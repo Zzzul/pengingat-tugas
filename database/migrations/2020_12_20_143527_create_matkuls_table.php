@@ -15,6 +15,9 @@ class CreateMatkulsTable extends Migration
     {
         Schema::create('matkuls', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('semester_id')->constrained('semesters');
+            $table->string('nama_matkul');
+            $table->integer('sks');
             $table->timestamps();
         });
     }
