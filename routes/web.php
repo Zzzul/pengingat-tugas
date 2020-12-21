@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Livewire\Matkul;
 use App\Http\Livewire\Semester;
 use Illuminate\Support\Facades\Route;
 
@@ -21,3 +22,4 @@ Route::get('/', function () {
 Route::view('home', 'home');
 
 Route::get('semester', Semester::class);
+Route::get('matkul', Matkul::class);
