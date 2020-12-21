@@ -37,9 +37,9 @@
                                     <select class="form-control @error('semester_id')is-invalid @enderror"
                                         wire:model="semester_id" id="semester-id">
                                         <option value="" disabled>--Pilih Semester--</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
+                                        @foreach ($semesters as $sms)
+                                        <option value="{{ $sms->id }}">{{ $sms->semester_ke }}</option>
+                                        @endforeach
                                     </select>
                                     @error('semester_id') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
@@ -61,7 +61,7 @@
                 <div class="card-header">
                     <div class="d-flex justify-content-between">
                         <div>
-                            <h5 class="card-title">Matkul</h5>
+                            <h5 class="card-title">Mata Kuliah</h5>
                         </div>
                         <div>
                             <button class="btn btn-primary" wire:click="showForm('add')">Tambah Data</button>

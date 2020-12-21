@@ -32,7 +32,7 @@
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
+                <a class="navbar-brand" href="{{ url('home') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
@@ -49,6 +49,15 @@
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="semester">Semester</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="matkul">Mata Kuliah</a>
+                        </li>
+
+
                         <!-- Authentication Links -->
                         @guest
                         @if (Route::has('login'))
@@ -92,6 +101,10 @@
         </main>
     </div>
     @livewireScripts
+    <script src="https://cdn.jsdelivr.net/gh/livewire/turbolinks@v0.1.x/dist/livewire-turbolinks.js"
+        data-turbolinks-eval="false"></script>
+</body>
+
 </body>
 
 </html>

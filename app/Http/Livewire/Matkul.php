@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\matkul as ModelsMatkul;
+use App\Models\semester;
 use Livewire\Component;
 
 class Matkul extends Component
@@ -18,7 +19,8 @@ class Matkul extends Component
     public function render()
     {
         $matkuls = ModelsMatkul::paginate(10);
-        return view('livewire.matkul', compact('matkuls'));
+        $semesters = Semester::get();
+        return view('livewire.matkul', compact('matkuls', 'semesters'));
     }
 
     public function showForm($type)
