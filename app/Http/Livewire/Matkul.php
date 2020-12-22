@@ -18,8 +18,10 @@ class Matkul extends Component
 
     public function render()
     {
-        $matkuls = ModelsMatkul::paginate(10);
+        $matkuls = ModelsMatkul::with('semester')->paginate(10);
         $semesters = Semester::get();
+        // echo json_encode($matkuls);
+        // die;
         return view('livewire.matkul', compact('matkuls', 'semesters'));
     }
 

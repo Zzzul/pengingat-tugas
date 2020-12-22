@@ -9,4 +9,10 @@ class matkul extends Model
 {
     use HasFactory;
     protected $fillable = ['name', 'sks', 'semester_id'];
+
+
+    public function semester()
+    {
+        return $this->belongsTo(semester::class);
+    }
 }

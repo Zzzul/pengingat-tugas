@@ -10,4 +10,9 @@ class semester extends Model
     use HasFactory;
 
     protected $fillable = ['semester_ke'];
+
+    public function matkul()
+    {
+        return $this->hasMany(matkul::class);
+    }
 }

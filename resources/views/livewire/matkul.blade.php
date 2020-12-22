@@ -86,7 +86,7 @@
                                 <td>{{ $loop->index+1 }}</td>
                                 <td>{{ $mk->name }}</td>
                                 <td>{{ $mk->sks }}</td>
-                                <td>{{ $mk->semester_id }}</td>
+                                <td>{{ $mk['semester']->semester_ke }}</td>
                                 <td>
                                     <span wire:click="show('{{ $mk->id }}')" style="cursor: pointer">
                                         <i class="fas fa-edit text-primary"></i></span>
