@@ -17,7 +17,7 @@
                     @endif
 
                     <div class="row form-group">
-                        <div class="col-md-10">
+                        <div class="col-md-8">
                             <div class="d-flex justify-content-start">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="semester-ke">Semester</span>
@@ -28,10 +28,20 @@
                                 @error('semester_ke') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
                         </div>
-                        <div class="col-md-2">
-                            <div class="d-flex justify-content-end">
-                                <button type="button" class="btn btn-dark mr-2" wire:click="hideForm()">Batal</button>
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                        <div class="col-md-4">
+                            <div class="float-right">
+                                <button type="button" class="btn btn-dark mr-1" wire:click="hideForm()">
+                                    <i class="fas fa-times mr-1"></i>
+                                    Batal
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save mr-1"></i>
+                                    @if ($form == 'add')
+                                    Submit
+                                    @else
+                                    Update
+                                    @endif
+                                </button>
                             </div>
                         </div>
                     </div> {{-- end of row form-group--}}
@@ -48,7 +58,10 @@
                             <h5 class="card-title">Semester</h5>
                         </div>
                         <div>
-                            <button class="btn btn-primary" wire:click="showForm('add')">Tambah Data</button>
+                            <button class="btn btn-primary" wire:click="showForm('add')">
+                                <i class="fas fa-plus mr-1"></i>
+                                Tambah Data
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -68,16 +81,22 @@
                                 <td>{{ $loop->index+1 }}</td>
                                 <td>{{ $sms->semester_ke }}</td>
                                 <td>
-                                    <span wire:click="show('{{ $sms->id }}')" style="cursor: pointer">
-                                        <i class="fas fa-edit text-primary"></i></span>
-                                    <span wire:click="destroy('{{ $sms->id }}')" style="cursor: pointer">
-                                        <i class="fas fa-trash text-danger"></i>
-                                    </span>
+                                    <button class="btn btn-outline-primary btn-sm mr-1"
+                                        wire:click="show('{{ $sms->id }}')">
+                                        <i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-outline-danger btn-sm"
+                                        wire:click="destroy('{{ $sms->id }}')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
                                 </td>
                             </tr>
                             @endforeach
                         </tbody>
                     </table>
+
+                    <div class="d-flex justify-content-end m-0">
+                        {{ $semesters->links() }}
+                    </div>
                 </div>
                 {{-- end of card-body--}}
             </div>

@@ -50,13 +50,16 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="semester">Semester</a>
+                            <a class="nav-link" href="tugas">Tugas</a>
                         </li>
 
                         <li class="nav-item">
                             <a class="nav-link" href="matkul">Mata Kuliah</a>
                         </li>
 
+                        <li class="nav-item">
+                            <a class="nav-link" href="semester">Semester</a>
+                        </li>
 
                         <!-- Authentication Links -->
                         @guest
@@ -101,6 +104,7 @@
         </main>
     </div>
     @livewireScripts
+    <x-livewire-alert::scripts />
     <script src="https://cdn.jsdelivr.net/gh/livewire/turbolinks@v0.1.x/dist/livewire-turbolinks.js"
         data-turbolinks-eval="false"></script>
 </body>

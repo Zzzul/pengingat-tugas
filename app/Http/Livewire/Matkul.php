@@ -5,10 +5,15 @@ namespace App\Http\Livewire;
 use App\Models\matkul as ModelsMatkul;
 use App\Models\semester;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Matkul extends Component
 {
-    public $form, $id_matkul, $name, $sks, $semesters, $semesters_id, $semester_id = '';
+    use WithPagination;
+
+    public $form, $id_matkul, $name, $sks, $semesters, $semester_id = '';
+
+    protected $paginationTheme = 'bootstrap';
 
     protected $rules = [
         'name' => 'required',
@@ -18,7 +23,8 @@ class Matkul extends Component
 
     public function render()
     {
-        $matkuls = ModelsMatkul::with('semester')->paginate(10);
+        $matkuls = ModelsMatkul::with('semester')->paginate(5);
+
         // get all semesters
         $this->semesters = Semester::get();
         return view('livewire.matkul', compact('matkuls'));
@@ -29,14 +35,14 @@ class Matkul extends Component
         $this->form = $type;
 
         if ($this->name) {
-            $this->removeAllFields();
+            $this->emptyItems();
         }
     }
 
     public function hideForm()
     {
         $this->form = '';
-        $this->removeAllFields();
+        $this->emptyItems();
         $this->validate([
             'name' => '',
             'sks' => '',
@@ -45,7 +51,7 @@ class Matkul extends Component
     }
 
 
-    public function removeAllFields()
+    public function emptyItems()
     {
         $this->name = '';
         $this->sks = '';
@@ -64,7 +70,7 @@ class Matkul extends Component
 
         $this->hideForm();
 
-        session()->flash('message', 'Mata Kuliah berhasil ditambahkan.');
+        $this->showAlert('Mata Kuliah berhasil ditambahkan.');
     }
 
     public function show($id)
@@ -91,14 +97,26 @@ class Matkul extends Component
         $matkul->semester_id = $this->semester_id;
         $matkul->save();
 
-        session()->flash('message', 'Mata Kuliah berhasil diubah.');
-
         $this->hideForm();
+
+        $this->showAlert('Mata Kuliah berhasil diubah.');
     }
 
     public function destroy($id)
     {
         ModelsMatkul::destroy($id);
-        session()->flash('message', 'Semester berhasil dihapus.');
+        $this->showAlert('Mata Kuliah berhasil dihapus.');
+    }
+
+
+    public function showAlert($message)
+    {
+        $this->alert('success', $message, [
+            'position'          =>  'top',
+            'timer'             =>  1500,
+            'toast'             =>  true,
+            'showCancelButton'  =>  false,
+            'showConfirmButton' =>  false
+        ]);
     }
 }

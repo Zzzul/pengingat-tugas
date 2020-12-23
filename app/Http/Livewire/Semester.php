@@ -4,9 +4,13 @@ namespace App\Http\Livewire;
 
 use App\Models\semester as ModelsSemester;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Semester extends Component
 {
+    use WithPagination;
+
+    protected $paginationTheme = 'bootstrap';
 
     public $form, $id_semester, $semester_ke;
 
@@ -16,7 +20,7 @@ class Semester extends Component
 
     public function render()
     {
-        $semesters = ModelsSemester::paginate(20);
+        $semesters = ModelsSemester::paginate(5);
         return view('livewire.semester', compact('semesters'));
     }
 
@@ -43,7 +47,7 @@ class Semester extends Component
             'semester_ke' => $this->semester_ke,
         ]);
 
-        session()->flash('message', 'Semester berhasil ditambahkan.');
+        $this->showAlert('Semester berhasil ditambahkan.');
 
         $this->semester_ke = '';
         $this->form = '';
@@ -67,7 +71,7 @@ class Semester extends Component
         $semester->semester_ke = $this->semester_ke;
         $semester->save();
 
-        session()->flash('message', 'Semester berhasil diubah.');
+        $this->showAlert('Semester berhasil diubah.');
 
         $this->hideForm();
     }
@@ -76,6 +80,18 @@ class Semester extends Component
     public function destroy($id)
     {
         ModelsSemester::destroy($id);
-        session()->flash('message', 'Semester berhasil dihapus.');
+        $this->showAlert('Semester berhasil dihapus.');
+    }
+
+
+    public function showAlert($message)
+    {
+        $this->alert('success', $message, [
+            'position'          =>  'top',
+            'timer'             =>  1500,
+            'toast'             =>  true,
+            'showCancelButton'  =>  false,
+            'showConfirmButton' =>  false
+        ]);
     }
 }

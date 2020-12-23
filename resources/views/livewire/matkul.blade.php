@@ -22,13 +22,13 @@
                                 <div class="col-6">
                                     <label for="name">Mata Kuliah</label>
                                     <input type="text" class="form-control @error('name')is-invalid @enderror"
-                                        wire:model="name" placeholder="Mata Kuliah" id="name">
+                                        wire:model="name" placeholder="Nama Mata Kuliah" id="name">
                                     @error('name') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                                 <div class="col-3">
                                     <label for="sks">SKS</label>
                                     <input type="number" class="form-control @error('sks')is-invalid @enderror"
-                                        wire:model="sks" placeholder="SKS" id="sks">
+                                        wire:model="sks" placeholder="SKS" id="sks" min="1" max="3">
                                     @error('sks') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
 
@@ -46,9 +46,18 @@
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <button type="button" class="btn btn-dark btn-block mr-2"
-                                wire:click="hideForm()">Batal</button>
-                            <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                            <button type="button" class="btn btn-dark btn-block mr-2" wire:click="hideForm()">
+                                <i class="fas fa-times mr-1"></i>
+                                Batal
+                            </button>
+                            <button type="submit" class="btn btn-primary btn-block">
+                                <i class="fas fa-save mr-1"></i>
+                                @if ($form == 'add')
+                                Submit
+                                @else
+                                Update
+                                @endif
+                            </button>
                         </div>
                     </div> {{-- end of row form-group--}}
                 </form>
@@ -65,7 +74,7 @@
                         </div>
                         <div>
                             <button class="btn btn-primary" wire:click="showForm('add')">
-                                <i class="fas fa-plus mr-2"></i>
+                                <i class="fas fa-plus mr-1"></i>
                                 Tambah Data
                             </button>
                         </div>
@@ -91,9 +100,10 @@
                                 <td>{{ $mk->sks }}</td>
                                 <td>{{ $mk['semester']->semester_ke }}</td>
                                 <td>
-                                    <button class="btn btn-outline-primary" wire:click="show('{{ $mk->id }}')">
+                                    <button class="btn btn-outline-primary btn-sm mr-1"
+                                        wire:click="show('{{ $mk->id }}')">
                                         <i class="fas fa-edit"></i></button>
-                                    <button class="btn btn-outline-danger" wire:click="destroy('{{ $mk->id }}')">
+                                    <button class="btn btn-outline-danger btn-sm" wire:click="destroy('{{ $mk->id }}')">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </td>
@@ -101,6 +111,10 @@
                             @endforeach
                         </tbody>
                     </table>
+
+                    <div class="d-flex justify-content-end m-0">
+                        {{ $matkuls->links() }}
+                    </div>
                 </div>
                 {{-- end of card-body--}}
             </div>
