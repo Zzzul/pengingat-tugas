@@ -64,7 +64,10 @@
                             <h5 class="card-title">Mata Kuliah</h5>
                         </div>
                         <div>
-                            <button class="btn btn-primary" wire:click="showForm('add')">Tambah Data</button>
+                            <button class="btn btn-primary" wire:click="showForm('add')">
+                                <i class="fas fa-plus mr-2"></i>
+                                Tambah Data
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -88,11 +91,11 @@
                                 <td>{{ $mk->sks }}</td>
                                 <td>{{ $mk['semester']->semester_ke }}</td>
                                 <td>
-                                    <span wire:click="show('{{ $mk->id }}')" style="cursor: pointer">
-                                        <i class="fas fa-edit text-primary"></i></span>
-                                    <span wire:click="destroy('{{ $mk->id }}')" style="cursor: pointer">
-                                        <i class="fas fa-trash text-danger"></i>
-                                    </span>
+                                    <button class="btn btn-outline-primary" wire:click="show('{{ $mk->id }}')">
+                                        <i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-outline-danger" wire:click="destroy('{{ $mk->id }}')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
                                 </td>
                             </tr>
                             @endforeach

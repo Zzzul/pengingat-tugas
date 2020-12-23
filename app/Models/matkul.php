@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class matkul extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'sks', 'semester_id'];
 
+    protected $fillable = ['name', 'sks', 'semester_id'];
 
     public function semester()
     {
-        return $this->belongsTo(semester::class);
+        return $this->belongsTo(Semester::class);
     }
 }

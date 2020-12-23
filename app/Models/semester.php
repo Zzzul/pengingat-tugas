@@ -11,8 +11,8 @@ class semester extends Model
 
     protected $fillable = ['semester_ke'];
 
-    public function matkul()
+    public function matkuls()
     {
-        return $this->hasMany(matkul::class);
+        return $this->hasMany(Matkul::class);
     }
 }

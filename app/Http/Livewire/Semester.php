@@ -69,8 +69,7 @@ class Semester extends Component
 
         session()->flash('message', 'Semester berhasil diubah.');
 
-        $this->id_semester = '';
-        $this->semester_ke = '';
+        $this->hideForm();
     }
 
 
