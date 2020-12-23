@@ -50,15 +50,17 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="tugas">Tugas</a>
+                            <a class="nav-link{{ request()->is('tugas') ? ' active' : '' }}" href="tugas">Tugas</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="matkul">Mata Kuliah</a>
+                            <a class="nav-link{{ request()->is('matkul') ? ' active' : '' }}" href="matkul">Mata
+                                Kuliah</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="semester">Semester</a>
+                            <a class="nav-link{{ request()->is('semester') ? ' active' : '' }}"
+                                href="semester">Semester</a>
                         </li>
 
                         <!-- Authentication Links -->
@@ -82,8 +84,8 @@
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
+                                <a class="dropdown-item" href="{{ route('logout') }}"
+                                    onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                                     {{ __('Logout') }}
                                 </a>
 
@@ -103,6 +105,21 @@
             {{ isset($slot) ? $slot : null }}
         </main>
     </div>
+
+    <footer>
+        <div class="container">
+            <div class="row justify-content-md-center">
+                <div class="col-md-8">
+                    <hr class="shadow-sm">
+                    <p class="text-center">Created by <a href="https://github.com/zzzul/" class="text-primary">Mohammad
+                            Zulfahmi</a>. Made
+                        with <i class="fas fa-heart-broken text-danger"></i></p>
+                </div>
+            </div>
+            {{-- end of row --}}
+        </div>
+    </footer>
+
     @livewireScripts
     <x-livewire-alert::scripts />
     <script src="https://cdn.jsdelivr.net/gh/livewire/turbolinks@v0.1.x/dist/livewire-turbolinks.js"
