@@ -2,6 +2,7 @@
 
 use App\Http\Livewire\Matkul;
 use App\Http\Livewire\Semester;
+use App\Http\Livewire\Tugas;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,3 +24,4 @@ Route::view('home', 'home');
 
 Route::get('semester', Semester::class);
 Route::get('matkul', Matkul::class);
+Route::get('tugas', Tugas::class);

@@ -1,26 +1,19 @@
 <div class="container py-3">
     <div class="row justify-content-md-center">
-        @if (session()->has('message'))
-        <div class="col-md-9 mb-2">
-            <div class="alert alert-success">
-                {{ session('message') }}
-            </div>
-        </div>
-        @endif
 
         @if ($form)
         <div class="col-md-9 mb-3">
             @if ($form == 'add')
             <form wire:submit.prevent="store">
                 @else
-                <form wire:submit.prevent="update('{{ $id_semester }}')">
+                <form wire:submit.prevent="update('{{ $id }}')">
                     @endif
 
                     <div class="row form-group">
                         <div class="col-md-8">
                             <div class="d-flex justify-content-start">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="semester-ke">Semester</span>
+                                    <span class="input-group-text" id="semester-ke">Tugas</span>
                                     <input type="text" class="form-control @error('semester_ke')is-invalid @enderror"
                                         placeholder="Antara 2" aria-label="Semester Ke" wire:model="semester_ke"
                                         aria-describedby="semester-ke" {{ $form ? 'autofocus' : '' }}>
@@ -71,25 +64,33 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Semester</th>
+                                <th>Mata Kuliah</th>
+                                <th>Deskripsi</th>
+                                <th>Batas Waktu</th>
+                                <th>Selesai</th>
+                                <th>Pertemuan</th>
                                 <th>Dibuat Pada</th>
-                                <th>Terakhir Diubah</th>
+                                <th>Terkahir Diubah</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($semesters as $sms)
+                            @foreach ($tugas as $tgs)
                             <tr>
                                 <td>{{ $loop->index+1 }}</td>
-                                <td>{{ $sms->semester_ke }}</td>
-                                <td>{{ $sms->created_at }}</td>
-                                <td>{{ $sms->updated_at }}</td>
+                                <td>{{ $tgs->matkul_id }}</td>
+                                <td>{{ $tgs->deskripsi }}</td>
+                                <td>{{ $tgs->batas_waktu }}</td>
+                                <td>{{ $tgs->selesai }}</td>
+                                <td>{{ $tgs->pertemuan_ke }}</td>
+                                <td>{{ $tgs->created_at }}</td>
+                                <td>{{ $tgs->updated_at }}</td>
                                 <td>
                                     <button class="btn btn-outline-primary btn-sm mr-1"
-                                        wire:click="show('{{ $sms->id }}')">
+                                        wire:click="show('{{ $tgs->id }}')">
                                         <i class="fas fa-edit"></i></button>
                                     <button class="btn btn-outline-danger btn-sm"
-                                        wire:click="destroy('{{ $sms->id }}')">
+                                        wire:click="destroy('{{ $tgs->id }}')">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </td>
@@ -99,7 +100,7 @@
                     </table>
 
                     <div class="d-flex justify-content-end m-0">
-                        {{ $semesters->links() }}
+                        {{ $tugas->links() }}
                     </div>
                 </div>
                 {{-- end of card-body--}}
