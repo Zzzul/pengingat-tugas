@@ -1,7 +1,7 @@
 <div class="container py-3">
     <div class="row justify-content-md-center">
         @if (session()->has('message'))
-        <div class="col-md-9 mb-2">
+        <div class="col-md-10 mb-2">
             <div class="alert alert-success">
                 {{ session('message') }}
             </div>
@@ -9,7 +9,7 @@
         @endif
 
         @if ($form)
-        <div class="col-md-9 mb-3">
+        <div class="col-md-10 mb-3">
             @if ($form == 'add')
             <form wire:submit.prevent="store">
                 @else
@@ -65,7 +65,7 @@
         {{-- end of --}}
         @endif
 
-        <div class="col-md-9">
+        <div class="col-md-10">
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex justify-content-between">

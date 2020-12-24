@@ -1,40 +1,79 @@
 <div class="container py-3">
     <div class="row justify-content-md-center">
-
+        {{ $id_tugas }}
         @if ($form)
-        <div class="col-md-9 mb-3">
+        <div class="col-md-10 mb-3">
             @if ($form == 'add')
             <form wire:submit.prevent="store">
                 @else
-                <form wire:submit.prevent="update('{{ $id }}')">
+                <form wire:submit.prevent="update('{{ $id_tugas }}')">
                     @endif
 
                     <div class="row form-group">
-                        <div class="col-md-8">
-                            <div class="d-flex justify-content-start">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="semester-ke">Tugas</span>
-                                    <input type="text" class="form-control @error('semester_ke')is-invalid @enderror"
-                                        placeholder="Antara 2" aria-label="Semester Ke" wire:model="semester_ke"
-                                        aria-describedby="semester-ke" {{ $form ? 'autofocus' : '' }}>
+                        <div class="col-md-12">
+                            <div class="row form-group">
+                                <div class="col-3">
+                                    <label for="matkul-id">Mata Kuliah</label>
+                                    <select class="form-control @error('matkul')is-invalid @enderror"
+                                        wire:model="matkul" id="matkul-id">
+                                        <option value="" disabled>--Pilih Mata Kuliah--</option>
+                                        @foreach ($matkuls as $mk)
+                                        <option value="{{ $mk->id }}">{{ $mk->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('matkul') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
-                                @error('semester_ke') <span class="text-danger">{{ $message }}</span> @enderror
+
+                                <div class="col-3">
+                                    <label for="batas_waktu">Batas Waktu</label>
+                                    <input type="date" class="form-control @error('batas_waktu')is-invalid @enderror"
+                                        wire:model="batas_waktu" id="batas_waktu">
+                                    @error('batas_waktu') <span class="text-danger">{{ $message }}</span> @enderror
+                                </div>
+
+                                <div class="col-3">
+                                    <label for="pertemuan_ke">Pertemuan Ke</label>
+                                    <input type="number" class="form-control @error('pertemuan_ke')is-invalid @enderror"
+                                        wire:model="pertemuan_ke" placeholder="Pertemuan Ke" id="pertemuan_ke" min="1"
+                                        max="16">
+                                    @error('pertemuan_ke') <span class="text-danger">{{ $message }}</span> @enderror
+                                </div>
+
+                                <div class="col-3">
+                                    <label for="selesai">Selesai Pada</label>
+                                    <input type="{{ $form == 'add' ? 'text' : 'date' }}"
+                                        class="form-control @error('selesai')is-invalid @enderror" wire:model="selesai"
+                                        placeholder="{{ $form == 'add' ? 'Terbuka ketika edit' : $selesai }}"
+                                        {{ $form == 'add' ? 'readonly' : '' }}>
+                                    @error('selesai') <span class="text-danger">{{ $message }}</span> @enderror
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="float-right">
-                                <button type="button" class="btn btn-dark mr-1" wire:click="hideForm()">
-                                    <i class="fas fa-times mr-1"></i>
-                                    Batal
-                                </button>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-save mr-1"></i>
-                                    @if ($form == 'add')
-                                    Submit
-                                    @else
-                                    Update
-                                    @endif
-                                </button>
+                            {{-- end of row group --}}
+
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <div class="form-group">
+                                        <label for="deskripsi">Deskripsi</label>
+                                        <textarea class="form-control @error('deskripsi')is-invalid @enderror"
+                                            wire:model="deskripsi" placeholder="Deskripsi" id="deskripsi"></textarea>
+                                        @error('deskripsi') <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-dark btn-block mr-2 mt-3"
+                                        wire:click="hideForm()">
+                                        <i class="fas fa-times mr-1"></i>
+                                        Batal
+                                    </button>
+                                    <button type="submit" class="btn btn-primary btn-block">
+                                        <i class="fas fa-save mr-1"></i>
+                                        @if ($form == 'add')
+                                        Submit
+                                        @else
+                                        Update
+                                        @endif
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div> {{-- end of row form-group--}}
@@ -43,12 +82,12 @@
         {{-- end of --}}
         @endif
 
-        <div class="col-md-9">
+        <div class="col-md-10">
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex justify-content-between">
                         <div>
-                            <h5 class="card-title">Semester</h5>
+                            <h5 class="card-title">Tugas</h5>
                         </div>
                         <div>
                             <button class="btn btn-primary" wire:click="showForm('add')">
@@ -67,6 +106,7 @@
                                 <th>Mata Kuliah</th>
                                 <th>Deskripsi</th>
                                 <th>Batas Waktu</th>
+                                <th>Sisa Hari</th>
                                 <th>Selesai</th>
                                 <th>Pertemuan</th>
                                 <th>Dibuat Pada</th>
@@ -75,18 +115,27 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($tugas as $tgs)
+                            @foreach ($all_tugas as $tgs)
+                            @php
+                            $batas_waktu = new DateTime("$tgs->batas_waktu");
+                            $today = new DateTime(date('Y-m-d'));
+                            $selisih = $today->diff($batas_waktu)->days;
+                            @endphp
                             <tr>
                                 <td>{{ $loop->index+1 }}</td>
-                                <td>{{ $tgs->matkul_id }}</td>
+                                <td>{{ $tgs['matkul']->name }}</td>
                                 <td>{{ $tgs->deskripsi }}</td>
-                                <td>{{ $tgs->batas_waktu }}</td>
-                                <td>{{ $tgs->selesai }}</td>
+                                <td>{{ date('d F Y - H:i:s', strtotime($tgs->batas_waktu)) }}</td>
+                                <td>{{ $selisih }} Hari Lagi!</td>
+                                <td>{!! $tgs->selesai ? date('d F Y - H:i:s', strtotime($tgs->selesai)) . '<i
+                                        class="fas fa-check text-success ml-2"></i>' : '<i
+                                        class="fas fa-times text-danger"></i>' !!}
+                                </td>
                                 <td>{{ $tgs->pertemuan_ke }}</td>
-                                <td>{{ $tgs->created_at }}</td>
-                                <td>{{ $tgs->updated_at }}</td>
+                                <td>{{ $tgs->created_at->diffForHumans()  }}</td>
+                                <td>{{ $tgs->updated_at->diffForHumans() }}</td>
                                 <td>
-                                    <button class="btn btn-outline-primary btn-sm mr-1"
+                                    <button class="btn btn-outline-primary btn-sm mb-2"
                                         wire:click="show('{{ $tgs->id }}')">
                                         <i class="fas fa-edit"></i></button>
                                     <button class="btn btn-outline-danger btn-sm"
@@ -100,7 +149,7 @@
                     </table>
 
                     <div class="d-flex justify-content-end m-0">
-                        {{ $tugas->links() }}
+                        {{ $all_tugas->links() }}
                     </div>
                 </div>
                 {{-- end of card-body--}}

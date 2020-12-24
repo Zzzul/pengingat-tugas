@@ -15,4 +15,10 @@ class matkul extends Model
     {
         return $this->belongsTo(Semester::class);
     }
+
+
+    public function tugas()
+    {
+        return $this->hasMany(Tugas::class);
+    }
 }

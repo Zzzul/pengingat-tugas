@@ -109,7 +109,7 @@
     <footer>
         <div class="container">
             <div class="row justify-content-md-center">
-                <div class="col-md-8">
+                <div class="col-md-10">
                     <hr class="shadow-sm">
                     <p class="text-center">Created by <a href="https://github.com/zzzul/" class="text-primary">Mohammad
                             Zulfahmi</a>. Made
