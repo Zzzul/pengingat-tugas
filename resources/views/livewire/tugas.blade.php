@@ -87,7 +87,8 @@
                 <div class="card-header">
                     <div class="d-flex justify-content-between">
                         <div>
-                            <h5 class="card-title">Tugas</h5>
+                            <h5 class="card-title mb-0">Tugas</h5>
+                            <small>Tanggal Sekarang : {{ date('d-F-Y') }}</small>
                         </div>
                         <div>
                             <button class="btn btn-primary" wire:click="showForm('add')">
@@ -119,14 +120,25 @@
                             @php
                             $batas_waktu = new DateTime("$tgs->batas_waktu");
                             $today = new DateTime(date('Y-m-d'));
-                            $selisih = $today->diff($batas_waktu)->days;
+
+                            $batas_waktu_count = str_replace("-", " ", date('Ymd', strtotime($tgs->batas_waktu)));
+
+                            $today_count = str_replace("-", " ", date('Ymd'));
+
+                            if($today_count > $batas_waktu_count){
+                            $selisih = '<p class="text-danger">Batas waktu telah habis!</p>';
+                            }else{
+                            $selisih = $today->diff($batas_waktu)->days . ' Hari Lagi!';
+                            }
+
                             @endphp
+
                             <tr>
                                 <td>{{ $loop->index+1 }}</td>
                                 <td>{{ $tgs['matkul']->name }}</td>
                                 <td>{{ $tgs->deskripsi }}</td>
                                 <td>{{ date('d F Y - H:i:s', strtotime($tgs->batas_waktu)) }}</td>
-                                <td>{{ $selisih }} Hari Lagi!</td>
+                                <td>{!! $selisih !!}</td>
                                 <td>{!! $tgs->selesai ? date('d F Y - H:i:s', strtotime($tgs->selesai)) . '<i
                                         class="fas fa-check text-success ml-2"></i>' : '<i
                                         class="fas fa-times text-danger"></i>' !!}
