@@ -91,8 +91,8 @@ class Tugas extends Component
         $this->matkuls = Matkul::get();
         $this->matkul       = $tugas->matkul_id;
         $this->deskripsi    = $tugas->deskripsi;
-        $this->batas_waktu  = $tugas->batas_waktu;
-        $this->selesai      = $tugas->selesai;
+        $this->batas_waktu  = date('Y-m-d\TH:i', strtotime($tugas->batas_waktu));
+        $this->selesai      = !$tugas->selesai ? $tugas->selesai : date('Y-m-d\TH:i', strtotime($tugas->selesai));
         $this->pertemuan_ke = $tugas->pertemuan_ke;
         $this->form         = 'edit';
     }

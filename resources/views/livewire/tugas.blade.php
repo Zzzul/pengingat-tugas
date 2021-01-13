@@ -2,7 +2,7 @@
     <div class="row justify-content-md-center">
         {{ $id_tugas }}
         @if ($form)
-        <div class="col-md-10 mb-3">
+        <div class="col-md-12 mb-3">
             @if ($form == 'add')
             <form wire:submit.prevent="store">
                 @else
@@ -26,7 +26,8 @@
 
                                 <div class="col-3">
                                     <label for="batas_waktu">Batas Waktu</label>
-                                    <input type="date" class="form-control @error('batas_waktu')is-invalid @enderror"
+                                    <input type="datetime-local" id="datetimepicker"
+                                        class="form-control @error('batas_waktu')is-invalid @enderror"
                                         wire:model="batas_waktu" id="batas_waktu">
                                     @error('batas_waktu') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
@@ -41,7 +42,7 @@
 
                                 <div class="col-3">
                                     <label for="selesai">Selesai Pada</label>
-                                    <input type="{{ $form == 'add' ? 'text' : 'date' }}"
+                                    <input type="{{ $form == 'add' ? 'text' : 'datetime-local' }}"
                                         class="form-control @error('selesai')is-invalid @enderror" wire:model="selesai"
                                         placeholder="{{ $form == 'add' ? 'Terbuka ketika edit' : $selesai }}"
                                         {{ $form == 'add' ? 'readonly' : '' }}>
@@ -55,7 +56,8 @@
                                     <div class="form-group">
                                         <label for="deskripsi">Deskripsi</label>
                                         <textarea class="form-control @error('deskripsi')is-invalid @enderror"
-                                            wire:model="deskripsi" placeholder="Deskripsi" id="deskripsi"></textarea>
+                                            wire:model="deskripsi" placeholder="Deskripsi" id="deskripsi" rows="3"
+                                            aria-setsize="false"></textarea>
                                         @error('deskripsi') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
                                 </div>
@@ -82,7 +84,8 @@
         {{-- end of --}}
         @endif
 
-        <div class="col-md-10">
+        {{-- table --}}
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex justify-content-between">
@@ -100,66 +103,67 @@
                 </div>
                 {{-- end of card-header --}}
                 <div class="card-body">
-                    <table class="table table-hover table-striped table-sm">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Mata Kuliah</th>
-                                <th>Deskripsi</th>
-                                <th>Batas Waktu</th>
-                                <th>Sisa Hari</th>
-                                <th>Selesai</th>
-                                <th>Pertemuan</th>
-                                <th>Dibuat Pada</th>
-                                <th>Terkahir Diubah</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($all_tugas as $tgs)
-                            @php
-                            $batas_waktu = new DateTime("$tgs->batas_waktu");
-                            $today = new DateTime(date('Y-m-d'));
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Mata Kuliah</th>
+                                    <th>Deskripsi</th>
+                                    <th>Batas Waktu</th>
+                                    <th>Sisa Hari</th>
+                                    <th>Selesai</th>
+                                    <th>Pertemuan</th>
+                                    <th>Dibuat Pada</th>
+                                    <th>Terkahir Diubah</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($all_tugas as $tgs)
+                                @php
+                                $batas_waktu = new DateTime("$tgs->batas_waktu");
+                                $today = new DateTime(date('Y-m-d'));
 
-                            $batas_waktu_count = str_replace("-", " ", date('Ymd', strtotime($tgs->batas_waktu)));
+                                $batas_waktu_count = date('Ymd', strtotime($tgs->batas_waktu));
 
-                            $today_count = str_replace("-", " ", date('Ymd'));
+                                $today_count = date('Ymd');
 
-                            if($today_count > $batas_waktu_count){
-                            $selisih = '<p class="text-danger">Batas waktu telah habis!</p>';
-                            }else{
-                            $selisih = $today->diff($batas_waktu)->days . ' Hari Lagi!';
-                            }
+                                if($today_count > $batas_waktu_count){
+                                $selisih = '<p class="text-danger">Batas waktu telah habis!</p>';
+                                }else{
+                                $selisih = $today->diff($batas_waktu)->days . ' Hari Lagi!';
+                                }
 
-                            @endphp
+                                @endphp
 
-                            <tr>
-                                <td>{{ $loop->index+1 }}</td>
-                                <td>{{ $tgs['matkul']->name }}</td>
-                                <td>{{ $tgs->deskripsi }}</td>
-                                <td>{{ date('d F Y - H:i:s', strtotime($tgs->batas_waktu)) }}</td>
-                                <td>{!! $selisih !!}</td>
-                                <td>{!! $tgs->selesai ? date('d F Y - H:i:s', strtotime($tgs->selesai)) . '<i
-                                        class="fas fa-check text-success ml-2"></i>' : '<i
-                                        class="fas fa-times text-danger"></i>' !!}
-                                </td>
-                                <td>{{ $tgs->pertemuan_ke }}</td>
-                                <td>{{ $tgs->created_at->diffForHumans()  }}</td>
-                                <td>{{ $tgs->updated_at->diffForHumans() }}</td>
-                                <td>
-                                    <button class="btn btn-outline-primary btn-sm mb-2"
-                                        wire:click="show('{{ $tgs->id }}')">
-                                        <i class="fas fa-edit"></i></button>
-                                    <button class="btn btn-outline-danger btn-sm"
-                                        wire:click="destroy('{{ $tgs->id }}')">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-
+                                <tr>
+                                    <td>{{ $loop->index+1 }}</td>
+                                    <td>{{ $tgs['matkul']->name }}</td>
+                                    <td>{!! nl2br($tgs->deskripsi) !!}</td>
+                                    <td>{{ date('d F Y - H:i ', strtotime($tgs->batas_waktu)) }}</td>
+                                    <td>{!! $selisih !!}</td>
+                                    <td>{!! $tgs->selesai ? date('d F Y - H:i ', strtotime($tgs->selesai)) . '<i
+                                            class="fas fa-check text-success ml-2"></i>' : '<i
+                                            class="fas fa-times text-danger"></i>' !!}
+                                    </td>
+                                    <td>{{ $tgs->pertemuan_ke }}</td>
+                                    <td>{{ $tgs->created_at->diffForHumans()  }}</td>
+                                    <td>{{ $tgs->updated_at->diffForHumans() }}</td>
+                                    <td>
+                                        <button class="btn btn-outline-primary btn-sm mb-2"
+                                            wire:click="show('{{ $tgs->id }}')">
+                                            <i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-outline-danger btn-sm"
+                                            wire:click="destroy('{{ $tgs->id }}')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                     <div class="d-flex justify-content-end m-0">
                         {{ $all_tugas->links() }}
                     </div>
