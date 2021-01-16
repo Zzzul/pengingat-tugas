@@ -122,17 +122,22 @@
                             <tbody>
                                 @foreach ($all_tugas as $tgs)
                                 @php
-                                $batas_waktu = new DateTime("$tgs->batas_waktu");
+                                $batasWaktu = new DateTime("$tgs->batas_waktu");
                                 $today = new DateTime(date('Y-m-d'));
 
-                                $batas_waktu_count = date('Ymd', strtotime($tgs->batas_waktu));
+                                $batasWaktuCount = date('Ymd', strtotime($tgs->batas_waktu));
 
-                                $today_count = date('Ymd');
+                                $todayCount = date('Ymd');
 
-                                if($today_count > $batas_waktu_count){
-                                $selisih = '<p class="text-danger">Batas waktu telah habis!</p>';
+                                if($todayCount > $batasWaktuCount){
+                                $sisa = 0;
+                                $selisih = 'Batas waktu telah habis!';
+                                }elseif($todayCount == $batasWaktuCount){
+                                $sisa = 0;
+                                $selisih = '<p class="text-danger">Tersisa beberapa jam!</p>';
                                 }else{
-                                $selisih = $today->diff($batas_waktu)->days . ' Hari Lagi!';
+                                $sisa = 1;
+                                $selisih = $today->diff($batasWaktu)->days . ' hari lagi!';
                                 }
 
                                 @endphp
@@ -142,18 +147,38 @@
                                     <td>{{ $tgs['matkul']->name }}</td>
                                     <td>{!! nl2br($tgs->deskripsi) !!}</td>
                                     <td>{{ date('d F Y - H:i ', strtotime($tgs->batas_waktu)) }}</td>
-                                    <td>{!! $selisih !!}</td>
-                                    <td>{!! $tgs->selesai ? date('d F Y - H:i ', strtotime($tgs->selesai)) . '<i
-                                            class="fas fa-check text-success ml-2"></i>' : '<i
-                                            class="fas fa-times text-danger"></i>' !!}
+                                    <td>
+                                        {!! $selisih !!}
+                                    </td>
+                                    <td>
+                                        @php
+                                        if($tgs->selesai && $sisa){
+                                        // tugas selesai dan waktu masih ada
+                                        echo date('d F Y - H:i ',
+                                        strtotime($tgs->selesai)).'<i class="fas fa-check text-success ml-2"></i>';
+                                        }elseif($tgs->selesai && !$sisa){
+                                        // tugas selesai dan waktu habis
+                                        echo date('d F Y - H:i ',
+                                        strtotime($tgs->selesai)).'<i class="fas fa-check text-success ml-2"></i>';
+                                        }elseif(!$tgs->selesai && !$sisa){
+                                        // tugas gak selesai dan waktu habis
+                                        echo '<i class="fas fa-times text-danger"></i>';
+                                        }elseif(!$tgs->selesai && $sisa){
+                                        // tugas gak selesai dan waktu masih ada
+                                        echo '<i class="fas fa-question text-info"></i>';
+                                        }
+                                        @endphp
                                     </td>
                                     <td>{{ $tgs->pertemuan_ke }}</td>
                                     <td>{{ $tgs->created_at->diffForHumans()  }}</td>
                                     <td>{{ $tgs->updated_at->diffForHumans() }}</td>
                                     <td>
+                                        @php if($selisih != 'Batas waktu telah habis!') : @endphp
                                         <button class="btn btn-outline-primary btn-sm mb-2"
                                             wire:click="show('{{ $tgs->id }}')">
-                                            <i class="fas fa-edit"></i></button>
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        @php endif @endphp
                                         <button class="btn btn-outline-danger btn-sm"
                                             wire:click="destroy('{{ $tgs->id }}')">
                                             <i class="fas fa-trash-alt"></i>
