@@ -21,7 +21,8 @@ class Semester extends Component
     public function render()
     {
         $semesters = ModelsSemester::paginate(5);
-        return view('livewire.semester', compact('semesters'));
+        $aktif_smt= ModelsSemester::select('semester_ke')->where('aktif_smt', 1)->first();
+        return view('livewire.semester', compact('semesters','aktif_smt'));
     }
 
     public function showForm($type)

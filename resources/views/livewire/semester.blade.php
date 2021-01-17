@@ -56,6 +56,7 @@
                     <div class="d-flex justify-content-between">
                         <div>
                             <h5 class="card-title">Semester</h5>
+                            <p class="m-0">Semester Aktif : <b>{{ $aktif_smt['semester_ke'] }}</b></p>
                         </div>
                         <div>
                             <button class="btn btn-primary" wire:click="showForm('add')">
