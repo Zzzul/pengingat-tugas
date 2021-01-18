@@ -1,6 +1,5 @@
 <div class="container py-3">
     <div class="row justify-content-md-center">
-        {{ $id_tugas }}
         @if ($form)
         <div class="col-md-12 mb-3">
             @if ($form == 'add')
@@ -198,6 +197,32 @@
             {{-- end of card--}}
         </div>
         {{-- end of col--}}
+
+        {{-- tugas yg ga dikerjain --}}
+        @php
+        $count=0;
+        @endphp
+        <div class="col-md-12 mt-4">
+            <h4 class="text-center my-4">Tugas yang tidak kamu dikerjakan</h4>
+            <div class="row">
+                @foreach ($tugas_yg_ga_selesai as $tgs)
+                @foreach ($tgs['tugas'] as $tg)
+                @php
+                $count++;
+                @endphp
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <p class="m-0">Mata Kuliah : <strong>{{ $tgs->name }}</strong> </p>
+                            <p class="m-0">Pertemuan Ke : <strong>{{ $tg->pertemuan_ke }}</strong></p>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+                @endforeach
+            </div>
+            <p class="text-center mt-3"><strong>Total : {{ $count }} Tugas</strong></p>
+        </div>
     </div>
     {{-- end of row--}}
 </div>

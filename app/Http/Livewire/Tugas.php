@@ -12,7 +12,7 @@ class Tugas extends Component
 
     use WithPagination;
 
-    public $form, $id_tugas, $deskripsi, $batas_waktu, $tugas, $selesai, $pertemuan_ke, $matkul = '', $matkuls;
+    public $form, $id_tugas, $deskripsi, $batas_waktu, $tugas, $selesai, $pertemuan_ke, $matkul = '', $matkuls, $tugas_yg_ga_selesai;
 
     protected $paginationTheme = 'bootstrap';
 
@@ -25,13 +25,24 @@ class Tugas extends Component
 
     public function render()
     {
+        $this->tugas_yg_ga_selesai = matkul::with([
+        'tugas' => function($q){
+            $q->where([
+                ['selesai', '=', null],
+                ['batas_waktu', '<', date('Y-m-d H:i')]
+            ]);
+        },
+        'semester' => function($q){
+            $q->where('aktif_smt', 1);
+        }
+        ])->get();
+
+
         $all_tugas = ModelsTugas::with('matkul')->orderBy('batas_waktu', 'desc')->paginate(5);
 
         // get all matkul
         $this->matkuls = Matkul::get();
 
-        // echo json_encode($tugas);
-        // die;
         return view('livewire.tugas', compact('all_tugas'));
     }
 
