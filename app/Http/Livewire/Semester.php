@@ -12,7 +12,7 @@ class Semester extends Component
 
     protected $paginationTheme = 'bootstrap';
 
-    public $form, $id_semester, $semester_ke;
+    public $form, $id_semester, $semester_ke, $aktif_smt, $select_semesters = [];
 
     protected $rules = [
         'semester_ke' => 'required',
@@ -20,9 +20,12 @@ class Semester extends Component
 
     public function render()
     {
+        $this->select_semesters = ModelsSemester::get();
+
+        $this->aktif_smt = ModelsSemester::select('id', 'semester_ke')->where('aktif_smt', 1)->first();
+
         $semesters = ModelsSemester::paginate(5);
-        $aktif_smt= ModelsSemester::select('semester_ke')->where('aktif_smt', 1)->first();
-        return view('livewire.semester', compact('semesters','aktif_smt'));
+        return view('livewire.semester', compact('semesters'));
     }
 
     public function showForm($type)
@@ -94,5 +97,22 @@ class Semester extends Component
             'showCancelButton'  =>  false,
             'showConfirmButton' =>  false
         ]);
+    }
+
+
+    public function setAktifSmt($id)
+    {
+
+        if ($id != $this->aktif_smt['id']) {
+            $semester_aktif = ModelsSemester::find($id);
+            $semester_aktif->aktif_smt = 1;
+            $semester_aktif->save();
+
+            $semester = ModelsSemester::find($this->aktif_smt['id']);
+            $semester->aktif_smt = null;
+            $semester->save();
+
+            $this->showAlert('Semester aktif berhasil diubah.');
+        }
     }
 }

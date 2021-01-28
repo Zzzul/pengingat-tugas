@@ -211,7 +211,7 @@
                 $count++;
                 @endphp
                 <div class="col-md-4">
-                    <div class="card">
+                    <div class="card mb-4">
                         <div class="card-body">
                             <p class="m-0">Mata Kuliah : <strong>{{ $tgs->name }}</strong> </p>
                             <p class="m-0">Pertemuan Ke : <strong>{{ $tg->pertemuan_ke }}</strong></p>

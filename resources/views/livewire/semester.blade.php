@@ -55,7 +55,7 @@
                 <div class="card-header">
                     <div class="d-flex justify-content-between">
                         <div>
-                            <h5 class="card-title">Semester</h5>
+                            <h5 class="card-title" for="semester-aktif">Semester</h5>
                             <p class="m-0">Semester Aktif : <b>{{ $aktif_smt['semester_ke'] }}</b></p>
                         </div>
                         <div>
@@ -92,6 +92,11 @@
                                     <button class="btn btn-outline-danger btn-sm"
                                         wire:click="destroy('{{ $sms->id }}')">
                                         <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                    <button class="btn btn-outline-success btn-sm"
+                                        wire:click="setAktifSmt('{{ $sms->id }}')">
+                                        {!! $sms->aktif_smt ? '<i class="fas fa-star"></i>' : '<i
+                                            class="far fa-star"></i>' !!}
                                     </button>
                                 </td>
                             </tr>
