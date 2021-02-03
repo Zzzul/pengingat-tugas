@@ -1,4 +1,5 @@
 <div class="container py-3">
+    @section('title', 'Tugas')
     <div class="row justify-content-md-center">
         @if ($form)
         <div class="col-md-12 mb-3">

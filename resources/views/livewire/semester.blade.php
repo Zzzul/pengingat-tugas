@@ -1,3 +1,4 @@
+@section('title', 'Semester')
 <div class="container py-3">
     <div class="row justify-content-md-center">
         @if (session()->has('message'))
