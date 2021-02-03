@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\semester as ModelsSemester;
+use App\Models\Semester as ModelsSemester;
 use Livewire\Component;
 use Livewire\WithPagination;
 

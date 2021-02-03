@@ -2,8 +2,8 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\matkul as ModelsMatkul;
-use App\Models\semester;
+use App\Models\Matkul as ModelsMatkul;
+use App\Models\Semester;
 use Livewire\Component;
 use Livewire\WithPagination;
 

@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\matkul;
+use App\Models\Matkul;
 use App\Models\Tugas as ModelsTugas;
 use Livewire\Component;
 use Livewire\WithPagination;
