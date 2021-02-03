@@ -56,7 +56,13 @@
                     <div class="d-flex justify-content-between">
                         <div>
                             <h5 class="card-title" for="semester-aktif">Semester</h5>
+                            @php
+                            if($aktif_smt) :
+                            @endphp
                             <p class="m-0">Semester Aktif : <b>{{ $aktif_smt['semester_ke'] }}</b></p>
+                            @php
+                            endif
+                            @endphp
                         </div>
                         <div>
                             <button class="btn btn-primary" wire:click="showForm('add')">
