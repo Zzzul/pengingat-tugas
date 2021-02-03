@@ -103,16 +103,25 @@ class Semester extends Component
     public function setAktifSmt($id)
     {
 
-        if ($id != $this->aktif_smt['id']) {
-            $semester_aktif = ModelsSemester::find($id);
-            $semester_aktif->aktif_smt = 1;
-            $semester_aktif->save();
-
-            $semester = ModelsSemester::find($this->aktif_smt['id']);
-            $semester->aktif_smt = null;
-            $semester->save();
-
-            $this->showAlert('Semester aktif berhasil diubah.');
+        if ($this->aktif_smt) {
+            if ($id != $this->aktif_smt['id']) {
+                $this->updateAktifSmt($id);
+                // set smt aktif sebelumnya ke null, agar cuma ada 1 smt aktif
+                $semester = ModelsSemester::find($this->aktif_smt['id']);
+                $semester->aktif_smt = null;
+                $semester->save();
+            }
+        } else {
+            $this->updateAktifSmt($id);
         }
+    }
+
+    public function updateAktifSmt($id)
+    {
+        $semester_aktif = ModelsSemester::find($id);
+        $semester_aktif->aktif_smt = 1;
+        $semester_aktif->save();
+
+        $this->showAlert('Semester aktif berhasil diubah.');
     }
 }
