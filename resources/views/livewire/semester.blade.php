@@ -2,7 +2,7 @@
 <div class="container py-3">
     <div class="row justify-content-md-center">
         @if (session()->has('message'))
-        <div class="col-md-10 mb-2">
+        <div class="col-md-12 mb-2">
             <div class="alert alert-success">
                 {{ session('message') }}
             </div>
@@ -10,7 +10,7 @@
         @endif
 
         @if ($form)
-        <div class="col-md-10 mb-3">
+        <div class="col-md-12 mb-3">
             @if ($form == 'add')
             <form wire:submit.prevent="store">
                 @else
@@ -51,7 +51,7 @@
         {{-- end of --}}
         @endif
 
-        <div class="col-md-10">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex justify-content-between">
@@ -75,41 +75,44 @@
                 </div>
                 {{-- end of card-header --}}
                 <div class="card-body">
-                    <table class="table table-hover table-striped table-sm">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Semester</th>
-                                <th>Dibuat Pada</th>
-                                <th>Terakhir Diubah</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($semesters as $sms)
-                            <tr>
-                                <td>{{ $loop->index+1 }}</td>
-                                <td>{{ $sms->semester_ke }}</td>
-                                <td>{{ $sms->created_at }}</td>
-                                <td>{{ $sms->updated_at }}</td>
-                                <td>
-                                    <button class="btn btn-outline-primary btn-sm mr-1"
-                                        wire:click="show('{{ $sms->id }}')">
-                                        <i class="fas fa-edit"></i></button>
-                                    <button class="btn btn-outline-danger btn-sm"
-                                        wire:click="destroy('{{ $sms->id }}')">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                    <button class="btn btn-outline-success btn-sm"
-                                        wire:click="setAktifSmt('{{ $sms->id }}')">
-                                        {!! $sms->aktif_smt ? '<i class="fas fa-star"></i>' : '<i
-                                            class="far fa-star"></i>' !!}
-                                    </button>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Semester</th>
+                                    <th>Dibuat Pada</th>
+                                    <th>Terakhir Diubah</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($semesters as $sms)
+                                <tr>
+                                    <td>{{ $semesters->count() * ($semesters->currentPage() -1) + $loop->iteration }}
+                                    </td>
+                                    <td>{{ $sms->semester_ke }}</td>
+                                    <td>{{ $sms->created_at->diffForHumans()  }}</td>
+                                    <td>{{ $sms->updated_at->diffForHumans() }}</td>
+                                    <td>
+                                        <button class="mb-2 btn btn-outline-primary btn-sm mr-1"
+                                            wire:click="show('{{ $sms->id }}')">
+                                            <i class="fas fa-edit"></i></button>
+                                        <button class="mb-2 btn btn-outline-danger btn-sm"
+                                            wire:click="destroy('{{ $sms->id }}')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                        <button class="mb-2 btn btn-outline-success btn-sm"
+                                            wire:click="setAktifSmt('{{ $sms->id }}')">
+                                            {!! $sms->aktif_smt ? '<i class="fas fa-star"></i>' : '<i
+                                                class="far fa-star"></i>' !!}
+                                        </button>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
 
                     <div class="d-flex justify-content-end m-0">
                         {{ $semesters->links() }}

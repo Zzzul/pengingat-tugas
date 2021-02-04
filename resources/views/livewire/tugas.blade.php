@@ -143,7 +143,8 @@
                                 @endphp
 
                                 <tr>
-                                    <td>{{ $loop->index+1 }}</td>
+                                    <td>{{ $all_tugas->count() * ($all_tugas->currentPage() -1) + $loop->iteration }}
+                                    </td>
                                     <td>{{ $tgs['matkul']->name }}</td>
                                     <td>{!! nl2br($tgs->deskripsi) !!}</td>
                                     <td>{{ date('d F Y - H:i ', strtotime($tgs->batas_waktu)) }}</td>
@@ -174,12 +175,12 @@
                                     <td>{{ $tgs->updated_at->diffForHumans() }}</td>
                                     <td>
                                         @php if($selisih != 'Batas waktu telah habis!') : @endphp
-                                        <button class="btn btn-outline-primary btn-sm mb-2"
+                                        <button class="mb-2 btn btn-outline-primary btn-sm mb-2"
                                             wire:click="show('{{ $tgs->id }}')">
                                             <i class="fas fa-edit"></i>
                                         </button>
                                         @php endif @endphp
-                                        <button class="btn btn-outline-danger btn-sm"
+                                        <button class="mb-2 btn btn-outline-danger btn-sm"
                                             wire:click="destroy('{{ $tgs->id }}')">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
@@ -205,6 +206,7 @@
         @endphp
         <div class="col-md-12 mt-4">
             <h4 class="text-center my-4">Tugas yang tidak kamu dikerjakan</h4>
+            <hr>
             <div class="row">
                 @foreach ($tugas_yg_ga_selesai as $tgs)
                 @foreach ($tgs['tugas'] as $tg)
