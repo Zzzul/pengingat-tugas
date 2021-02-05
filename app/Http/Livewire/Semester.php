@@ -31,6 +31,10 @@ class Semester extends Component
     public function showForm($type)
     {
         $this->form = $type;
+
+        if ($this->semester_ke) {
+            $this->emptyItems();
+        }
     }
 
     public function hideForm()
@@ -85,6 +89,12 @@ class Semester extends Component
     {
         ModelsSemester::destroy($id);
         $this->showAlert('Semester berhasil dihapus.');
+    }
+
+
+    public function emptyItems()
+    {
+        $this->semester_ke = '';
     }
 
 
