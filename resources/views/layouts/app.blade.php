@@ -20,33 +20,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
-    {{-- sketchy --}}
-    <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
 
-    <style>
-        .card-tugas {
-            -webkit-transition-duration: 0.3s;
-            transition-duration: 0.3s;
-            -webkit-transition-property: transform;
-            transition-property: transform;
-            -webkit-transition-timing-function: ease-out;
-            transition-timing-function: ease-out;
-        }
-
-        .card-tugas:hover,
-        .card-tugas:focus,
-        .card-tugas:active {
-            -webkit-transform: translateY(5px);
-            transform: translateY(5px);
-            -webkit-box-shadow: 4px 3px 0px 1px rgb(0, 0, 0) !important;
-            -moz-box-shadow: 4px 3px 0px 1px rgb(0, 0, 0) !important;
-            box-shadow: 4px 3px 0px 0px rgb(0, 0, 0) !important;
-        }
-
-        .active {
-            color: #138496 !important;
-        }
-    </style>
 
     {{-- font awesome --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
