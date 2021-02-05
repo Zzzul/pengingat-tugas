@@ -20,6 +20,34 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
+    {{-- sketchy --}}
+    <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
+
+    <style>
+        .card-tugas {
+            -webkit-transition-duration: 0.3s;
+            transition-duration: 0.3s;
+            -webkit-transition-property: transform;
+            transition-property: transform;
+            -webkit-transition-timing-function: ease-out;
+            transition-timing-function: ease-out;
+        }
+
+        .card-tugas:hover,
+        .card-tugas:focus,
+        .card-tugas:active {
+            -webkit-transform: translateY(5px);
+            transform: translateY(5px);
+            -webkit-box-shadow: 4px 3px 0px 1px rgb(0, 0, 0) !important;
+            -moz-box-shadow: 4px 3px 0px 1px rgb(0, 0, 0) !important;
+            box-shadow: 4px 3px 0px 0px rgb(0, 0, 0) !important;
+        }
+
+        .active {
+            color: #138496 !important;
+        }
+    </style>
+
     {{-- font awesome --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
         integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
@@ -32,7 +60,7 @@
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm d-none d-md-block">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('home') }}">
+                <a class="navbar-brand{{ request()->is('home') ? ' active' : '' }}" href="{{ url('home') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
@@ -101,8 +129,7 @@
         </nav>
 
         <!-- Bottom Navbar -->
-        <nav
-            class="navbar navbar-dark bg-primary navbar-expand fixed-bottom d-md-none d-lg-none d-xl-none  shadow-sm border-top">
+        <nav class="navbar navbar-light bg-white navbar-expand fixed-bottom d-md-none d-lg-none d-xl-none">
             <ul class="navbar-nav nav-justified w-100">
                 <li class="nav-item">
                     <a class="nav-link{{ request()->is('home') ? ' active' : '' }}" href="home">
@@ -159,8 +186,9 @@
         <div class="container">
             <div class="row justify-content-md-center">
                 <div class="col-md-12">
-                    <hr class="shadow-sm">
-                    <p class="text-center">Created by <a href="https://github.com/zzzul/" class="text-primary">Mohammad
+                    <hr>
+                    <p class="text-center">Created by <a href="https://github.com/zzzul/" class="text-info"
+                            target="blank">Mohammad
                             Zulfahmi</a> Made
                         with <i class="fas fa-heart-broken text-danger"></i></p>
                 </div>

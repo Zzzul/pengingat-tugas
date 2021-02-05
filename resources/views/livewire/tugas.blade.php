@@ -67,7 +67,7 @@
                                         <i class="fas fa-times mr-1"></i>
                                         Batal
                                     </button>
-                                    <button type="submit" class="btn btn-primary btn-block">
+                                    <button type="submit" class="btn btn-success btn-block">
                                         <i class="fas fa-save mr-1"></i>
                                         @if ($form == 'add')
                                         Submit
@@ -94,7 +94,7 @@
                             <small>Tanggal Sekarang : {{ date('d-F-Y') }}</small>
                         </div>
                         <div>
-                            <button class="btn btn-primary" wire:click="showForm('add')">
+                            <button class="btn btn-info" wire:click="showForm('add')">
                                 <i class="fas fa-plus mr-1"></i>
                                 Tambah Data
                             </button>
@@ -120,7 +120,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($all_tugas as $tgs)
+                                @foreach ($all_tugas as $key => $tgs)
                                 @php
                                 $batasWaktu = new DateTime("$tgs->batas_waktu");
                                 $today = new DateTime(date('Y-m-d'));
@@ -143,7 +143,7 @@
                                 @endphp
 
                                 <tr>
-                                    <td>{{ $all_tugas->count() * ($all_tugas->currentPage() -1) + $loop->iteration }}
+                                    <td>{{ $all_tugas->firstItem() + $key }}
                                     </td>
                                     <td>{{ $tgs['matkul']->name }}</td>
                                     <td>{!! nl2br($tgs->deskripsi) !!}</td>
@@ -175,7 +175,7 @@
                                     <td>{{ $tgs->updated_at->diffForHumans() }}</td>
                                     <td>
                                         @php if($selisih != 'Batas waktu telah habis!') : @endphp
-                                        <button class="mb-2 btn btn-outline-primary btn-sm mb-2"
+                                        <button class="mb-2 btn btn-outline-info btn-sm mb-2"
                                             wire:click="show('{{ $tgs->id }}')">
                                             <i class="fas fa-edit"></i>
                                         </button>
@@ -206,7 +206,6 @@
         @endphp
         <div class="col-md-12 mt-4">
             <h4 class="text-center my-4">Tugas yang tidak kamu dikerjakan</h4>
-            <hr>
             <div class="row">
                 @foreach ($tugas_yg_ga_selesai as $tgs)
                 @foreach ($tgs['tugas'] as $tg)
@@ -214,9 +213,9 @@
                 $count++;
                 @endphp
                 <div class="col-md-4">
-                    <div class="card mb-4">
+                    <div class="card card-tugas mb-4">
                         <div class="card-body">
-                            <p class="m-0">Mata Kuliah : <strong>{{ $tgs->name }}</strong> </p>
+                            <p class="m-0 matkul">Mata Kuliah : <strong>{{ $tgs->name }}</strong> </p>
                             <p class="m-0">Pertemuan Ke : <strong>{{ $tg->pertemuan_ke }}</strong></p>
                         </div>
                     </div>

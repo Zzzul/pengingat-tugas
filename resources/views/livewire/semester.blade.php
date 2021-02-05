@@ -18,32 +18,26 @@
                     @endif
 
                     <div class="row form-group">
-                        <div class="col-md-8">
-                            <div class="d-flex justify-content-start">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="semester-ke">Semester</span>
-                                    <input type="text" class="form-control @error('semester_ke')is-invalid @enderror"
-                                        placeholder="Antara 2" aria-label="Semester Ke" wire:model="semester_ke"
-                                        aria-describedby="semester-ke" {{ $form ? 'autofocus' : '' }}>
-                                </div>
-                                @error('semester_ke') <span class="text-danger">{{ $message }}</span> @enderror
-                            </div>
+                        <div class="col-md-3">
+                            <label for="semester-ke">Semester</label>
+                            <input type="text" id="semester-ke"
+                                class="form-control @error('semester_ke')is-invalid @enderror" placeholder="5"
+                                wire:model="semester_ke" aria-describedby="semester-ke" {{ $form ? 'autofocus' : '' }}>
+                            @error('semester_ke') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
-                        <div class="col-md-4">
-                            <div class="float-right">
-                                <button type="button" class="btn btn-dark mr-1" wire:click="hideForm()">
-                                    <i class="fas fa-times mr-1"></i>
-                                    Batal
-                                </button>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-save mr-1"></i>
-                                    @if ($form == 'add')
-                                    Submit
-                                    @else
-                                    Update
-                                    @endif
-                                </button>
-                            </div>
+                        <div class="col-md-9  mt-4">
+                            <button type="button" class="btn btn-dark" wire:click="hideForm()">
+                                <i class="fas fa-times mr-1"></i>
+                                Batal
+                            </button>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-save mr-1"></i>
+                                @if ($form == 'add')
+                                Submit
+                                @else
+                                Update
+                                @endif
+                            </button>
                         </div>
                     </div> {{-- end of row form-group--}}
                 </form>
@@ -66,7 +60,7 @@
                             @endphp
                         </div>
                         <div>
-                            <button class="btn btn-primary" wire:click="showForm('add')">
+                            <button class="btn btn-info" wire:click="showForm('add')">
                                 <i class="fas fa-plus mr-1"></i>
                                 Tambah Data
                             </button>
@@ -87,15 +81,15 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($semesters as $sms)
+                                @foreach ($semesters as $key => $sms)
                                 <tr>
-                                    <td>{{ $semesters->count() * ($semesters->currentPage() -1) + $loop->iteration }}
+                                    <td>{{ $semesters->firstItem() + $key }}
                                     </td>
                                     <td>{{ $sms->semester_ke }}</td>
                                     <td>{{ $sms->created_at->diffForHumans()  }}</td>
                                     <td>{{ $sms->updated_at->diffForHumans() }}</td>
                                     <td>
-                                        <button class="mb-2 btn btn-outline-primary btn-sm mr-1"
+                                        <button class="mb-2 btn btn-outline-info btn-sm mr-1"
                                             wire:click="show('{{ $sms->id }}')">
                                             <i class="fas fa-edit"></i></button>
                                         <button class="mb-2 btn btn-outline-danger btn-sm"

@@ -14,8 +14,8 @@
                     </div>
                     @endif
 
-                    <h4>Hai, Selamat datang kembali!</h4>
-                    <h6>Tetap semangat, walaupun terbantai sama tugas :)</h6>
+                    <h4>Hai, Selamat datang!</h4>
+                    <h6>Tetap semangat walaupun terbantai tugas :)</h6>
                 </div>
             </div>
         </div>

@@ -51,7 +51,7 @@
                                 <i class="fas fa-times mr-1"></i>
                                 Batal
                             </button>
-                            <button type="submit" class="btn btn-primary btn-block">
+                            <button type="submit" class="btn btn-success btn-block">
                                 <i class="fas fa-save mr-1"></i>
                                 @if ($form == 'add')
                                 Submit
@@ -74,7 +74,7 @@
                             <h5 class="card-title">Mata Kuliah</h5>
                         </div>
                         <div>
-                            <button class="btn btn-primary" wire:click="showForm('add')">
+                            <button class="btn btn-info" wire:click="showForm('add')">
                                 <i class="fas fa-plus mr-1"></i>
                                 Tambah Data
                             </button>
@@ -97,16 +97,16 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($matkuls as $mk)
+                                @foreach ($matkuls as $key => $mk)
                                 <tr>
-                                    <td>{{ $matkuls->count() * ($matkuls->currentPage() -1) + $loop->iteration }}</td>
+                                    <td>{{ $matkuls->firstItem() + $key }}</td>
                                     <td>{{ $mk->name }}</td>
                                     <td>{{ $mk->sks }}</td>
                                     <td>{{ $mk['semester']->semester_ke }}</td>
                                     <td>{{ $mk->created_at->diffForHumans()  }}</td>
                                     <td>{{ $mk->updated_at->diffForHumans() }}</td>
                                     <td>
-                                        <button class="mb-2 btn btn-outline-primary btn-sm mr-1"
+                                        <button class="mb-2 btn btn-outline-info btn-sm mr-1"
                                             wire:click="show('{{ $mk->id }}')">
                                             <i class="fas fa-edit"></i></button>
                                         <button class="mb-2 btn btn-outline-danger btn-sm"
