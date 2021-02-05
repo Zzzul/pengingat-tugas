@@ -1,16 +1,16 @@
 @section('title', 'Mata Kuliah')
 <div class="container py-3">
     <div class="row justify-content-md-center">
-        @if (session()->has('message'))
-        <div class="col-md-12 mb-2">
-            <div class="alert alert-success">
-                {{ session('message') }}
-            </div>
+
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="home">Home</a></li>
+                <li class="breadcrumb-item active">Mata Kuliah</li>
+            </ol>
         </div>
-        @endif
 
         @if ($form)
-        <div class="col-md-12 mb-3">
+        <div class="col-md-12 my-2">
             @if ($form == 'add')
             <form wire:submit.prevent="store">
                 @else
@@ -67,66 +67,57 @@
         @endif
 
         <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h5 class="card-title">Mata Kuliah</h5>
-                        </div>
-                        <div>
-                            <button class="btn btn-info" wire:click="showForm('add')">
-                                <i class="fas fa-plus mr-1"></i>
-                                Tambah Data
-                            </button>
-                        </div>
-                    </div>
+            <div class="d-flex justify-content-between mb-3">
+                <div>
+                    <h5 class="card-title">Mata Kuliah</h5>
                 </div>
-                {{-- end of card-header --}}
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-striped table-sm">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Mata Kuliah</th>
-                                    <th>SKS</th>
-                                    <th>Semester</th>
-                                    <th>Dibuat Pada</th>
-                                    <th>Terakhir Diubah</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($matkuls as $key => $mk)
-                                <tr>
-                                    <td>{{ $matkuls->firstItem() + $key }}</td>
-                                    <td>{{ $mk->name }}</td>
-                                    <td>{{ $mk->sks }}</td>
-                                    <td>{{ $mk['semester']->semester_ke }}</td>
-                                    <td>{{ $mk->created_at->diffForHumans()  }}</td>
-                                    <td>{{ $mk->updated_at->diffForHumans() }}</td>
-                                    <td>
-                                        <button class="mb-2 btn btn-outline-info btn-sm mr-1"
-                                            wire:click="show('{{ $mk->id }}')">
-                                            <i class="fas fa-edit"></i></button>
-                                        <button class="mb-2 btn btn-outline-danger btn-sm"
-                                            wire:click="destroy('{{ $mk->id }}')">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="d-flex justify-content-end m-0">
-                        {{ $matkuls->links() }}
-                    </div>
+                <div>
+                    <button class="btn btn-info" wire:click="showForm('add')">
+                        <i class="fas fa-plus mr-1"></i>
+                        Tambah Data
+                    </button>
                 </div>
-                {{-- end of card-body--}}
             </div>
-            {{-- end of card--}}
+            <div class="table-responsive">
+                <table class="table table-hover table-striped table-sm">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Mata Kuliah</th>
+                            <th>SKS</th>
+                            <th>Semester</th>
+                            <th>Dibuat Pada</th>
+                            <th>Terakhir Diubah</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($matkuls as $key => $mk)
+                        <tr class="table-active">
+                            <td>{{ $matkuls->firstItem() + $key }}</td>
+                            <td>{{ $mk->name }}</td>
+                            <td>{{ $mk->sks }}</td>
+                            <td>{{ $mk['semester']->semester_ke }}</td>
+                            <td>{{ $mk->created_at->diffForHumans()  }}</td>
+                            <td>{{ $mk->updated_at->diffForHumans() }}</td>
+                            <td>
+                                <button class="mb-2 btn btn-outline-info btn-sm mr-1"
+                                    wire:click="show('{{ $mk->id }}')">
+                                    <i class="fas fa-edit"></i></button>
+                                <button class="mb-2 btn btn-outline-danger btn-sm"
+                                    wire:click="destroy('{{ $mk->id }}')">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-end m-0">
+                {{ $matkuls->links() }}
+            </div>
         </div>
         {{-- end of col--}}
     </div>

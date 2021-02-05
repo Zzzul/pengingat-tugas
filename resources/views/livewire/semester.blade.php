@@ -1,16 +1,16 @@
 @section('title', 'Semester')
 <div class="container py-3">
     <div class="row justify-content-md-center">
-        @if (session()->has('message'))
-        <div class="col-md-12 mb-2">
-            <div class="alert alert-success">
-                {{ session('message') }}
-            </div>
+
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="home">Home</a></li>
+                <li class="breadcrumb-item active">Semester</li>
+            </ol>
         </div>
-        @endif
 
         @if ($form)
-        <div class="col-md-12 mb-3">
+        <div class="col-md-12 my-2">
             @if ($form == 'add')
             <form wire:submit.prevent="store">
                 @else
@@ -45,76 +45,67 @@
         {{-- end of --}}
         @endif
 
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h5 class="card-title" for="semester-aktif">Semester</h5>
-                            @php
-                            if($aktif_smt) :
-                            @endphp
-                            <p class="m-0">Semester Aktif : <b>{{ $aktif_smt['semester_ke'] }}</b></p>
-                            @php
-                            endif
-                            @endphp
-                        </div>
-                        <div>
-                            <button class="btn btn-info" wire:click="showForm('add')">
-                                <i class="fas fa-plus mr-1"></i>
-                                Tambah Data
-                            </button>
-                        </div>
-                    </div>
+        <div class="col-md-12 mt-2">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <h5 class="card-title" for="semester-aktif">Semester</h5>
+                    @php
+                    if($aktif_smt) :
+                    @endphp
+                    <p class="m-0">Semester Aktif : <b>{{ $aktif_smt['semester_ke'] }}</b></p>
+                    @php
+                    endif
+                    @endphp
                 </div>
-                {{-- end of card-header --}}
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-striped table-sm">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Semester</th>
-                                    <th>Dibuat Pada</th>
-                                    <th>Terakhir Diubah</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($semesters as $key => $sms)
-                                <tr>
-                                    <td>{{ $semesters->firstItem() + $key }}
-                                    </td>
-                                    <td>{{ $sms->semester_ke }}</td>
-                                    <td>{{ $sms->created_at->diffForHumans()  }}</td>
-                                    <td>{{ $sms->updated_at->diffForHumans() }}</td>
-                                    <td>
-                                        <button class="mb-2 btn btn-outline-info btn-sm mr-1"
-                                            wire:click="show('{{ $sms->id }}')">
-                                            <i class="fas fa-edit"></i></button>
-                                        <button class="mb-2 btn btn-outline-danger btn-sm"
-                                            wire:click="destroy('{{ $sms->id }}')">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                        <button class="mb-2 btn btn-outline-success btn-sm"
-                                            wire:click="setAktifSmt('{{ $sms->id }}')">
-                                            {!! $sms->aktif_smt ? '<i class="fas fa-star"></i>' : '<i
-                                                class="far fa-star"></i>' !!}
-                                        </button>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="d-flex justify-content-end m-0">
-                        {{ $semesters->links() }}
-                    </div>
+                <div>
+                    <button class="btn btn-info" wire:click="showForm('add')">
+                        <i class="fas fa-plus mr-1"></i>
+                        Tambah Data
+                    </button>
                 </div>
-                {{-- end of card-body--}}
             </div>
-            {{-- end of card--}}
+            <div class="table-responsive">
+                <table class="table table-hover table-striped table-sm">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Semester</th>
+                            <th>Dibuat Pada</th>
+                            <th>Terakhir Diubah</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($semesters as $key => $sms)
+                        <tr class="table-active">
+                            <td>{{ $semesters->firstItem() + $key }}
+                            </td>
+                            <td>{{ $sms->semester_ke }}</td>
+                            <td>{{ $sms->created_at->diffForHumans()  }}</td>
+                            <td>{{ $sms->updated_at->diffForHumans() }}</td>
+                            <td>
+                                <button class="mb-2 btn btn-outline-info btn-sm mr-1"
+                                    wire:click="show('{{ $sms->id }}')">
+                                    <i class="fas fa-edit"></i></button>
+                                <button class="mb-2 btn btn-outline-danger btn-sm"
+                                    wire:click="destroy('{{ $sms->id }}')">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                                <button class="mb-2 btn btn-outline-success btn-sm"
+                                    wire:click="setAktifSmt('{{ $sms->id }}')">
+                                    {!! $sms->aktif_smt ? '<i class="fas fa-star"></i>' : '<i class="far fa-star"></i>'
+                                    !!}
+                                </button>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-end m-0">
+                {{ $semesters->links() }}
+            </div>
         </div>
         {{-- end of col--}}
     </div>
