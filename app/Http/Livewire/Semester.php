@@ -41,10 +41,16 @@ class Semester extends Component
     {
         $this->form = '';
         $this->semester_ke = '';
+        $this->noValidate();
+    }
+
+    public function noValidate()
+    {
         $this->validate([
             'semester_ke' => ''
         ]);
     }
+
 
 
     public function store()
@@ -64,6 +70,8 @@ class Semester extends Component
 
     public function show($id)
     {
+        $this->noValidate();
+
         $this->id_semester = $id;
         $semester = ModelsSemester::find($id);
         $this->semester_ke = $semester->semester_ke;

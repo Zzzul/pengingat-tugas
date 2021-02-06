@@ -1,3 +1,12 @@
+@php
+$target = '';
+
+if( $form == 'add'){
+$target = 'store';
+}else{
+$target = 'update';
+}
+@endphp
 @section('title', 'Semester')
 <div class="container py-3">
     <div class="row justify-content-md-center">
@@ -25,19 +34,9 @@
                                 wire:model="semester_ke" aria-describedby="semester-ke" {{ $form ? 'autofocus' : '' }}>
                             @error('semester_ke') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
-                        <div class="col-md-9  mt-4">
-                            <button type="button" class="btn btn-dark" wire:click="hideForm()">
-                                <i class="fas fa-times mr-1"></i>
-                                Batal
-                            </button>
-                            <button type="submit" class="btn btn-success">
-                                <i class="fas fa-save mr-1"></i>
-                                @if ($form == 'add')
-                                Submit
-                                @else
-                                Update
-                                @endif
-                            </button>
+                        <div class="col-md-7"></div>
+                        <div class="col-md-2">
+                            <x-button-submit target="{{ $target }}"></x-button-submit>
                         </div>
                     </div> {{-- end of row form-group--}}
                 </form>
@@ -46,24 +45,24 @@
         @endif
 
         <div class="col-md-12 mt-2">
-            <div class="d-flex justify-content-between">
-                <div>
+            {{-- button create --}}
+            <div class="row my-2">
+                <div class="col-md-10 mb-2">
                     <h5 class="card-title" for="semester-aktif">Semester</h5>
                     @php
                     if($aktif_smt) :
                     @endphp
-                    <p class="m-0">Semester Aktif : <b>{{ $aktif_smt['semester_ke'] }}</b></p>
+                    <p class="mt-0 mb-2">Semester Aktif : <b>{{ $aktif_smt['semester_ke'] }}</b></p>
                     @php
                     endif
                     @endphp
                 </div>
-                <div>
-                    <button class="btn btn-info" wire:click="showForm('add')">
-                        <i class="fas fa-plus mr-1"></i>
-                        Tambah Data
-                    </button>
+                <div class="col-md-2 justify-content-end mb-3">
+                    <x-button-create></x-button-create>
                 </div>
             </div>
+
+
             <div class="table-responsive">
                 <table class="table table-hover table-striped table-sm">
                     <thead>
@@ -86,7 +85,9 @@
                             <td>
                                 <button class="mb-2 btn btn-outline-info btn-sm mr-1"
                                     wire:click="show('{{ $sms->id }}')">
-                                    <i class="fas fa-edit"></i></button>
+                                    <i class="fas fa-edit"></i>
+                                </button>
+
                                 <button class="mb-2 btn btn-outline-danger btn-sm"
                                     wire:click="destroy('{{ $sms->id }}')">
                                     <i class="fas fa-trash-alt"></i>

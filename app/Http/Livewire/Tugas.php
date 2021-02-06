@@ -62,12 +62,7 @@ class Tugas extends Component
     {
         $this->form = '';
         $this->emptyItems();
-        $this->validate([
-            'matkul'        => '',
-            'deskripsi'     => '',
-            'batas_waktu'   => '',
-            'selesai'       => ''
-        ]);
+        $this->noValidate();
     }
 
 
@@ -98,6 +93,8 @@ class Tugas extends Component
 
     public function show($id)
     {
+        $this->noValidate();
+
         $this->id_tugas = $id;
         $tugas = ModelsTugas::find($id);
 
@@ -134,6 +131,15 @@ class Tugas extends Component
         $this->showAlert('Mata Kuliah berhasil dihapus.');
     }
 
+    public function noValidate()
+    {
+        $this->validate([
+            'matkul'        => '',
+            'deskripsi'     => '',
+            'batas_waktu'   => '',
+            'selesai'       => ''
+        ]);
+    }
 
     public function showAlert($message)
     {

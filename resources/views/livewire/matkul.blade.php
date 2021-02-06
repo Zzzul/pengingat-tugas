@@ -1,3 +1,12 @@
+@php
+$target = '';
+
+if( $form == 'add'){
+$target = 'store';
+}else{
+$target = 'update';
+}
+@endphp
 @section('title', 'Mata Kuliah')
 <div class="container py-3">
     <div class="row justify-content-md-center">
@@ -47,18 +56,8 @@
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <button type="button" class="btn btn-dark btn-block mr-2" wire:click="hideForm()">
-                                <i class="fas fa-times mr-1"></i>
-                                Batal
-                            </button>
-                            <button type="submit" class="btn btn-success btn-block">
-                                <i class="fas fa-save mr-1"></i>
-                                @if ($form == 'add')
-                                Submit
-                                @else
-                                Update
-                                @endif
-                            </button>
+                            <x-button-submit target="{{ $target }}">
+                            </x-button-submit>
                         </div>
                     </div> {{-- end of row form-group--}}
                 </form>
@@ -67,17 +66,17 @@
         @endif
 
         <div class="col-md-12">
-            <div class="d-flex justify-content-between mb-3">
-                <div>
-                    <h5 class="card-title">Mata Kuliah</h5>
+            {{-- button create --}}
+            <div class="row my-2">
+                <div class="col-md-10 mb-2">
+                    <h5 class="card-title mb-0">Mata Kuliah</h5>
                 </div>
-                <div>
-                    <button class="btn btn-info" wire:click="showForm('add')">
-                        <i class="fas fa-plus mr-1"></i>
-                        Tambah Data
-                    </button>
+                <div class="col-md-2 justify-content-end mb-3">
+                    <x-button-create></x-button-create>
                 </div>
             </div>
+
+
             <div class="table-responsive">
                 <table class="table table-hover table-striped table-sm">
                     <thead>

@@ -1,5 +1,14 @@
+@php
+$target = '';
+
+if( $form == 'add'){
+$target = 'store';
+}else{
+$target = 'update';
+}
+@endphp
+@section('title', 'Tugas')
 <div class="container py-3">
-    @section('title', 'Tugas')
     <div class="row justify-content-md-center">
 
         <div class="col-md-12">
@@ -11,8 +20,8 @@
 
 
         @if ($form)
-        <div class="col-md-12 my-3">
-            @if ($form == 'add')
+        <div class="col-md-12 mt-3">
+            @if ($form === 'add')
             <form wire:submit.prevent="store">
                 @else
                 <form wire:submit.prevent="update('{{ $id_tugas }}')">
@@ -70,20 +79,10 @@
                                         @error('deskripsi') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
                                 </div>
+
                                 <div class="col-md-2">
-                                    <button type="button" class="btn btn-dark btn-block mr-2 mt-3"
-                                        wire:click="hideForm()">
-                                        <i class="fas fa-times mr-1"></i>
-                                        Batal
-                                    </button>
-                                    <button type="submit" class="btn btn-success btn-block">
-                                        <i class="fas fa-save mr-1"></i>
-                                        @if ($form == 'add')
-                                        Submit
-                                        @else
-                                        Update
-                                        @endif
-                                    </button>
+                                    <x-button-submit target="{{ $target }}">
+                                    </x-button-submit>
                                 </div>
                             </div>
                         </div>
@@ -95,16 +94,14 @@
 
         {{-- table --}}
         <div class="col-md-12">
-            <div class="d-flex justify-content-between mb-3">
-                <div>
+            {{-- button create --}}
+            <div class="row my-2">
+                <div class="col-md-10 mb-2">
                     <h5 class="card-title mb-0">Tugas</h5>
                     <small>Tanggal Sekarang : {{ date('d-F-Y') }}</small>
                 </div>
-                <div>
-                    <button class="btn btn-info" wire:click="showForm('add')">
-                        <i class="fas fa-plus mr-1"></i>
-                        Tambah Data
-                    </button>
+                <div class="col-md-2 justify-content-end">
+                    <x-button-create></x-button-create>
                 </div>
             </div>
 

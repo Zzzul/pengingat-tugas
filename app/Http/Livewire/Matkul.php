@@ -6,6 +6,8 @@ use App\Models\Matkul as ModelsMatkul;
 use App\Models\Semester;
 use Livewire\Component;
 use Livewire\WithPagination;
+use PhpParser\Builder\Function_;
+use PhpParser\Node\Expr\FuncCall;
 
 class Matkul extends Component
 {
@@ -43,13 +45,17 @@ class Matkul extends Component
     {
         $this->form = '';
         $this->emptyItems();
+        $this->noValidate();
+    }
+
+    public function noValidate()
+    {
         $this->validate([
             'name' => '',
             'sks' => '',
             'semester_id' => ''
         ]);
     }
-
 
     public function emptyItems()
     {
@@ -75,6 +81,8 @@ class Matkul extends Component
 
     public function show($id)
     {
+        $this->noValidate();
+
         $this->id_matkul = $id;
         $matkul = ModelsMatkul::find($id);
 
