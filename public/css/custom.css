@@ -20,3 +20,7 @@
 .active {
     color: #138496 !important;
 }
+
+hr {
+    border: 1px solid black;
+}

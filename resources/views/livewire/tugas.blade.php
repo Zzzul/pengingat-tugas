@@ -100,7 +100,7 @@ $target = 'update';
                     <h5 class="card-title mb-0">Tugas</h5>
                     <small>Tanggal Sekarang : {{ date('d-F-Y') }}</small>
                 </div>
-                <div class="col-md-2 justify-content-end">
+                <div class="col-md-2 justify-content-end mb-3">
                     <x-button-create></x-button-create>
                 </div>
             </div>
@@ -127,16 +127,20 @@ $target = 'update';
                         $batasWaktu = new DateTime("$tgs->batas_waktu");
                         $today = new DateTime(date('Y-m-d'));
 
-                        $batasWaktuCount = date('Ymd', strtotime($tgs->batas_waktu));
+                        $batasWaktuCount = date('YmdHi', strtotime($tgs->batas_waktu));
 
-                        $todayCount = date('Ymd');
+                        $todayCount = date('YmdHi');
 
                         if($todayCount > $batasWaktuCount){
+                        // jika waktu telah habis
                         $sisa = 0;
                         $selisih = 'Batas waktu telah habis!';
-                        }elseif($todayCount == $batasWaktuCount){
-                        $sisa = 0;
+
+                        }elseif($today->diff($batasWaktu)->days == 0){
+                        // jika sisa beberapa jam
+                        $sisa = 1;
                         $selisih = '<p class="text-danger">Tersisa beberapa jam!</p>';
+
                         }else{
                         $sisa = 1;
                         $selisih = $today->diff($batasWaktu)->days . ' hari lagi!';
@@ -159,13 +163,16 @@ $target = 'update';
                                 // tugas selesai dan waktu masih ada
                                 echo date('d F Y - H:i ',
                                 strtotime($tgs->selesai)).'<i class="fas fa-check text-success ml-2"></i>';
+
                                 }elseif($tgs->selesai && !$sisa){
                                 // tugas selesai dan waktu habis
                                 echo date('d F Y - H:i ',
                                 strtotime($tgs->selesai)).'<i class="fas fa-check text-success ml-2"></i>';
+
                                 }elseif(!$tgs->selesai && !$sisa){
                                 // tugas gak selesai dan waktu habis
                                 echo '<i class="fas fa-times text-danger"></i>';
+
                                 }elseif(!$tgs->selesai && $sisa){
                                 // tugas gak selesai dan waktu masih ada
                                 echo '<i class="fas fa-question text-info"></i>';
@@ -213,8 +220,12 @@ $target = 'update';
                 <div class="col-md-4">
                     <div class="card card-tugas mb-4">
                         <div class="card-body">
-                            <p class="m-0 matkul">Mata Kuliah : <strong>{{ $tgs->name }}</strong> </p>
-                            <p class="m-0">Pertemuan Ke : <strong>{{ $tg->pertemuan_ke }}</strong></p>
+                            <p class="m-0 matkul">Mata Kuliah :
+                                <strong>{{ $tgs->name }}</strong>
+                            </p>
+                            <p class="m-0">Pertemuan Ke :
+                                <strong>{{ $tg->pertemuan_ke }}</strong>
+                            </p>
                         </div>
                     </div>
                 </div>
