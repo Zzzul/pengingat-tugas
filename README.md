@@ -41,5 +41,5 @@ $ php artisan key:generate
 $ php artisan migrate
 
 # Start local development server
-$ php artisan migrate
+$ php artisan serve
 ```
