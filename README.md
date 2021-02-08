@@ -4,22 +4,20 @@
 Buat pengingat kalo ada tugas kuliah beserta deadline nya. sebenernya inget cuma males ngerjainnya...
 
 ## Demo
-<a  href="https://pengingat-tugas.herokuapp.com/" target="blank">Disini</a>
+<a  href="https://pengingat-tugas.herokuapp.com/" target="blank">Here</a>
 
-
-## Teknologi
+## What inside?
 - Laravel ^8.x - [Laravel 8](https://laravel.com/docs/8.x)
 - Laravel UI ^3.x - [Laravel/ui](https://github.com/laravel/ui/tree/3.x)
-- Livewire ^2.x - [laravel-livewire.com](https://laravel-livewire.com)
+-   Livewire ^2.x - [laravel-livewire.com](https://laravel-livewire.com)
 
-
-## Instal
-Clone atau download repository
+## Installation
+Clone or download this repository
 ```shell
 $ git clone https://github.com/Zzzul/pengingat-tugas.git
 ```
 
-Install  dependencies
+Install all dependencies
 ```shell
 # install composer dependency
 $ composer install
@@ -31,7 +29,7 @@ $ npm install
 $ npm run dev
 ```
 
-Generate app key, konfigurasi`.env` file dan migrasi.
+Generate app key, configure `.env` file and do migration.
 ```shell
 # create copy of .env
 $ cp .env.example .env
@@ -43,5 +41,5 @@ $ php artisan key:generate
 $ php artisan migrate
 
 # Start local development server
-$ php artisan serve
+$ php artisan migrate
 ```
