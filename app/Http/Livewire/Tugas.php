@@ -25,15 +25,15 @@ class Tugas extends Component
 
     public function render()
     {
-        $this->tugas_yg_ga_selesai = matkul::with([
-            'tugas' => function ($q) {
-                $q->where([
-                    ['selesai', '=', null],
-                    ['batas_waktu', '<', date('Y-m-d H:i')]
-                ]);
-            },
+        $this->tugas_yg_ga_selesai = Matkul::with([
             'semester' => function ($q) {
                 $q->where('aktif_smt', 1);
+            },
+            'tugas' => function ($q) {
+                $q->where([
+                    // ['batas_waktu', '<=', date('Y-m-d H:i')],
+                    ['selesai', '=', null]
+                ]);
             }
         ])->get();
 

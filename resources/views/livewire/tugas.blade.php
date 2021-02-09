@@ -6,7 +6,9 @@ $target = 'store';
 }else{
 $target = 'update';
 }
+
 @endphp
+
 @section('title', 'Tugas')
 <div class="container py-3">
     <div class="row justify-content-md-center">
@@ -139,7 +141,7 @@ $target = 'update';
                         }elseif($today->diff($batasWaktu)->days == 0){
                         // jika sisa beberapa jam
                         $sisa = 1;
-                        $selisih = '<p class="text-danger">Tersisa beberapa jam!</p>';
+                        $selisih = '<p class="text-danger">Tugas akan segera berakhir!</p>';
 
                         }else{
                         $sisa = 1;
@@ -183,12 +185,11 @@ $target = 'update';
                             <td>{{ $tgs->created_at->diffForHumans()  }}</td>
                             <td>{{ $tgs->updated_at->diffForHumans() }}</td>
                             <td>
-                                @php if($selisih != 'Batas waktu telah habis!') : @endphp
-                                <button class="mb-2 btn btn-outline-info btn-sm mb-2"
+                                <button
+                                    class="mb-2 btn btn-outline-{{ $selisih != 'Batas waktu telah habis!' ? 'info' : 'warning' }} btn-sm mb-2"
                                     wire:click="show('{{ $tgs->id }}')">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                @php endif @endphp
                                 <button class="mb-2 btn btn-outline-danger btn-sm"
                                     wire:click="destroy('{{ $tgs->id }}')">
                                     <i class="fas fa-trash-alt"></i>
@@ -199,6 +200,7 @@ $target = 'update';
                     </tbody>
                 </table>
             </div>
+
             <div class="d-flex justify-content-end m-0">
                 {{ $all_tugas->links() }}
             </div>
@@ -210,10 +212,14 @@ $target = 'update';
         $count=0;
         @endphp
         <div class="col-md-12 mt-4">
-            <h4 class="text-center my-4">Tugas yang tidak kamu dikerjakan</h4>
+            <h4 class="text-center my-4">Tugas yang belum/tidak kamu dikerjakan</h4>
             <div class="row">
                 @foreach ($tugas_yg_ga_selesai as $tgs)
+
+                @if ($tgs['semester'])
+
                 @foreach ($tgs['tugas'] as $tg)
+
                 @php
                 $count++;
                 @endphp
@@ -230,7 +236,11 @@ $target = 'update';
                     </div>
                 </div>
                 @endforeach
+
+                @endif
+
                 @endforeach
+
             </div>
             <p class="text-center mt-3"><strong>Total : {{ $count }} Tugas</strong></p>
         </div>

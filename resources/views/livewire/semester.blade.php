@@ -19,7 +19,7 @@ $target = 'update';
         </div>
 
         @if ($form)
-        <div class="col-md-12 my-2">
+        <div class="col-md-12 mt-3">
             @if ($form == 'add')
             <form wire:submit.prevent="store">
                 @else
@@ -44,18 +44,15 @@ $target = 'update';
         {{-- end of --}}
         @endif
 
-        <div class="col-md-12 mt-2">
+        <div class="col-md-12">
+
             {{-- button create --}}
             <div class="row my-2">
                 <div class="col-md-10 mb-2">
-                    <h5 class="card-title" for="semester-aktif">Semester</h5>
-                    @php
-                    if($aktif_smt) :
-                    @endphp
-                    <p class="mt-0 mb-2">Semester Aktif : <b>{{ $aktif_smt['semester_ke'] }}</b></p>
-                    @php
-                    endif
-                    @endphp
+                    <h5 class="card-title mb-0" for="semester-aktif">Semester</h5>
+                    @if ($aktif_smt)
+                    <small>Semester Sekarang : <strong>{{ $aktif_smt['semester_ke'] }}</strong></small>
+                    @endif
                 </div>
                 <div class="col-md-2 justify-content-end mb-3">
                     <x-button-create></x-button-create>
