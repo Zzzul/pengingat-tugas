@@ -24,7 +24,7 @@ class Semester extends Component
 
         $this->aktif_smt = ModelsSemester::select('id', 'semester_ke')->where('aktif_smt', 1)->first();
 
-        $semesters = ModelsSemester::paginate(5);
+        $semesters = ModelsSemester::orderBy('updated_at', 'desc')->paginate(5);
         return view('livewire.semester', compact('semesters'));
     }
 
@@ -97,6 +97,9 @@ class Semester extends Component
     {
         ModelsSemester::destroy($id);
         $this->showAlert('Semester berhasil dihapus.');
+
+        $this->hideForm();
+        $this->emptyItems();
     }
 
 
@@ -120,7 +123,6 @@ class Semester extends Component
 
     public function setAktifSmt($id)
     {
-
         if ($this->aktif_smt) {
             if ($id != $this->aktif_smt['id']) {
                 $this->updateAktifSmt($id);
@@ -140,6 +142,6 @@ class Semester extends Component
         $semester_aktif->aktif_smt = 1;
         $semester_aktif->save();
 
-        $this->showAlert('Semester aktif berhasil diubah.');
+        $this->showAlert("Semester sekarang berhasil diubah.");
     }
 }

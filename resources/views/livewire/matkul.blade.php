@@ -38,7 +38,7 @@ $target = 'update';
                                 <div class="col-3">
                                     <label for="sks">SKS</label>
                                     <input type="number" class="form-control @error('sks')is-invalid @enderror"
-                                        wire:model="sks" placeholder="SKS" id="sks" min="1" max="3">
+                                        wire:model="sks" placeholder="SKS" id="sks" min="1" max="6">
                                     @error('sks') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
 

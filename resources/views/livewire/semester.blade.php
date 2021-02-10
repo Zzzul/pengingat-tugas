@@ -29,8 +29,8 @@ $target = 'update';
                     <div class="row form-group">
                         <div class="col-md-3">
                             <label for="semester-ke">Semester</label>
-                            <input type="text" id="semester-ke"
-                                class="form-control @error('semester_ke')is-invalid @enderror" placeholder="5"
+                            <input type="number" id="semester-ke"
+                                class="form-control @error('semester_ke')is-invalid @enderror" placeholder="Semester"
                                 wire:model="semester_ke" aria-describedby="semester-ke" {{ $form ? 'autofocus' : '' }}>
                             @error('semester_ke') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
@@ -59,6 +59,9 @@ $target = 'update';
                 </div>
             </div>
 
+            <div class="form-group">
+                <input type="text" class="form-control my-2" placeholder="Cari...">
+            </div>
 
             <div class="table-responsive">
                 <table class="table table-hover table-striped table-sm">

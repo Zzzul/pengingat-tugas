@@ -115,9 +115,9 @@ $target = 'update';
                             <th>Mata Kuliah</th>
                             <th>Deskripsi</th>
                             <th>Batas Waktu</th>
-                            <th>Sisa Hari</th>
+                            <th>Sisa Waktu</th>
                             <th>Selesai</th>
-                            <th>Pertemuan</th>
+                            <th>Pertemuan Ke</th>
                             <th>Dibuat Pada</th>
                             <th>Terkahir Diubah</th>
                             <th>Aksi</th>
@@ -186,7 +186,7 @@ $target = 'update';
                             <td>{{ $tgs->updated_at->diffForHumans() }}</td>
                             <td>
                                 <button
-                                    class="mb-2 btn btn-outline-{{ $selisih != 'Batas waktu telah habis!' ? 'info' : 'warning' }} btn-sm mb-2"
+                                    class="mb-2 btn btn-outline-{{ $selisih == 'Batas waktu telah habis!' && !$tgs->selesai ? 'warning' : 'info' }} btn-sm mb-2"
                                     wire:click="show('{{ $tgs->id }}')">
                                     <i class="fas fa-edit"></i>
                                 </button>
@@ -211,8 +211,9 @@ $target = 'update';
         @php
         $count=0;
         @endphp
-        <div class="col-md-12 mt-4">
-            <h4 class="text-center my-4">Tugas yang belum/tidak kamu dikerjakan</h4>
+        <div class="col-md-12 mt-2">
+            <h4 class="text-center mt-4 mb-0">Tugas yang belum/tidak kamu dikerjakan</h4>
+            <h6 class="mb-4 mt-1 text-center">(Semester sekarang)</h6>
             <div class="row">
                 @foreach ($tugas_yg_ga_selesai as $tgs)
 

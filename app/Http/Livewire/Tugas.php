@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Matkul;
 use App\Models\Tugas as ModelsTugas;
+use DateTime;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -41,7 +42,7 @@ class Tugas extends Component
         // die;
 
 
-        $all_tugas = ModelsTugas::with('matkul')->orderBy('batas_waktu', 'desc')->paginate(5);
+        $all_tugas = ModelsTugas::with('matkul')->orderBy('selesai', 'asc')->paginate(5);
 
         // get all matkul
         $this->matkuls = Matkul::get();
@@ -112,23 +113,61 @@ class Tugas extends Component
     {
         $this->validate();
 
-        $matkul = ModelsTugas::find($id);
-        $matkul->matkul_id      = $this->matkul;
-        $matkul->deskripsi      = $this->deskripsi;
-        $matkul->batas_waktu    = $this->batas_waktu;
-        $matkul->selesai        = $this->selesai;
-        $matkul->pertemuan_ke   = $this->pertemuan_ke;
-        $matkul->save();
+        $tugas = ModelsTugas::find($id);
 
-        $this->hideForm();
+        $batasWaktu = new DateTime($this->batas_waktu);
+        $tglSelesai = new DateTime($this->selesai);
 
-        $this->showAlert('Mata Kuliah berhasil diubah.');
+        $batasWaktuCount = date('YmdHi', strtotime($this->batas_waktu));
+
+        $tglSelesaiCount =  date('YmdHi', strtotime($this->selesai));
+
+
+        if ($tglSelesaiCount > $batasWaktuCount) {
+            // jika waktu telah habis
+            $sisa = 0;
+        } elseif ($tglSelesai->diff($batasWaktu)->days == 0) {
+            // jika sisa beberapa jam
+            $sisa = 1;
+        } else {
+            $sisa = 1;
+        }
+
+        if ($sisa == 0) {
+            $this->alert('error', 'Tanggal selesai tidak boleh lebih besar dari batas waktu!', [
+                'position'          =>  'top',
+                'timer'             =>  2500,
+                'toast'             =>  true,
+                'showCancelButton'  =>  false,
+                'showConfirmButton' =>  false
+            ]);
+
+            $this->selesai = null;
+
+            $this->validate([
+                'selesai' => 'required'
+            ]);
+        } else {
+            $tugas->matkul_id      = $this->matkul;
+            $tugas->deskripsi      = $this->deskripsi;
+            $tugas->batas_waktu    = $this->batas_waktu;
+            $tugas->selesai        = $this->selesai;
+            $tugas->pertemuan_ke   = $this->pertemuan_ke;
+            $tugas->save();
+
+            $this->hideForm();
+
+            $this->showAlert('Mata Kuliah berhasil diubah.');
+        }
     }
 
     public function destroy($id)
     {
         ModelsTugas::destroy($id);
         $this->showAlert('Mata Kuliah berhasil dihapus.');
+
+        $this->hideForm();
+        $this->emptyItems();
     }
 
     public function noValidate()

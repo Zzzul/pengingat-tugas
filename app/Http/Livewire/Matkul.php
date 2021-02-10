@@ -25,7 +25,7 @@ class Matkul extends Component
 
     public function render()
     {
-        $matkuls = ModelsMatkul::with('semester')->paginate(5);
+        $matkuls = ModelsMatkul::with('semester')->orderBy('updated_at', 'desc')->paginate(5);
 
         // get all semesters
         $this->semesters = Semester::get();
@@ -114,6 +114,9 @@ class Matkul extends Component
     {
         ModelsMatkul::destroy($id);
         $this->showAlert('Mata Kuliah berhasil dihapus.');
+
+        $this->hideForm();
+        $this->emptyItems();
     }
 
 
