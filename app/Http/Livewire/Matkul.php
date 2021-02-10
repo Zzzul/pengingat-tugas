@@ -23,9 +23,28 @@ class Matkul extends Component
         'semester_id' => 'required',
     ];
 
+    public $search = '';
+    public $page = 1;
+
+    protected $queryString = [
+        'search' => ['except' => ''],
+        'page' => ['except' => 1],
+    ];
+
+    public function mount()
+    {
+        $this->fill(request()->only('search', 'page'));
+    }
+
     public function render()
     {
-        $matkuls = ModelsMatkul::with('semester')->orderBy('updated_at', 'desc')->paginate(5);
+        $matkuls = ModelsMatkul::where('name', 'like', '%' . $this->search . '%')
+            ->orWhere('sks', 'like', '%' . $this->search . '%')
+            ->orWhereHas('semester', function ($q) {
+                $q->where('semester_ke', 'like', '%' . $this->search . '%');
+            })
+            ->orderBy('updated_at', 'desc')
+            ->paginate(5);
 
         // get all semesters
         $this->semesters = Semester::get();

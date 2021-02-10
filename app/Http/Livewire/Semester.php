@@ -18,13 +18,26 @@ class Semester extends Component
         'semester_ke' => 'required',
     ];
 
+    public $search = '';
+    public $page = 1;
+
+    protected $queryString = [
+        'search' => ['except' => ''],
+        'page' => ['except' => 1],
+    ];
+
+    public function mount()
+    {
+        $this->fill(request()->only('search', 'page'));
+    }
+
     public function render()
     {
         $this->select_semesters = ModelsSemester::get();
 
         $this->aktif_smt = ModelsSemester::select('id', 'semester_ke')->where('aktif_smt', 1)->first();
 
-        $semesters = ModelsSemester::orderBy('updated_at', 'desc')->paginate(5);
+        $semesters = ModelsSemester::where('semester_ke', 'like', '%' . $this->search . '%')->orderBy('updated_at', 'desc')->paginate(5);
         return view('livewire.semester', compact('semesters'));
     }
 

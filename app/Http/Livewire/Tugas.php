@@ -24,6 +24,19 @@ class Tugas extends Component
         'pertemuan_ke'  => 'required',
     ];
 
+    public $search = '';
+    public $page = 1;
+
+    protected $queryString = [
+        'search' => ['except' => ''],
+        'page' => ['except' => 1],
+    ];
+
+    public function mount()
+    {
+        $this->fill(request()->only('search', 'page'));
+    }
+
     public function render()
     {
         $this->tugas_yg_ga_selesai = Matkul::with([
@@ -42,7 +55,14 @@ class Tugas extends Component
         // die;
 
 
-        $all_tugas = ModelsTugas::with('matkul')->orderBy('selesai', 'asc')->paginate(5);
+        $all_tugas = ModelsTugas::where('deskripsi', 'like', '%' . $this->search . '%')
+            ->orWhere('batas_waktu', 'like', '%' . $this->search . '%')
+            ->orWhere('selesai', 'like', '%' . $this->search . '%')
+            ->orWhereHas('matkul', function ($q) {
+                $q->where('name', 'like', '%' . $this->search . '%');
+            })
+            ->orderBy('selesai', 'asc')
+            ->paginate(5);
 
         // get all matkul
         $this->matkuls = Matkul::get();

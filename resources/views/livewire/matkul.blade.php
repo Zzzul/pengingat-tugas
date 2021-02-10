@@ -69,13 +69,14 @@ $target = 'update';
             {{-- button create --}}
             <div class="row my-2">
                 <div class="col-md-10 mb-2">
-                    <h5 class="card-title mb-0">Mata Kuliah</h5>
+                    <h5 class="card-title mb-0 pt-2">Mata Kuliah</h5>
                 </div>
                 <div class="col-md-2 justify-content-end mb-3">
                     <x-button-create></x-button-create>
                 </div>
             </div>
 
+            <x-search-input></x-search-input>
 
             <div class="table-responsive">
                 <table class="table table-hover table-striped table-sm">
@@ -91,7 +92,7 @@ $target = 'update';
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($matkuls as $key => $mk)
+                        @forelse ($matkuls as $key => $mk)
                         <tr class="table-active">
                             <td>{{ $matkuls->firstItem() + $key }}</td>
                             <td>{{ $mk->name }}</td>
@@ -109,7 +110,11 @@ $target = 'update';
                                 </button>
                             </td>
                         </tr>
-                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="7" class="text-center">Data tidak ada/ditemukan.</td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>

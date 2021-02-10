@@ -21,8 +21,6 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
 
-
-
     {{-- font awesome --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
         integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
@@ -184,7 +182,22 @@
     <x-livewire-alert::scripts />
     <script src="https://cdn.jsdelivr.net/gh/livewire/turbolinks@v0.1.x/dist/livewire-turbolinks.js"
         data-turbolinks-eval="false"></script>
+    <script>
+        var map = {};
+        onkeydown = onkeyup = function(e){
+            e = e || event;
 
+            map[e.keyCode] = e.type == 'keydown';
+
+            // 191 = /
+            if(map["191"]==true){
+                e.preventDefault();
+                var elm=document.getElementById('search');
+                elm.focus();
+            }
+
+        }
+    </script>
 </body>
 
 </body>

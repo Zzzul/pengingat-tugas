@@ -107,6 +107,9 @@ $target = 'update';
                 </div>
             </div>
 
+            <x-search-input></x-search-input>
+
+
             <div class="table-responsive">
                 <table class="table table-hover table-striped table-sm">
                     <thead>
@@ -124,7 +127,7 @@ $target = 'update';
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($all_tugas as $key => $tgs)
+                        @forelse ($all_tugas as $key => $tgs)
                         @php
                         $batasWaktu = new DateTime("$tgs->batas_waktu");
                         $today = new DateTime(date('Y-m-d'));
@@ -149,7 +152,6 @@ $target = 'update';
                         }
 
                         @endphp
-
                         <tr class="table-active">
                             <td>{{ $all_tugas->firstItem() + $key }}
                             </td>
@@ -196,7 +198,11 @@ $target = 'update';
                                 </button>
                             </td>
                         </tr>
-                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="10" class="text-center">Data tidak ada/ditemukan.</td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -225,7 +231,7 @@ $target = 'update';
                 $count++;
                 @endphp
                 <div class="col-md-4">
-                    <div class="card card-tugas mb-4">
+                    <div class="card card-tugas mb-3">
                         <div class="card-body">
                             <p class="m-0 matkul">Mata Kuliah :
                                 <strong>{{ $tgs->name }}</strong>

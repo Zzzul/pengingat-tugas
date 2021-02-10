@@ -59,9 +59,7 @@ $target = 'update';
                 </div>
             </div>
 
-            <div class="form-group">
-                <input type="text" class="form-control my-2" placeholder="Cari...">
-            </div>
+            <x-search-input></x-search-input>
 
             <div class="table-responsive">
                 <table class="table table-hover table-striped table-sm">
@@ -75,7 +73,7 @@ $target = 'update';
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($semesters as $key => $sms)
+                        @forelse ($semesters as $key => $sms)
                         <tr class="table-active">
                             <td>{{ $semesters->firstItem() + $key }}
                             </td>
@@ -99,7 +97,11 @@ $target = 'update';
                                 </button>
                             </td>
                         </tr>
-                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="5" class="text-center">Data tidak ada/ditemukan.</td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
