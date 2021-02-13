@@ -159,7 +159,7 @@
             </ul>
         </nav>
 
-        <main class="py-4">
+        <main class="pt-4 pb-0">
             @yield('content')
             {{ isset($slot) ? $slot : null }}
         </main>

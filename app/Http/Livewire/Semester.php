@@ -10,9 +10,10 @@ class Semester extends Component
 {
     use WithPagination;
 
+    public $paginate_per_page = 5;
     protected $paginationTheme = 'bootstrap';
 
-    public $form, $id_semester, $semester_ke, $aktif_smt, $select_semesters = [];
+    public $form, $id_semester, $semester_ke, $aktif_smt, $total_data, $select_semesters = [];
 
     protected $rules = [
         'semester_ke' => 'required',
@@ -37,7 +38,10 @@ class Semester extends Component
 
         $this->aktif_smt = ModelsSemester::select('id', 'semester_ke')->where('aktif_smt', 1)->first();
 
-        $semesters = ModelsSemester::where('semester_ke', 'like', '%' . $this->search . '%')->orderBy('updated_at', 'desc')->paginate(5);
+        //count total data semester
+        $this->total_data = ModelsSemester::count();
+
+        $semesters = ModelsSemester::where('semester_ke', 'like', '%' . $this->search . '%')->orderBy('updated_at', 'desc')->paginate($this->paginate_per_page);
         return view('livewire.semester', compact('semesters'));
     }
 

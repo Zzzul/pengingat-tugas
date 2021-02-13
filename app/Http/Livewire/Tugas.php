@@ -14,7 +14,9 @@ class Tugas extends Component
 
     use WithPagination;
 
-    public $form, $id_tugas, $deskripsi, $batas_waktu, $tugas, $selesai, $pertemuan_ke, $matkul = '', $matkuls, $tugas_yg_ga_selesai;
+    public $form, $id_tugas, $deskripsi, $batas_waktu, $tugas, $selesai, $pertemuan_ke, $total_data, $matkul = '', $matkuls, $tugas_yg_ga_selesai;
+
+    public $paginate_per_page = 5;
 
     protected $paginationTheme = 'bootstrap';
 
@@ -55,32 +57,21 @@ class Tugas extends Component
         // echo json_encode($this->tugas_yg_ga_selesai);
         // die;
 
-
-        // $all_tugas = ModelsTugas::with('matkul')
-        //     ->where('deskripsi', 'like', '%' . $this->search . '%')
-        //     ->orWhere('batas_waktu', 'like', '%' . $this->search . '%')
-        //     ->orWhere('selesai', 'like', '%' . $this->search . '%')
-        //     ->orWhereHas('matkul', function ($q) {
-        //         $q->where('name', 'like', '%' . $this->search . '%');
-        //     })
-        //     ->orderBy('selesai', 'asc')
-        //     ->paginate(5);
-
-        $all_tugas = DB::table('tugas')
-            ->select('*')
-            ->join('matkuls', 'tugas.matkul_id', '=', 'matkuls.id')
+        $all_tugas = ModelsTugas::with('matkul')
             ->where('deskripsi', 'like', '%' . $this->search . '%')
             ->orWhere('batas_waktu', 'like', '%' . $this->search . '%')
             ->orWhere('selesai', 'like', '%' . $this->search . '%')
-            ->orWhere('name', 'like', '%' . $this->search . '%')
+            ->orWhereHas('matkul', function ($q) {
+                $q->where('name', 'like', '%' . $this->search . '%');
+            })
             ->orderBy('selesai', 'asc')
-            ->paginate(5);
-
-        // echo json_encode($all_tugas);
-        // die;
+            ->paginate($this->paginate_per_page);
 
         // get all matkul
         $this->matkuls = Matkul::get();
+
+        //count total data tuga
+        $this->total_data = ModelsTugas::count();
 
         return view('livewire.tugas', compact('all_tugas'));
     }

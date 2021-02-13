@@ -109,7 +109,9 @@ $target = 'update';
 
             <x-search-input></x-search-input>
 
-
+            @php
+            $data_yg_ditampilkan = 0;
+            @endphp
             <div class="table-responsive">
                 <table class="table table-hover table-striped table-sm">
                     <thead>
@@ -155,8 +157,8 @@ $target = 'update';
                         <tr class="table-active">
                             <td>{{ $all_tugas->firstItem() + $key }}
                             </td>
-                            <td>{{ $tgs->name }}</td>
-                            <td>{!! nl2br($tgs->deskripsi) !!}</td>
+                            <td>{{ $tgs['matkul']->name }}</td>
+                            <td>{{ nl2br($tgs->deskripsi) }}</td>
                             <td>{{ date('d F Y - H:i ', strtotime($tgs->batas_waktu)) }}</td>
                             <td>
                                 {!! $selisih !!}
@@ -184,8 +186,8 @@ $target = 'update';
                                 @endphp
                             </td>
                             <td>{{ $tgs->pertemuan_ke }}</td>
-                            <td>{{ $tgs->created_at }}</td>
-                            <td>{{ $tgs->updated_at }}</td>
+                            <td>{{ $tgs->created_at->diffForHumans() }}</td>
+                            <td>{{ $tgs->updated_at->diffForHumans() }}</td>
                             <td>
                                 <button
                                     class="mb-2 btn btn-outline-{{ $selisih == 'Batas waktu telah habis!' && !$tgs->selesai ? 'warning' : 'info' }} btn-sm mb-2"
@@ -198,6 +200,9 @@ $target = 'update';
                                 </button>
                             </td>
                         </tr>
+                        @php
+                        $data_yg_ditampilkan = $loop->index+1;
+                        @endphp
                         @empty
                         <tr>
                             <td colspan="10" class="text-center">Data tidak ada/ditemukan.</td>
@@ -206,17 +211,43 @@ $target = 'update';
                     </tbody>
                 </table>
             </div>
+        </div>
+        {{-- end of col--}}
+    </div>
+    {{-- end of row--}}
 
-            <div class="d-flex justify-content-end m-0">
+    <div class="d-none d-md-block">
+        <div class="d-flex justify-content-between">
+            <div>
+                Menampilkan {{  $data_yg_ditampilkan .' dari total '. $total_data}} data
+            </div>
+            <div>
                 {{ $all_tugas->links() }}
             </div>
         </div>
-        {{-- end of col--}}
+    </div>
+    {{-- d-none d-md-block --}}
 
-        {{-- tugas yg ga dikerjain --}}
-        @php
-        $count=0;
-        @endphp
+    <div class="d-sm-block d-md-none">
+        <div class="row justify-content-center">
+            <div class="col-sm-12 mb-2 text-center">
+                Menampilkan {{  $data_yg_ditampilkan .' dari total '. $total_data}} data
+            </div>
+            <div class="col-sm-12">
+                <div class="d-flex justify-content-center m-0">
+                    {{ $all_tugas->links() }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- d-sm-block d-md-none --}}
+
+
+    {{-- tugas yg ga dikerjain --}}
+    @php
+    $count=0;
+    @endphp
+    <div class="row">
         <div class="col-md-12 mt-2">
             <h4 class="text-center mt-4 mb-0">Tugas yang belum/tidak kamu dikerjakan</h4>
             <h6 class="mb-4 mt-1 text-center">(Semester sekarang)</h6>
@@ -252,6 +283,7 @@ $target = 'update';
             <p class="text-center mt-3"><strong>Total : {{ $count }} Tugas</strong></p>
         </div>
     </div>
-    {{-- end of row--}}
+
+
 </div>
 {{-- end of container--}}

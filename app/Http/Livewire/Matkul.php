@@ -13,8 +13,8 @@ class Matkul extends Component
 {
     use WithPagination;
 
-    public $form, $id_matkul, $name, $sks, $semesters, $semester_id = '';
-
+    public $form, $id_matkul, $name, $sks, $semesters, $total_data, $semester_id = '';
+    public $paginate_per_page = 5;
     protected $paginationTheme = 'bootstrap';
 
     protected $rules = [
@@ -45,10 +45,14 @@ class Matkul extends Component
                 $q->where('semester_ke', 'like', '%' . $this->search . '%');
             })
             ->orderBy('updated_at', 'desc')
-            ->paginate(5);
+            ->paginate($this->paginate_per_page);
 
         // get all semesters
         $this->semesters = Semester::get();
+
+        //count total data matkul
+        $this->total_data = ModelsMatkul::count();
+
         return view('livewire.matkul', compact('matkuls'));
     }
 

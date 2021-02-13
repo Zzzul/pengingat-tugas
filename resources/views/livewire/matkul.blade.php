@@ -92,6 +92,9 @@ $target = 'update';
                         </tr>
                     </thead>
                     <tbody>
+                        @php
+                        $data_yg_ditampilkan = 0;
+                        @endphp
                         @forelse ($matkuls as $key => $mk)
                         <tr class="table-active">
                             <td>{{ $matkuls->firstItem() + $key }}</td>
@@ -110,6 +113,9 @@ $target = 'update';
                                 </button>
                             </td>
                         </tr>
+                        @php
+                        $data_yg_ditampilkan = $loop->index+1;
+                        @endphp
                         @empty
                         <tr>
                             <td colspan="7" class="text-center">Data tidak ada/ditemukan.</td>
@@ -118,13 +124,36 @@ $target = 'update';
                     </tbody>
                 </table>
             </div>
-
-            <div class="d-flex justify-content-end m-0">
-                {{ $matkuls->links() }}
-            </div>
         </div>
         {{-- end of col--}}
     </div>
     {{-- end of row--}}
+
+    <div class="d-none d-md-block">
+        <div class="d-flex justify-content-between">
+            <div>
+                Menampilkan {{  $data_yg_ditampilkan .' dari total '. $total_data}} data
+            </div>
+            <div>
+                {{ $matkuls->links() }}
+            </div>
+        </div>
+    </div>
+    {{-- d-none d-md-block --}}
+
+    <div class="d-sm-block d-md-none">
+        <div class="row justify-content-center">
+            <div class="col-sm-12 mb-2 text-center">
+                Menampilkan {{  $data_yg_ditampilkan .' dari total '. $total_data}} data
+            </div>
+            <div class="col-sm-12">
+                <div class="d-flex justify-content-center m-0">
+                    {{ $matkuls->links() }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- d-sm-block d-md-none --}}
+
 </div>
 {{-- end of container--}}
