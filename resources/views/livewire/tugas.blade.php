@@ -155,7 +155,7 @@ $target = 'update';
                         <tr class="table-active">
                             <td>{{ $all_tugas->firstItem() + $key }}
                             </td>
-                            <td>{{ $tgs['matkul']->name }}</td>
+                            <td>{{ $tgs->name }}</td>
                             <td>{!! nl2br($tgs->deskripsi) !!}</td>
                             <td>{{ date('d F Y - H:i ', strtotime($tgs->batas_waktu)) }}</td>
                             <td>
@@ -184,8 +184,8 @@ $target = 'update';
                                 @endphp
                             </td>
                             <td>{{ $tgs->pertemuan_ke }}</td>
-                            <td>{{ $tgs->created_at->diffForHumans()  }}</td>
-                            <td>{{ $tgs->updated_at->diffForHumans() }}</td>
+                            <td>{{ $tgs->created_at }}</td>
+                            <td>{{ $tgs->updated_at }}</td>
                             <td>
                                 <button
                                     class="mb-2 btn btn-outline-{{ $selisih == 'Batas waktu telah habis!' && !$tgs->selesai ? 'warning' : 'info' }} btn-sm mb-2"

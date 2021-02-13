@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\Matkul;
 use App\Models\Tugas as ModelsTugas;
 use DateTime;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -55,15 +56,28 @@ class Tugas extends Component
         // die;
 
 
-        $all_tugas = ModelsTugas::where('deskripsi', 'like', '%' . $this->search . '%')
+        // $all_tugas = ModelsTugas::with('matkul')
+        //     ->where('deskripsi', 'like', '%' . $this->search . '%')
+        //     ->orWhere('batas_waktu', 'like', '%' . $this->search . '%')
+        //     ->orWhere('selesai', 'like', '%' . $this->search . '%')
+        //     ->orWhereHas('matkul', function ($q) {
+        //         $q->where('name', 'like', '%' . $this->search . '%');
+        //     })
+        //     ->orderBy('selesai', 'asc')
+        //     ->paginate(5);
+
+        $all_tugas = DB::table('tugas')
+            ->select('*')
+            ->join('matkuls', 'tugas.matkul_id', '=', 'matkuls.id')
+            ->where('deskripsi', 'like', '%' . $this->search . '%')
             ->orWhere('batas_waktu', 'like', '%' . $this->search . '%')
             ->orWhere('selesai', 'like', '%' . $this->search . '%')
-            ->with('matkul')
-            ->orWhereHas('matkul', function ($q) {
-                $q->where('name', 'like', '%' . $this->search . '%');
-            })
+            ->orWhere('name', 'like', '%' . $this->search . '%')
             ->orderBy('selesai', 'asc')
             ->paginate(5);
+
+        // echo json_encode($all_tugas);
+        // die;
 
         // get all matkul
         $this->matkuls = Matkul::get();
@@ -155,19 +169,15 @@ class Tugas extends Component
         }
 
         if ($sisa == 0) {
-            $this->alert('error', 'Tanggal selesai tidak boleh lebih besar dari batas waktu!', [
-                'position'          =>  'top',
-                'timer'             =>  2500,
-                'toast'             =>  true,
-                'showCancelButton'  =>  false,
-                'showConfirmButton' =>  false
-            ]);
 
             $this->selesai = null;
 
-            $this->validate([
-                'selesai' => 'required'
-            ]);
+            $this->validate(
+                [
+                    'selesai' => 'required'
+                ],
+                ['required' => 'Tanggal selesai tidak boleh lebih besar dari batas waktu!']
+            );
         } else {
             $tugas->matkul_id      = $this->matkul;
             $tugas->deskripsi      = $this->deskripsi;
