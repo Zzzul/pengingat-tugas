@@ -40,6 +40,7 @@ class Matkul extends Component
     {
         $matkuls = ModelsMatkul::where('name', 'like', '%' . $this->search . '%')
             ->orWhere('sks', 'like', '%' . $this->search . '%')
+            ->with('semester')
             ->orWhereHas('semester', function ($q) {
                 $q->where('semester_ke', 'like', '%' . $this->search . '%');
             })

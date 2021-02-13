@@ -58,6 +58,7 @@ class Tugas extends Component
         $all_tugas = ModelsTugas::where('deskripsi', 'like', '%' . $this->search . '%')
             ->orWhere('batas_waktu', 'like', '%' . $this->search . '%')
             ->orWhere('selesai', 'like', '%' . $this->search . '%')
+            ->with('matkul')
             ->orWhereHas('matkul', function ($q) {
                 $q->where('name', 'like', '%' . $this->search . '%');
             })
