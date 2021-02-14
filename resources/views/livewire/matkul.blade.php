@@ -71,7 +71,7 @@ $target = 'update';
                 <div class="col-md-10 mb-2">
                     <h5 class="card-title mb-0 pt-2">Mata Kuliah</h5>
                 </div>
-                <div class="col-md-2 justify-content-end mb-3">
+                <div class="col-md-2 justify-content-end mb-1">
                     <x-button-create></x-button-create>
                 </div>
             </div>
@@ -92,9 +92,6 @@ $target = 'update';
                         </tr>
                     </thead>
                     <tbody>
-                        @php
-                        $data_yg_ditampilkan = 0;
-                        @endphp
                         @forelse ($matkuls as $key => $mk)
                         <tr class="table-active">
                             <td>{{ $matkuls->firstItem() + $key }}</td>
@@ -132,7 +129,9 @@ $target = 'update';
     <div class="d-none d-md-block">
         <div class="d-flex justify-content-between">
             <div>
-                Menampilkan {{  $data_yg_ditampilkan .' dari total '. $total_data}} data
+                Menampilkan
+                {{  $matkuls->firstItem() .' sampai '. $matkuls->lastItem()  .' dari total '. $matkuls->total() }}
+                data
             </div>
             <div>
                 {{ $matkuls->links() }}
@@ -144,7 +143,9 @@ $target = 'update';
     <div class="d-sm-block d-md-none">
         <div class="row justify-content-center">
             <div class="col-sm-12 mb-2 text-center">
-                Menampilkan {{  $data_yg_ditampilkan .' dari total '. $total_data}} data
+                Menampilkan
+                {{  $matkuls->firstItem() .' sampai '. $matkuls->lastItem()  .' dari total '. $matkuls->total() }}
+                data
             </div>
             <div class="col-sm-12">
                 <div class="d-flex justify-content-center m-0">

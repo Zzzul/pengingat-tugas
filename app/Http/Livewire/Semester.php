@@ -13,7 +13,7 @@ class Semester extends Component
     public $paginate_per_page = 5;
     protected $paginationTheme = 'bootstrap';
 
-    public $form, $id_semester, $semester_ke, $aktif_smt, $total_data, $select_semesters = [];
+    public $form, $id_semester, $semester_ke, $aktif_smt, $select_semesters = [];
 
     protected $rules = [
         'semester_ke' => 'required',
@@ -37,9 +37,6 @@ class Semester extends Component
         $this->select_semesters = ModelsSemester::get();
 
         $this->aktif_smt = ModelsSemester::select('id', 'semester_ke')->where('aktif_smt', 1)->first();
-
-        //count total data semester
-        $this->total_data = ModelsSemester::count();
 
         $semesters = ModelsSemester::where('semester_ke', 'like', '%' . $this->search . '%')->orderBy('updated_at', 'desc')->paginate($this->paginate_per_page);
         return view('livewire.semester', compact('semesters'));

@@ -33,7 +33,7 @@
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm d-none d-md-block">
             <div class="container">
-                <a class="navbar-brand{{ request()->is('home') ? ' active' : '' }}" href="{{ url('home') }}">
+                <a class="navbar-brand{{ request()->is('/') ? ' active' : '' }}" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
@@ -105,7 +105,7 @@
         <nav class="navbar navbar-light bg-white navbar-expand fixed-bottom d-md-none d-lg-none d-xl-none">
             <ul class="navbar-nav nav-justified w-100">
                 <li class="nav-item">
-                    <a class="mb-0 pb-0 nav-link{{ request()->is('home') ? ' active' : '' }}" href="home">
+                    <a class="mb-0 pb-0 nav-link{{ request()->is('/') ? ' active' : '' }}" href="/">
                         <svg width="1.3em" height="1.3em" viewBox="0 0 16 16" class="bi bi-house" fill="currentColor"
                             xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd"

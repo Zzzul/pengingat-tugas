@@ -102,16 +102,14 @@ $target = 'update';
                     <h5 class="card-title mb-0">Tugas</h5>
                     <small>Tanggal Sekarang : {{ date('d-F-Y') }}</small>
                 </div>
-                <div class="col-md-2 justify-content-end mb-3">
+                <div class="col-md-2 justify-content-end mb-1">
                     <x-button-create></x-button-create>
                 </div>
             </div>
 
             <x-search-input></x-search-input>
 
-            @php
-            $data_yg_ditampilkan = 0;
-            @endphp
+
             <div class="table-responsive">
                 <table class="table table-hover table-striped table-sm">
                     <thead>
@@ -157,7 +155,7 @@ $target = 'update';
                         <tr class="table-active">
                             <td>{{ $all_tugas->firstItem() + $key }}
                             </td>
-                            <td>{{ $tgs->name }}</td>
+                            <td>{{ $tgs['matkul']->name }}</td>
                             <td>{{ nl2br($tgs->deskripsi) }}</td>
                             <td>{{ date('d F Y - H:i ', strtotime($tgs->batas_waktu)) }}</td>
                             <td>
@@ -186,8 +184,8 @@ $target = 'update';
                                 @endphp
                             </td>
                             <td>{{ $tgs->pertemuan_ke }}</td>
-                            <td>{{ $tgs->created_at }}</td>
-                            <td>{{ $tgs->updated_at }}</td>
+                            <td>{{ $tgs->created_at->diffForHumans() }}</td>
+                            <td>{{ $tgs->updated_at->diffForHumans() }}</td>
                             <td>
                                 <button
                                     class="mb-2 btn btn-outline-{{ $selisih == 'Batas waktu telah habis!' && !$tgs->selesai ? 'warning' : 'info' }} btn-sm mb-2"
@@ -219,7 +217,9 @@ $target = 'update';
     <div class="d-none d-md-block">
         <div class="d-flex justify-content-between">
             <div>
-                Menampilkan {{ $data_yg_ditampilkan .' dari total '. $total_data }} data
+                Menampilkan
+                {{  $all_tugas->firstItem() .' sampai '. $all_tugas->lastItem()  .' dari total '. $all_tugas->total() }}
+                data
             </div>
             <div>
                 {{ $all_tugas->links() }}
@@ -231,7 +231,9 @@ $target = 'update';
     <div class="d-sm-block d-md-none">
         <div class="row justify-content-center">
             <div class="col-sm-12 mb-2 text-center">
-                Menampilkan {{  $data_yg_ditampilkan .' dari total '. $total_data}} data
+                Menampilkan
+                {{  $all_tugas->firstItem() .' sampai '. $all_tugas->lastItem()  .' dari total '. $all_tugas->total() }}
+                data
             </div>
             <div class="col-sm-12">
                 <div class="d-flex justify-content-center m-0">

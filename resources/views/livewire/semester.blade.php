@@ -54,7 +54,7 @@ $target = 'update';
                     <small>Semester Sekarang : <strong>{{ $aktif_smt['semester_ke'] }}</strong></small>
                     @endif
                 </div>
-                <div class="col-md-2 justify-content-end mb-3">
+                <div class="col-md-2 justify-content-end mb-1">
                     <x-button-create></x-button-create>
                 </div>
             </div>
@@ -73,9 +73,6 @@ $target = 'update';
                         </tr>
                     </thead>
                     <tbody>
-                        @php
-                        $data_yg_ditampilkan = 0;
-                        @endphp
                         @forelse ($semesters as $key => $sms)
                         <tr class="table-active">
                             <td>{{ $semesters->firstItem() + $key }}
@@ -120,7 +117,9 @@ $target = 'update';
     <div class="d-none d-md-block">
         <div class="d-flex justify-content-between">
             <div>
-                Menampilkan {{  $data_yg_ditampilkan .' dari total '. $total_data}} data
+                Menampilkan
+                {{  $semesters->firstItem() .' sampai '. $semesters->lastItem()  .' dari total '. $semesters->total() }}
+                data
             </div>
             <div>
                 {{ $semesters->links() }}
@@ -132,7 +131,9 @@ $target = 'update';
     <div class="d-sm-block d-md-none">
         <div class="row justify-content-center">
             <div class="col-sm-12 mb-2 text-center">
-                Menampilkan {{  $data_yg_ditampilkan .' dari total '. $total_data}} data
+                Menampilkan
+                {{  $semesters->firstItem() .' sampai '. $semesters->lastItem()  .' dari total '. $semesters->total() }}
+                data
             </div>
             <div class="col-sm-12">
                 <div class="d-flex justify-content-center m-0">
