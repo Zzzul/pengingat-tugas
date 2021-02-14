@@ -57,13 +57,23 @@ class Tugas extends Component
         // echo json_encode($this->tugas_yg_ga_selesai);
         // die;
 
-        $all_tugas = ModelsTugas::with('matkul')
+        // $all_tugas = ModelsTugas::with('matkul')
+        //     ->where('deskripsi', 'like', '%' . $this->search . '%')
+        //     ->orWhere('batas_waktu', 'like', '%' . $this->search . '%')
+        //     ->orWhere('selesai', 'like', '%' . $this->search . '%')
+        //     ->orWhereHas('matkul', function ($q) {
+        //         $q->where('name', 'like', '%' . $this->search . '%');
+        //     })
+        //     ->orderBy('selesai', 'asc')
+        //     ->paginate($this->paginate_per_page);
+
+        $all_tugas = DB::table('tugas')
+            ->select('*')
+            ->join('matkuls', 'tugas.matkul_id', '=', 'matkuls.id')
             ->where('deskripsi', 'like', '%' . $this->search . '%')
             ->orWhere('batas_waktu', 'like', '%' . $this->search . '%')
             ->orWhere('selesai', 'like', '%' . $this->search . '%')
-            ->orWhereHas('matkul', function ($q) {
-                $q->where('name', 'like', '%' . $this->search . '%');
-            })
+            ->orWhere('name', 'like', '%' . $this->search . '%')
             ->orderBy('selesai', 'asc')
             ->paginate($this->paginate_per_page);
 
