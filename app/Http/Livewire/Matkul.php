@@ -38,8 +38,7 @@ class Matkul extends Component
 
     public function render()
     {
-        $matkuls = ModelsMatkul::with('semester')
-            ->where('name', 'like', '%' . $this->search . '%')
+        $matkuls = ModelsMatkul::where('name', 'like', '%' . $this->search . '%')
             ->orWhere('sks', 'like', '%' . $this->search . '%')
             ->orWhereHas('semester', function ($q) {
                 $q->where('semester_ke', 'like', '%' . $this->search . '%');

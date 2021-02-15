@@ -55,7 +55,8 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link{{ request()->is('matkul') ? ' active' : '' }}" href="matkul">Mata
+                            <a class="nav-link{{ request()->is('mata-kuliah') ? ' active' : '' }}"
+                                href="mata-kuliah">Mata
                                 Kuliah</a>
                         </li>
 
@@ -133,7 +134,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="mb-0 pb-0 nav-link{{ request()->is('matkul') ? ' active' : '' }}" href="matkul">
+                    <a class="mb-0 pb-0 nav-link{{ request()->is('mata-kuliah') ? ' active' : '' }}" href="mata-kuliah">
                         <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" fill="currentColor"
                             class="bi bi-book" viewBox="0 0 16 16">
                             <path

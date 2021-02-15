@@ -23,5 +23,5 @@ Route::get('/', function () {
 Route::view('home', 'home');
 
 Route::get('semester', Semester::class);
-Route::get('matkul', Matkul::class);
+Route::get('mata-kuliah', Matkul::class);
 Route::get('tugas', Tugas::class);

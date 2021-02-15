@@ -57,8 +57,7 @@ class Tugas extends Component
         // echo json_encode($this->tugas_yg_ga_selesai);
         // die;
 
-        $all_tugas = ModelsTugas::with('matkul')
-            ->where('deskripsi', 'like', '%' . $this->search . '%')
+        $all_tugas = ModelsTugas::where('deskripsi', 'like', '%' . $this->search . '%')
             ->orWhere('batas_waktu', 'like', '%' . $this->search . '%')
             ->orWhere('selesai', 'like', '%' . $this->search . '%')
             ->orWhereHas('matkul', function ($q) {

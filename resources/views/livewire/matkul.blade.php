@@ -127,11 +127,13 @@ $target = 'update';
     {{-- end of row--}}
 
     <div class="d-none d-md-block">
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between text-muted">
             <div>
+                @if ($matkuls->total())
                 Menampilkan
                 {{  $matkuls->firstItem() .' sampai '. $matkuls->lastItem()  .' dari total '. $matkuls->total() }}
                 data
+                @endif
             </div>
             <div>
                 {{ $matkuls->links() }}
@@ -142,10 +144,12 @@ $target = 'update';
 
     <div class="d-sm-block d-md-none">
         <div class="row justify-content-center">
-            <div class="col-sm-12 mb-2 text-center">
+            <div class="col-sm-12 mb-2 text-center text-muted">
+                @if ($matkuls->total())
                 Menampilkan
                 {{  $matkuls->firstItem() .' sampai '. $matkuls->lastItem()  .' dari total '. $matkuls->total() }}
                 data
+                @endif
             </div>
             <div class="col-sm-12">
                 <div class="d-flex justify-content-center m-0">

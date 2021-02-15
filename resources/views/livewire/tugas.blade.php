@@ -31,10 +31,10 @@ $target = 'update';
 
                     <div class="row form-group">
                         <div class="col-md-12">
-                            <div class="row form-group">
-                                <div class="col-3">
-                                    <label for="matkul-id">Mata Kuliah</label>
-                                    <select class="form-control @error('matkul')is-invalid @enderror"
+                            <div class="row form-group mb-0">
+                                <div class="col-md-{{ $form != 'add' ? '3' : '5' }}">
+                                    <label for="matkul-id" class="mb-1">Mata Kuliah</label>
+                                    <select class="form-control mb-2 @error('matkul')is-invalid @enderror"
                                         wire:model="matkul" id="matkul-id">
                                         <option value="" disabled>--Pilih Mata Kuliah--</option>
                                         @foreach ($matkuls as $mk)
@@ -44,37 +44,40 @@ $target = 'update';
                                     @error('matkul') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
 
-                                <div class="col-3">
-                                    <label for="batas_waktu">Batas Waktu</label>
-                                    <input type="datetime-local" id="datetimepicker"
-                                        class="form-control @error('batas_waktu')is-invalid @enderror"
+                                <div class="col-md-{{ $form != 'add' ? '3' : '4' }}">
+                                    <label for="batas_waktu" class="mb-1">Batas Waktu</label>
+                                    <input type="datetime-local" id="batas_waktu"
+                                        class="form-control mb-2  @error('batas_waktu')is-invalid @enderror"
                                         wire:model="batas_waktu" id="batas_waktu">
                                     @error('batas_waktu') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
 
-                                <div class="col-3">
-                                    <label for="pertemuan_ke">Pertemuan Ke</label>
-                                    <input type="number" class="form-control @error('pertemuan_ke')is-invalid @enderror"
+                                <div class="col-md-3">
+                                    <label for="pertemuan_ke" class="mb-1">Pertemuan Ke</label>
+                                    <input type="number"
+                                        class="form-control mb-2  @error('pertemuan_ke')is-invalid @enderror"
                                         wire:model="pertemuan_ke" placeholder="Pertemuan Ke" id="pertemuan_ke" min="1"
-                                        max="16">
+                                        max="18">
                                     @error('pertemuan_ke') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
 
-                                <div class="col-3">
-                                    <label for="selesai">Selesai Pada</label>
-                                    <input type="{{ $form == 'add' ? 'text' : 'datetime-local' }}"
-                                        class="form-control @error('selesai')is-invalid @enderror" wire:model="selesai"
-                                        placeholder="{{ $form == 'add' ? 'Terbuka ketika edit' : $selesai }}"
-                                        {{ $form == 'add' ? 'readonly' : '' }}>
-                                    @error('selesai') <span class="text-danger">{{ $message }}</span> @enderror
+                                @if ($form != 'add')
+                                <div class="col-md-3">
+                                    <label for="selesai" class="mb-1">Selesai Pada</label>
+                                    <input type="datetime-local" id="selesai"
+                                        class="form-control mb-2  @error('selesai')is-invalid @enderror"
+                                        wire:model="selesai" placeholder="{{ $selesai }}">
+                                    @error('selesai') <span class="text-danger mt-0 mb-5">{{ $message }}</span>
+                                    @enderror
                                 </div>
+                                @endif
                             </div>
                             {{-- end of row group --}}
 
-                            <div class="row">
+                            <div class="row mt-0">
                                 <div class="col-md-10">
                                     <div class="form-group">
-                                        <label for="deskripsi">Deskripsi</label>
+                                        <label for="deskripsi" class="mb-1">Deskripsi</label>
                                         <textarea class="form-control @error('deskripsi')is-invalid @enderror"
                                             wire:model="deskripsi" placeholder="Deskripsi" id="deskripsi" rows="3"
                                             aria-setsize="false"></textarea>
@@ -82,7 +85,7 @@ $target = 'update';
                                     </div>
                                 </div>
 
-                                <div class="col-md-2">
+                                <div class="col-md-2 mt-0">
                                     <x-button-submit target="{{ $target }}">
                                     </x-button-submit>
                                 </div>
@@ -100,7 +103,7 @@ $target = 'update';
             <div class="row my-2">
                 <div class="col-md-10 mb-2">
                     <h5 class="card-title mb-0">Tugas</h5>
-                    <small>Tanggal Sekarang : {{ date('d-F-Y') }}</small>
+                    <small> <b>Tanggal Sekarang : {{ date('d F Y') }}</b> </small>
                 </div>
                 <div class="col-md-2 justify-content-end mb-1">
                     <x-button-create></x-button-create>
@@ -215,11 +218,13 @@ $target = 'update';
     {{-- end of row--}}
 
     <div class="d-none d-md-block">
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between text-muted">
             <div>
+                @if ($all_tugas->total())
                 Menampilkan
                 {{  $all_tugas->firstItem() .' sampai '. $all_tugas->lastItem()  .' dari total '. $all_tugas->total() }}
                 data
+                @endif
             </div>
             <div>
                 {{ $all_tugas->links() }}
@@ -230,10 +235,12 @@ $target = 'update';
 
     <div class="d-sm-block d-md-none">
         <div class="row justify-content-center">
-            <div class="col-sm-12 mb-2 text-center">
+            <div class="col-sm-12 mb-2 text-center text-muted">
+                @if ($all_tugas->total())
                 Menampilkan
                 {{  $all_tugas->firstItem() .' sampai '. $all_tugas->lastItem()  .' dari total '. $all_tugas->total() }}
                 data
+                @endif
             </div>
             <div class="col-sm-12">
                 <div class="d-flex justify-content-center m-0">
@@ -267,10 +274,10 @@ $target = 'update';
                     <div class="card card-tugas mb-3">
                         <div class="card-body">
                             <p class="m-0 matkul">Mata Kuliah :
-                                <strong>{{ $tgs->name }}</strong>
+                                <b>{{ $tgs->name }}</b>
                             </p>
                             <p class="m-0">Pertemuan Ke :
-                                <strong>{{ $tg->pertemuan_ke }}</strong>
+                                <b>{{ $tg->pertemuan_ke }}</b>
                             </p>
                         </div>
                     </div>
