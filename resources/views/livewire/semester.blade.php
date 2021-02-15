@@ -108,10 +108,12 @@ $target = 'update';
                     </tbody>
                 </table>
             </div>
+
         </div>
         {{-- end of col--}}
     </div>
     {{-- end of row--}}
+
 
 
     <div class="d-none d-md-block">
@@ -143,5 +145,8 @@ $target = 'update';
         </div>
     </div>
     {{-- d-sm-block d-md-none --}}
+
+
+    <livewire:semesters-table />
 </div>
 {{-- end of container--}}
