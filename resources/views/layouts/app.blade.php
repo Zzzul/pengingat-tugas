@@ -174,7 +174,7 @@
                     <p class="text-center">Created by <a href="https://github.com/zzzul/" class="text-info"
                             target="blank">Mohammad
                             Zulfahmi</a> Made
-                        with <i class="fas fa-heart-broken text-danger"></i></p>
+                        with 🖤</p>
                 </div>
             </div>
             {{-- end of row --}}
