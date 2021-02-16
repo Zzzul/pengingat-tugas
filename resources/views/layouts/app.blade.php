@@ -170,8 +170,10 @@
             <div class="row justify-content-md-center">
                 <div class="col-md-12">
                     <hr>
-                    <p class="text-center">&copy; Copyright {{ date('Y') }}. Made
-                        with 🖤</p>
+                    <p class="text-center">Created by <a href="https://github.com/zzzul/" class="text-info"
+                            target="blank">Mohammad
+                            Zulfahmi</a> Made
+                        with 🖤
                 </div>
             </div>
             {{-- end of row --}}
