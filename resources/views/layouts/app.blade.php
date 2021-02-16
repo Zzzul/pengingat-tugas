@@ -165,24 +165,25 @@
             {{ isset($slot) ? $slot : null }}
         </main>
     </div>
-
     <footer class="mb-5">
         <div class="container">
             <div class="row justify-content-md-center">
                 <div class="col-md-12">
                     <hr>
-                    <p class="text-center">Created by <a href="https://github.com/zzzul/" class="text-info"
-                            target="blank">Mohammad
-                            Zulfahmi</a> Made
+                    <p class="text-center">&copy; Copyright {{ date('Y') }}. Made
                         with 🖤</p>
                 </div>
             </div>
             {{-- end of row --}}
         </div>
     </footer>
+
     <br>
     @livewireScripts
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <x-livewire-alert::scripts />
+
     <script src="https://cdn.jsdelivr.net/gh/livewire/turbolinks@v0.1.x/dist/livewire-turbolinks.js"
         data-turbolinks-eval="false"></script>
     <script>

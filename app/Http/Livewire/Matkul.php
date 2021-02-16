@@ -17,18 +17,23 @@ class Matkul extends Component
     public $paginate_per_page = 5;
     protected $paginationTheme = 'bootstrap';
 
+    public $search = '';
+    public $page = 1;
+
     protected $rules = [
         'name' => 'required',
         'sks' => 'required',
         'semester_id' => 'required',
     ];
 
-    public $search = '';
-    public $page = 1;
-
     protected $queryString = [
         'search' => ['except' => ''],
         'page' => ['except' => 1],
+    ];
+
+    protected $listeners = [
+        'confirmed',
+        'cancelled',
     ];
 
     public function mount()
@@ -38,11 +43,16 @@ class Matkul extends Component
 
     public function render()
     {
-        $matkuls = ModelsMatkul::where('name', 'like', '%' . $this->search . '%')
+
+        //  ->orWhereHas('semester', function ($q) {
+        //     $q->where('semester_ke', 'like', '%' . $this->search . '%');
+        // })
+
+        $matkuls = ModelsMatkul::with('semester')
+            ->where('name', 'like', '%' . $this->search . '%')
             ->orWhere('sks', 'like', '%' . $this->search . '%')
-            ->orWhereHas('semester', function ($q) {
-                $q->where('semester_ke', 'like', '%' . $this->search . '%');
-            })
+            ->orWhere('created_at', 'like', '%' . $this->search . '%')
+            ->orWhere('updated_at', 'like', '%' . $this->search . '%')
             ->orderBy('updated_at', 'desc')
             ->paginate($this->paginate_per_page);
 
@@ -130,14 +140,6 @@ class Matkul extends Component
         $this->showAlert('Mata Kuliah berhasil diubah.');
     }
 
-    public function destroy($id)
-    {
-        ModelsMatkul::destroy($id);
-        $this->showAlert('Mata Kuliah berhasil dihapus.');
-
-        $this->hideForm();
-        $this->emptyItems();
-    }
 
 
     public function showAlert($message)
@@ -148,6 +150,41 @@ class Matkul extends Component
             'toast'             =>  true,
             'showCancelButton'  =>  false,
             'showConfirmButton' =>  false
+        ]);
+    }
+
+    public function confirmed()
+    {
+        ModelsMatkul::destroy($this->id_matkul);
+
+        $this->showAlert('Mata Kuliah berhasil dihapus.');
+        $this->id_matkul = '';
+        $this->hideForm();
+    }
+
+    public function cancelled()
+    {
+        $this->id_matkul = '';
+        $this->alert('error', 'Dibatalkan', [
+            'position'          =>  'top',
+            'timer'             =>  1500,
+            'toast'             =>  true,
+            'showCancelButton'  =>  false,
+            'showConfirmButton' =>  false
+        ]);
+    }
+
+
+    public function triggerConfirm($id)
+    {
+        $this->id_matkul = $id;
+        $this->confirm('Yakin ingin menghapus data ini?', [
+            'toast' => false,
+            'position' => 'center',
+            'confirmButtonText' =>  'Ya',
+            'cancelButtonText' =>  'Batal',
+            'onConfirmed' => 'confirmed',
+            'onCancelled' => 'cancelled'
         ]);
     }
 }

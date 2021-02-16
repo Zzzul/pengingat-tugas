@@ -13,7 +13,7 @@ $target = 'update';
 
         <div class="col-md-12">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="home">Home</a></li>
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
                 <li class="breadcrumb-item active">Semester</li>
             </ol>
         </div>
@@ -87,7 +87,7 @@ $target = 'update';
                                 </button>
 
                                 <button class="mb-2 btn btn-outline-danger btn-sm"
-                                    wire:click="destroy('{{ $sms->id }}')">
+                                    wire:click="triggerConfirm('{{ $sms->id }}')">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
                                 <button class="mb-2 btn btn-outline-success btn-sm"

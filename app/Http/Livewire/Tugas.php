@@ -18,6 +18,9 @@ class Tugas extends Component
 
     public $paginate_per_page = 5;
 
+    public $search = '';
+    public $page = 1;
+
     protected $paginationTheme = 'bootstrap';
 
     protected $rules = [
@@ -27,12 +30,14 @@ class Tugas extends Component
         'pertemuan_ke'  => 'required',
     ];
 
-    public $search = '';
-    public $page = 1;
-
     protected $queryString = [
         'search' => ['except' => ''],
         'page' => ['except' => 1],
+    ];
+
+    protected $listeners = [
+        'confirmed',
+        'cancelled',
     ];
 
     public function mount()
@@ -57,12 +62,17 @@ class Tugas extends Component
         // echo json_encode($this->tugas_yg_ga_selesai);
         // die;
 
-        $all_tugas = ModelsTugas::where('deskripsi', 'like', '%' . $this->search . '%')
+        // ->orWhereHas('matkul', function ($q) {
+        //     $q->where('name', 'like', '%' . $this->search . '%');
+        // })
+
+        $all_tugas = ModelsTugas::with('matkul')
+            ->where('deskripsi', 'like', '%' . $this->search . '%')
             ->orWhere('batas_waktu', 'like', '%' . $this->search . '%')
             ->orWhere('selesai', 'like', '%' . $this->search . '%')
-            ->orWhereHas('matkul', function ($q) {
-                $q->where('name', 'like', '%' . $this->search . '%');
-            })
+            ->orWhere('pertemuan_ke', 'like', '%' . $this->search . '%')
+            ->orWhere('created_at', 'like', '%' . $this->search . '%')
+            ->orWhere('updated_at', 'like', '%' . $this->search . '%')
             ->orderBy('selesai', 'asc')
             ->paginate($this->paginate_per_page);
 
@@ -190,14 +200,6 @@ class Tugas extends Component
         }
     }
 
-    public function destroy($id)
-    {
-        ModelsTugas::destroy($id);
-        $this->showAlert('Mata Kuliah berhasil dihapus.');
-
-        $this->hideForm();
-        $this->emptyItems();
-    }
 
     public function noValidate()
     {
@@ -217,6 +219,41 @@ class Tugas extends Component
             'toast'             =>  true,
             'showCancelButton'  =>  false,
             'showConfirmButton' =>  false
+        ]);
+    }
+
+    public function confirmed()
+    {
+        ModelsTugas::destroy($this->id_tugas);
+
+        $this->showAlert('Tugas berhasil dihapus.');
+        $this->id_tugas = '';
+        $this->hideForm();
+    }
+
+    public function cancelled()
+    {
+        $this->id_tugas = '';
+        $this->alert('error', 'Dibatalkan', [
+            'position'          =>  'top',
+            'timer'             =>  1500,
+            'toast'             =>  true,
+            'showCancelButton'  =>  false,
+            'showConfirmButton' =>  false
+        ]);
+    }
+
+
+    public function triggerConfirm($id)
+    {
+        $this->id_tugas = $id;
+        $this->confirm('Yakin ingin menghapus data ini?', [
+            'toast' => false,
+            'position' => 'center',
+            'confirmButtonText' =>  'Ya',
+            'cancelButtonText' =>  'Batal',
+            'onConfirmed' => 'confirmed',
+            'onCancelled' => 'cancelled'
         ]);
     }
 }

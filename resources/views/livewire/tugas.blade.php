@@ -15,7 +15,7 @@ $target = 'update';
 
         <div class="col-md-12">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="home">Home</a></li>
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
                 <li class="breadcrumb-item active">Tugas</li>
             </ol>
         </div>
@@ -196,7 +196,7 @@ $target = 'update';
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 <button class="mb-2 btn btn-outline-danger btn-sm"
-                                    wire:click="destroy('{{ $tgs->id }}')">
+                                    wire:click="triggerConfirm('{{ $tgs->id }}')">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
                             </td>
@@ -289,7 +289,12 @@ $target = 'update';
                 @endforeach
 
             </div>
-            <p class="text-center mt-3"><strong>Total : {{ $count }} Tugas</strong></p>
+            @if ($count)
+            <p class="text-center mt-3">
+                <strong>Total : {{ $count }} Tugas</strong>
+            </p>
+            @endif
+
         </div>
     </div>
 

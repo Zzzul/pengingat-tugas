@@ -10,21 +10,26 @@ class Semester extends Component
 {
     use WithPagination;
 
-    public $paginate_per_page = 5;
-    protected $paginationTheme = 'bootstrap';
-
     public $form, $id_semester, $semester_ke, $aktif_smt, $select_semesters = [];
+
+    public $search = '';
+    public $page = 1;
+    public $paginate_per_page = 5;
+
+    protected $paginationTheme = 'bootstrap';
 
     protected $rules = [
         'semester_ke' => 'required',
     ];
 
-    public $search = '';
-    public $page = 1;
-
     protected $queryString = [
         'search' => ['except' => ''],
         'page' => ['except' => 1],
+    ];
+
+    protected $listeners = [
+        'confirmed',
+        'cancelled',
     ];
 
     public function mount()
@@ -107,15 +112,6 @@ class Semester extends Component
     }
 
 
-    public function destroy($id)
-    {
-        ModelsSemester::destroy($id);
-        $this->showAlert('Semester berhasil dihapus.');
-
-        $this->hideForm();
-        $this->emptyItems();
-    }
-
 
     public function emptyItems()
     {
@@ -157,5 +153,40 @@ class Semester extends Component
         $semester_aktif->save();
 
         $this->showAlert("Semester sekarang berhasil diubah.");
+    }
+
+    public function confirmed()
+    {
+        ModelsSemester::destroy($this->id_semester);
+
+        $this->showAlert('Semester berhasil dihapus.');
+        $this->id_semester = '';
+        $this->hideForm();
+    }
+
+    public function cancelled()
+    {
+        $this->id_semester = '';
+        $this->alert('error', 'Dibatalkan', [
+            'position'          =>  'top',
+            'timer'             =>  1500,
+            'toast'             =>  true,
+            'showCancelButton'  =>  false,
+            'showConfirmButton' =>  false
+        ]);
+    }
+
+
+    public function triggerConfirm($id)
+    {
+        $this->id_semester = $id;
+        $this->confirm('Yakin ingin menghapus data ini?', [
+            'toast' => false,
+            'position' => 'center',
+            'confirmButtonText' =>  'ya',
+            'cancelButtonText' =>  'Batal',
+            'onConfirmed' => 'confirmed',
+            'onCancelled' => 'cancelled'
+        ]);
     }
 }
