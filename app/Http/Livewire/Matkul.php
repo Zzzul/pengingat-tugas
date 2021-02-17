@@ -48,12 +48,12 @@ class Matkul extends Component
         //     $q->where('semester_ke', 'like', '%' . $this->search . '%');
         // })
 
-        $matkuls = ModelsMatkul::where('name', 'like', '%' . $this->search . '%')
-            ->orWhere('sks', 'like', '%' . $this->search . '%')
-            ->orWhere('created_at', 'like', '%' . $this->search . '%')
-            ->orWhere('updated_at', 'like', '%' . $this->search . '%')
+        $matkuls = ModelsMatkul::where('name', 'like', '%' . strtolower($this->search) . '%')
+            ->orWhere('sks', 'like', '%' . strtolower($this->search) . '%')
+            ->orWhere('created_at', 'like', '%' . strtolower($this->search) . '%')
+            ->orWhere('updated_at', 'like', '%' . strtolower($this->search) . '%')
             ->orWhereHas('semester', function ($q) {
-                $q->where('semester_ke', 'like', '%' . $this->search . '%');
+                $q->where('semester_ke', 'like', '%' . strtolower($this->search) . '%');
             })
             ->orderBy('updated_at', 'desc')
             ->paginate($this->paginate_per_page);
