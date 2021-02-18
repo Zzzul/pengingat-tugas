@@ -51,18 +51,19 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item">
-                            <a class="nav-link{{ request()->is('tugas') ? ' active' : '' }}" href="tugas">Tugas</a>
+                            <a class="nav-link{{ request()->is('tugas') ? ' active' : '' }}"
+                                href="{{ route('tugas') }}">Tugas</a>
                         </li>
 
                         <li class="nav-item">
                             <a class="nav-link{{ request()->is('mata-kuliah') ? ' active' : '' }}"
-                                href="mata-kuliah">Mata
+                                href="{{ route('matkul') }}">Mata
                                 Kuliah</a>
                         </li>
 
                         <li class="nav-item">
                             <a class="nav-link{{ request()->is('semester') ? ' active' : '' }}"
-                                href="semester">Semester</a>
+                                href="{{ route('semester') }}">Semester</a>
                         </li>
 
                         <!-- Authentication Links -->
@@ -86,6 +87,14 @@
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <a href="{{ route('user-profile-information.edit') }}" class="dropdown-item">
+                                    Edit Profile
+                                </a>
+
+                                <a href="{{ route('password.edit') }}" class="dropdown-item">
+                                    Change Password
+                                </a>
+
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                     onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                                     {{ __('Logout') }}
@@ -119,7 +128,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="mb-0 pb-0 nav-link{{ request()->is('tugas') ? ' active' : '' }}" href="tugas">
+                    <a class="mb-0 pb-0 nav-link{{ request()->is('tugas') ? ' active' : '' }}"
+                        href="{{ route('tugas') }}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" fill="currentColor"
                             class="bi bi-list-task" viewBox="0 0 16 16">
                             <path fill-rule="evenodd"
@@ -134,7 +144,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="mb-0 pb-0 nav-link{{ request()->is('mata-kuliah') ? ' active' : '' }}" href="mata-kuliah">
+                    <a class="mb-0 pb-0 nav-link{{ request()->is('mata-kuliah') ? ' active' : '' }}"
+                        href="{{ route('matkul') }}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" fill="currentColor"
                             class="bi bi-book" viewBox="0 0 16 16">
                             <path
@@ -145,7 +156,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="mb-0 pb-0 nav-link{{ request()->is('semester') ? ' active' : '' }}" href="semester">
+                    <a class="mb-0 pb-0 nav-link{{ request()->is('semester') ? ' active' : '' }}"
+                        href="{{ route('semester') }}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" fill="currentColor"
                             class="bi bi-clipboard" viewBox="0 0 16 16">
                             <path
