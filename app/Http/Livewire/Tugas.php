@@ -59,33 +59,19 @@ class Tugas extends Component
             }
         ])->get();
 
-        // echo json_encode($this->tugas_yg_ga_selesai);
-        // die;
-
-        // ->orWhereHas('matkul', function ($q) {
-        //     $q->where('name', 'like', '%' . $this->search . '%');
-        // })
-
-        $all_tugas = ModelsTugas::with('matkul')
-            ->where('deskripsi', 'like', '%' . $this->search . '%')
-            ->orWhere('batas_waktu', 'like', '%' . $this->search . '%')
-            ->orWhere('selesai', 'like', '%' . $this->search . '%')
-            ->orWhere('pertemuan_ke', 'like', '%' . $this->search . '%')
-            ->orWhere('created_at', 'like', '%' . $this->search . '%')
-            ->orWhere('updated_at', 'like', '%' . $this->search . '%')
+        // get all task
+        $all_tugas = ModelsTugas::where('deskripsi', 'like', '%' . strtolower($this->search) . '%')
+            ->orWhere('batas_waktu', 'like', '%' . strtolower($this->search) . '%')
+            ->orWhere('selesai', 'like', '%' . strtolower($this->search) . '%')
+            ->orWhere('pertemuan_ke', 'like', '%' . strtolower($this->search) . '%')
+            ->orWhere('created_at', 'like', '%' . strtolower($this->search) . '%')
+            ->orWhere('updated_at', 'like', '%' . strtolower($this->search) . '%')
+            ->orWhereHas('matkul', function ($q) {
+                $q->where('name', 'like', '%' . strtolower($this->search) . '%');
+            })
             ->orderBy('selesai', 'asc')
             ->paginate($this->paginate_per_page);
 
-        // test search using query builder, maybe work for heroku pgsql
-        // $all_tugas = DB::table('tugas')
-        //     ->select('*')
-        //     ->join('matkuls', 'tugas.matkul_id', '=', 'matkuls.id')
-        //     ->where('deskripsi', 'like', '%' . $this->search . '%')
-        //     ->orWhere('batas_waktu', 'like', '%' . $this->search . '%')
-        //     ->orWhere('selesai', 'like', '%' . $this->search . '%')
-        //     ->orWhere('name', 'like', '%' . $this->search . '%')
-        //     ->orderBy('selesai', 'asc')
-        //     ->paginate($this->paginate_per_page);
 
         // get all matkul
         $this->matkuls = Matkul::get();
@@ -125,9 +111,9 @@ class Tugas extends Component
 
         $matkul = new ModelsTugas;
         $matkul->matkul_id      = $this->matkul;
-        $matkul->deskripsi      = $this->deskripsi;
+        $matkul->deskripsi      = strtolower($this->deskripsi);
         $matkul->batas_waktu    = $this->batas_waktu;
-        $matkul->pertemuan_ke    = $this->pertemuan_ke;
+        $matkul->pertemuan_ke   = $this->pertemuan_ke;
         $matkul->save();
 
         $this->hideForm();
@@ -145,7 +131,7 @@ class Tugas extends Component
         // get all matkul
         $this->matkuls = Matkul::get();
         $this->matkul       = $tugas->matkul_id;
-        $this->deskripsi    = $tugas->deskripsi;
+        $this->deskripsi    = ucfirst($tugas->deskripsi);
         $this->batas_waktu  = date('Y-m-d\TH:i', strtotime($tugas->batas_waktu));
         $this->selesai      = !$tugas->selesai ? $tugas->selesai : date('Y-m-d\TH:i', strtotime($tugas->selesai));
         $this->pertemuan_ke = $tugas->pertemuan_ke;
@@ -188,7 +174,7 @@ class Tugas extends Component
             );
         } else {
             $tugas->matkul_id      = $this->matkul;
-            $tugas->deskripsi      = $this->deskripsi;
+            $tugas->deskripsi      = strtolower($this->deskripsi);
             $tugas->batas_waktu    = $this->batas_waktu;
             $tugas->selesai        = $this->selesai;
             $tugas->pertemuan_ke   = $this->pertemuan_ke;

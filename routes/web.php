@@ -16,12 +16,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('home');
+// Route::get('/', function () {
+//     return view('home')->name('home');
+// });
+
+Route::view('/', 'home')->name('home');
+Route::view('home', 'home')->name('home');
+
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('semester', Semester::class)->name('semester');
+    Route::get('mata-kuliah', Matkul::class)->name('matkul');
+    Route::get('tugas', Tugas::class)->name('tugas');
+
+    Route::view('/profile', 'profile.user-profile-information-form')->name('user-profile-information.edit');
+    Route::view('change-password', 'auth.passwords.change-password')->name('password.edit');
+
+    Route::view('setting', 'profile.setting')->name('setting');
 });
-
-Route::view('home', 'home');
-
-Route::get('semester', Semester::class);
-Route::get('mata-kuliah', Matkul::class);
-Route::get('tugas', Tugas::class);

@@ -95,7 +95,7 @@ $target = 'update';
                         @forelse ($matkuls as $key => $mk)
                         <tr class="table-active">
                             <td>{{ $matkuls->firstItem() + $key }}</td>
-                            <td>{{ $mk->name }}</td>
+                            <td>{{ ucwords($mk->name) }}</td>
                             <td>{{ $mk->sks }}</td>
                             <td>{{ $mk['semester']->semester_ke }}</td>
                             <td>{{ $mk->created_at->diffForHumans()  }}</td>

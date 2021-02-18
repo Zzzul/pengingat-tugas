@@ -48,11 +48,13 @@ class Matkul extends Component
         //     $q->where('semester_ke', 'like', '%' . $this->search . '%');
         // })
 
-        $matkuls = ModelsMatkul::with('semester')
-            ->where('name', 'like', '%' . $this->search . '%')
-            ->orWhere('sks', 'like', '%' . $this->search . '%')
-            ->orWhere('created_at', 'like', '%' . $this->search . '%')
-            ->orWhere('updated_at', 'like', '%' . $this->search . '%')
+        $matkuls = ModelsMatkul::where('name', 'like', '%' . strtolower($this->search) . '%')
+            ->orWhere('sks', 'like', '%' . strtolower($this->search) . '%')
+            ->orWhere('created_at', 'like', '%' . strtolower($this->search) . '%')
+            ->orWhere('updated_at', 'like', '%' . strtolower($this->search) . '%')
+            ->orWhereHas('semester', function ($q) {
+                $q->where('semester_ke', 'like', '%' . strtolower($this->search) . '%');
+            })
             ->orderBy('updated_at', 'desc')
             ->paginate($this->paginate_per_page);
 
@@ -99,7 +101,7 @@ class Matkul extends Component
         $this->validate();
 
         $matkul = new ModelsMatkul;
-        $matkul->name = $this->name;
+        $matkul->name = strtolower($this->name);
         $matkul->sks = $this->sks;
         $matkul->semester_id = $this->semester_id;
         $matkul->save();
@@ -119,7 +121,7 @@ class Matkul extends Component
         // get all semesters
         $this->semesters = Semester::get();
 
-        $this->name = $matkul->name;
+        $this->name = ucwords($matkul->name);
         $this->sks = $matkul->sks;
         $this->semester_id = $matkul->semester_id;
         $this->form = 'edit';
@@ -130,7 +132,7 @@ class Matkul extends Component
         $this->validate();
 
         $matkul = ModelsMatkul::find($id);
-        $matkul->name = $this->name;
+        $matkul->name = strtolower($this->name);
         $matkul->sks = $this->sks;
         $matkul->semester_id = $this->semester_id;
         $matkul->save();
@@ -139,7 +141,6 @@ class Matkul extends Component
 
         $this->showAlert('Mata Kuliah berhasil diubah.');
     }
-
 
 
     public function showAlert($message)

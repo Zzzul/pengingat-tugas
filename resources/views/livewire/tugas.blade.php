@@ -38,7 +38,7 @@ $target = 'update';
                                         wire:model="matkul" id="matkul-id">
                                         <option value="" disabled>--Pilih Mata Kuliah--</option>
                                         @foreach ($matkuls as $mk)
-                                        <option value="{{ $mk->id }}">{{ $mk->name }}</option>
+                                        <option value="{{ $mk->id }}">{{ ucwords($mk->name) }}</option>
                                         @endforeach
                                     </select>
                                     @error('matkul') <span class="text-danger">{{ $message }}</span> @enderror
@@ -158,8 +158,8 @@ $target = 'update';
                         <tr class="table-active">
                             <td>{{ $all_tugas->firstItem() + $key }}
                             </td>
-                            <td>{{ $tgs['matkul']->name }}</td>
-                            <td>{{ nl2br($tgs->deskripsi) }}</td>
+                            <td>{{ ucwords($tgs['matkul']->name) }}</td>
+                            <td>{{ ucfirst(nl2br($tgs->deskripsi)) }}</td>
                             <td>{{ date('d F Y - H:i ', strtotime($tgs->batas_waktu)) }}</td>
                             <td>
                                 {!! $selisih !!}
@@ -274,7 +274,7 @@ $target = 'update';
                     <div class="card card-tugas mb-3">
                         <div class="card-body">
                             <p class="m-0 matkul">Mata Kuliah :
-                                <b>{{ $tgs->name }}</b>
+                                <b>{{ ucwords($tgs->name) }}</b>
                             </p>
                             <p class="m-0">Pertemuan Ke :
                                 <b>{{ $tg->pertemuan_ke }}</b>
