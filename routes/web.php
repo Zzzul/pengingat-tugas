@@ -30,4 +30,6 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::view('/profile', 'profile.user-profile-information-form')->name('user-profile-information.edit');
     Route::view('change-password', 'auth.passwords.change-password')->name('password.edit');
+
+    Route::view('setting', 'profile.setting')->name('setting');
 });

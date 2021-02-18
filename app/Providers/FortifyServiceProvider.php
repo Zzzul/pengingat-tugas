@@ -47,18 +47,18 @@ class FortifyServiceProvider extends ServiceProvider
             return view('auth.login');
         });
 
-        //if you want to add your own logic aunthenticate a user, you can do right here in this method
-        Fortify::authenticateUsing(function (Request  $request) {
-            $user = User::where('name', $request->email)->first();
+        // //if you want to add your own logic aunthenticate a user, you can do right here in this method
+        // Fortify::authenticateUsing(function (Request  $request) {
+        //     $user = User::where('name', $request->email)->first();
 
-            if ($user && Hash::check($request->password, $user->password)) {
-                return $user;
-            }
-        });
+        //     if ($user && Hash::check($request->password, $user->password)) {
+        //         return $user;
+        //     }
+        // });
 
-        Fortify::requestPasswordResetLinkView(function () {
-            return view('auth.passwords.forgot-password');
-        });
+        // Fortify::requestPasswordResetLinkView(function () {
+        //     return view('auth.passwords.forgot-password');
+        // });
 
         Fortify::resetPasswordView(function ($request) {
             return view('auth.passwords.reset-password', ['request' => $request]);
