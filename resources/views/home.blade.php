@@ -16,7 +16,12 @@
             </div>
             @endif
 
+            @auth
+            <h3>Hai, {{ Auth::user()->name }}!</h3>
+            @else
             <h3>Hai, Selamat datang!</h3>
+            @endauth
+
             <p class="lead">Tetap semangat walaupun terbantai tugas :)</p>
         </div>
     </div>

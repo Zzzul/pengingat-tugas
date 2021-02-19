@@ -20,7 +20,6 @@ $target = 'update';
             </ol>
         </div>
 
-
         @if ($form)
         <div class="col-md-12 mt-3">
             @if ($form === 'add')

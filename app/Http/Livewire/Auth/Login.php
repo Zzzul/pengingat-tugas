@@ -1,0 +1,51 @@
+<?php
+
+namespace App\Http\Livewire\Auth;
+
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Livewire\Component;
+
+class Login extends Component
+{
+
+    public $username, $password;
+
+    protected $rules = [
+        'username' => 'required',
+        'password' => 'required',
+    ];
+
+    public function render()
+    {
+        return view('livewire.auth.login');
+    }
+
+    public function login()
+    {
+        $this->validate();
+
+        $user = User::where(['username' => $this->username])->get();
+
+        if ($user->isEmpty()) {
+            $this->alert('error', 'Username tidak terdafar!', [
+                'position' =>  'top',
+                'timer'    =>  2000,
+                'toast'    =>  true,
+            ]);
+        } elseif (!$user->isEmpty() && Auth::attempt(['username' => $this->username, 'password' => $this->password])) {
+            $this->flash('success', 'Kamu berhasil login!', [
+                'position' =>  'top',
+                'timer'    =>  2000,
+                'toast'    =>  true,
+            ]);
+            redirect(route('home'));
+        } else {
+            $this->alert('error', 'Username atau password salah!', [
+                'position' =>  'top',
+                'timer'    =>  2000,
+                'toast'    =>  true,
+            ]);
+        }
+    }
+}

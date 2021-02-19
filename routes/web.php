@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Livewire\Auth\Login;
+use App\Http\Livewire\Auth\Logout;
+use App\Http\Livewire\Auth\Register;
 use App\Http\Livewire\Matkul;
 use App\Http\Livewire\Semester;
 use App\Http\Livewire\Tugas;
@@ -16,12 +19,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('home');
+
+Route::view('/', 'home')->name('home');
+
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('semester', Semester::class)->name('semester');
+    Route::get('mata-kuliah', Matkul::class)->name('matkul');
+    Route::get('tugas', Tugas::class)->name('tugas');
 });
 
-Route::view('home', 'home');
-
-Route::get('semester', Semester::class);
-Route::get('mata-kuliah', Matkul::class);
-Route::get('tugas', Tugas::class);
+Route::group(['middleware' => ['guest']], function () {
+    Route::get('register', Register::class)->name('register');
+    Route::get('login', Login::class)->name('login');
+    Route::get('logout', Logout::class)->name('logout');
+});
