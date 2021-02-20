@@ -30,20 +30,20 @@ class Login extends Component
         if ($user->isEmpty()) {
             $this->alert('error', 'Username tidak terdafar!', [
                 'position' =>  'top',
-                'timer'    =>  2000,
+                'timer'    =>  1500,
                 'toast'    =>  true,
             ]);
         } elseif (!$user->isEmpty() && Auth::attempt(['username' => $this->username, 'password' => $this->password])) {
             $this->flash('success', 'Kamu berhasil login!', [
                 'position' =>  'top',
-                'timer'    =>  2000,
+                'timer'    =>  1500,
                 'toast'    =>  true,
             ]);
             redirect(route('home'));
         } else {
             $this->alert('error', 'Username atau password salah!', [
                 'position' =>  'top',
-                'timer'    =>  2000,
+                'timer'    =>  1500,
                 'toast'    =>  true,
             ]);
         }

@@ -6,8 +6,6 @@ use App\Models\Matkul as ModelsMatkul;
 use App\Models\Semester;
 use Livewire\Component;
 use Livewire\WithPagination;
-use PhpParser\Builder\Function_;
-use PhpParser\Node\Expr\FuncCall;
 
 class Matkul extends Component
 {

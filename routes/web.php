@@ -4,6 +4,8 @@ use App\Http\Livewire\Auth\Login;
 use App\Http\Livewire\Auth\Logout;
 use App\Http\Livewire\Auth\Register;
 use App\Http\Livewire\Matkul;
+use App\Http\Livewire\Profile\Setting;
+use App\Http\Livewire\Profile\User;
 use App\Http\Livewire\Semester;
 use App\Http\Livewire\Tugas;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +28,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('semester', Semester::class)->name('semester');
     Route::get('mata-kuliah', Matkul::class)->name('matkul');
     Route::get('tugas', Tugas::class)->name('tugas');
+
+    // Profile
+    Route::get('setting', Setting::class)->name('setting');
+    Route::get('profile', User::class)->name('user-profile');
 });
 
 Route::group(['middleware' => ['guest']], function () {

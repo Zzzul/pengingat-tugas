@@ -34,7 +34,7 @@ class Register extends Component
 
         $this->flash('success', 'Akun berhasil didaftarkan silahkan login!', [
             'position'  =>  'top',
-            'timer'     =>  1500,
+            'timer'     =>  1000,
             'toast'     =>  true,
         ]);
 

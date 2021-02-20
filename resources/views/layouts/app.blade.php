@@ -87,6 +87,14 @@
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <a href="{{ route('user-profile') }}" class="dropdown-item">
+                                    Edit Profile
+                                </a>
+                                {{-- {{ route('password.edit') }} --}}
+                                <a href="/" class="dropdown-item">
+                                    Ganti Password
+                                </a>
+
                                 <livewire:auth.logout />
                             </div>
                         </li>
@@ -176,7 +184,7 @@
                 </li>
                 @else
                 <li class="nav-item">
-                    <a href="{{ route('home') }}"
+                    <a href="{{ route('setting') }}"
                         class="mb-0 pb-0 nav-link{{ request()->is('setting') ? ' active' : '' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor"
                             class="bi bi-gear" viewBox="0 0 16 16">

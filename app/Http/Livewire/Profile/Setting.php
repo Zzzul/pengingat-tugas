@@ -1,17 +1,15 @@
 <?php
 
-namespace App\Http\Livewire\Auth;
+namespace App\Http\Livewire\Profile;
 
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
-class Logout extends Component
+class Setting extends Component
 {
-    public $type;
-
     public function render()
     {
-        return view('livewire.auth.logout');
+        return view('livewire.profile.setting');
     }
 
     public function logout()
