@@ -39,8 +39,7 @@
                     </tr>
                     <tr class="table-active">
                         <td>
-                            {{-- {{ route('password.edit') }} --}}
-                            <a href="/" class="text-decoration-none">
+                            <a href="{{ route('change-password') }}" class="text-decoration-none">
                                 <h6 class="m-0 p-0">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em"
                                         fill="currentColor" class="bi bi-key" viewBox="0 0 16 16">

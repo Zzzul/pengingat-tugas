@@ -90,8 +90,8 @@
                                 <a href="{{ route('user-profile') }}" class="dropdown-item">
                                     Edit Profile
                                 </a>
-                                {{-- {{ route('password.edit') }} --}}
-                                <a href="/" class="dropdown-item">
+
+                                <a href="{{ route('change-password') }}" class="dropdown-item">
                                     Ganti Password
                                 </a>
 

@@ -1,7 +1,6 @@
-@section('title', 'Profile')
+@section('title', 'Ganti Password')
 <div class="container py-3">
     <div class="row justify-content-center">
-
         <div class="col-md-12">
             <div class="d-none d-md-block">
                 <ol class="breadcrumb">
@@ -14,24 +13,22 @@
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Home</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('setting') }}">Setting</a></li>
-                    <li class="breadcrumb-item active">Profile</li>
+                    <li class="breadcrumb-item active">Ganti Password</li>
                 </ol>
             </div>
         </div>
 
         <div class="col-md-6 my-3">
+
             <form wire:submit.prevent="update">
                 <div class="form-group">
-                    <label for="username">{{ __('Username') }}</label>
-                    <input wire:model="username" id="username" type="text" class="form-control" readonly>
-                </div>
+                    <label for="current_password">{{ __('Password Sekarang') }}</label>
 
-                <div class="form-group">
-                    <label for="name">{{ __('Name') }}</label>
-                    <input wire:model="name" id="name" type="name"
-                        class="form-control @error('name') is-invalid @enderror" name="name" required autofocus>
+                    <input id="current_password" type="password" wire:model="current_password"
+                        class="form-control @error('current_password') is-invalid @enderror" placeholder="••••••••••"
+                        required name="current_password">
 
-                    @error('name')
+                    @error('current_password')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
@@ -39,33 +36,43 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="email">{{ __('E-Mail Address') }}</label>
+                    <label for="password">{{ __('Password Baru') }}</label>
 
-                    <input wire:model="email" id="email" type="email"
-                        class="form-control @error('email') is-invalid @enderror" name="email" required>
+                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror"
+                        wire:model="password" name="password" placeholder="••••••••••" required
+                        autocomplete="new-password">
 
-                    @error('email')
+                    @error('password')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
                     @enderror
                 </div>
+
+                <div class="form-group">
+                    <label for="password-confirm">{{ __('Ulangi Password Baru') }}</label>
+
+                    <input id="password-confirm" type="password" class="form-control" wire:model="password_confirmation"
+                        placeholder="••••••••••" name="password_confirmation" required autocomplete="new-password">
+                </div>
+
 
                 <div class="form-groupmb-0">
                     <div class="d-none d-md-block">
                         <button type="submit" class="btn btn-info">
-                            {{ __('Update Profile') }}
+                            {{ __('Update Password') }}
                             <x-loading target="{{ 'update' }}"></x-loading>
                         </button>
                     </div>
 
                     <div class=" d-md-none d-lg-none d-xl-none">
                         <button type="submit" class="btn btn-info btn-block">
-                            {{ __('Update Profile') }}
+                            {{ __('Update Password') }}
                             <x-loading target="{{ 'update' }}"></x-loading>
                         </button>
                     </div>
                 </div>
+
             </form>
         </div>
     </div>

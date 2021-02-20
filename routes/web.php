@@ -4,6 +4,7 @@ use App\Http\Livewire\Auth\Login;
 use App\Http\Livewire\Auth\Logout;
 use App\Http\Livewire\Auth\Register;
 use App\Http\Livewire\Matkul;
+use App\Http\Livewire\Profile\Password;
 use App\Http\Livewire\Profile\Setting;
 use App\Http\Livewire\Profile\User;
 use App\Http\Livewire\Semester;
@@ -32,6 +33,7 @@ Route::group(['middleware' => ['auth']], function () {
     // Profile
     Route::get('setting', Setting::class)->name('setting');
     Route::get('profile', User::class)->name('user-profile');
+    Route::get('change-password', Password::class)->name('change-password');
 });
 
 Route::group(['middleware' => ['guest']], function () {
