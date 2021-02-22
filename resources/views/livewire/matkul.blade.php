@@ -93,6 +93,7 @@ $target = 'update';
                     </thead>
                     <tbody>
                         @forelse ($matkuls as $key => $mk)
+
                         <tr class="table-active">
                             <td>{{ $matkuls->firstItem() + $key }}</td>
                             <td>{{ $mk->name }}</td>

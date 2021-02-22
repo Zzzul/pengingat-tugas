@@ -102,7 +102,7 @@ $target = 'update';
             <div class="row my-2">
                 <div class="col-md-10 mb-2">
                     <h5 class="card-title mb-0">Tugas</h5>
-                    <small> <b>Tanggal Sekarang : {{ date('d F Y') }}</b> </small>
+                    <p class="mb-0"> <b>Tanggal Sekarang : {{ date('d F Y') }}</b> </p cmlaclass="mb-0">
                 </div>
                 <div class="col-md-2 justify-content-end mb-1">
                     <x-button-create></x-button-create>
@@ -288,11 +288,10 @@ $target = 'update';
                 @endforeach
 
             </div>
-            @if ($count)
+
             <p class="text-center mt-3">
                 <strong>Total : {{ $count }} Tugas</strong>
             </p>
-            @endif
 
         </div>
     </div>

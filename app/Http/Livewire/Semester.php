@@ -3,12 +3,14 @@
 namespace App\Http\Livewire;
 
 use App\Models\Semester as ModelsSemester;
+use App\Traits\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 class Semester extends Component
 {
     use WithPagination;
+    use LivewireAlert;
 
     public $form, $id_semester, $semester_ke, $aktif_smt, $select_semesters = [];
 
@@ -43,7 +45,7 @@ class Semester extends Component
 
         $this->aktif_smt = ModelsSemester::select('id', 'semester_ke')->where('aktif_smt', 1)->first();
 
-        $semesters = ModelsSemester::where('semester_ke', 'like', '%' . $this->search . '%')->orderBy('updated_at', 'desc')->paginate($this->paginate_per_page);
+        $semesters = ModelsSemester::where('semester_ke', 'like', '%' . $this->search . '%')->orderBy('created_at', 'asc')->paginate($this->paginate_per_page);
         return view('livewire.semester', compact('semesters'));
     }
 
@@ -70,66 +72,61 @@ class Semester extends Component
         ]);
     }
 
-
-
     public function store()
     {
         $this->validate();
 
         ModelsSemester::create([
+            'user_id' => auth()->user()->id,
             'semester_ke' => $this->semester_ke,
         ]);
 
-        $this->showAlert('Semester berhasil ditambahkan.');
+        $this->showAlert('success', 'Semester berhasil ditambahkan.');
 
         $this->semester_ke = '';
         $this->form = '';
     }
-
 
     public function show($id)
     {
         $this->noValidate();
 
         $this->id_semester = $id;
-        $semester = ModelsSemester::find($id);
-        $this->semester_ke = $semester->semester_ke;
-        $this->form = 'edit';
-    }
 
+        $semester = ModelsSemester::findOrFail($id);
+
+        if ($semester->user_id == auth()->user()->id) {
+            $this->semester_ke = $semester->semester_ke;
+            $this->form = 'edit';
+        } else {
+            $this->showAlert('error', 'Semester tidak dapat diubah.');
+        }
+    }
 
     public function update($id)
     {
         $this->validate();
 
-        $semester = ModelsSemester::find($id);
-        $semester->semester_ke = $this->semester_ke;
-        $semester->save();
+        $semester = ModelsSemester::findOrFail($id);
 
-        $this->showAlert('Semester berhasil diubah.');
+        // jika user ingin edit data yang bukan miliknya
+        if ($semester->user_id == auth()->user()->id) {
+            $semester->user_id = auth()->user()->id;
+            $semester->semester_ke = $this->semester_ke;
+            $semester->save();
+
+            $this->showAlert('success', 'Semester berhasil diubah.');
+        } else {
+            $this->showAlert('error', 'Semester tidak dapat diubah.');
+        }
 
         $this->hideForm();
     }
-
-
 
     public function emptyItems()
     {
         $this->semester_ke = '';
     }
-
-
-    public function showAlert($message)
-    {
-        $this->alert('success', $message, [
-            'position'          =>  'top',
-            'timer'             =>  1500,
-            'toast'             =>  true,
-            'showCancelButton'  =>  false,
-            'showConfirmButton' =>  false
-        ]);
-    }
-
 
     public function setAktifSmt($id)
     {
@@ -148,19 +145,30 @@ class Semester extends Component
 
     public function updateAktifSmt($id)
     {
-        $semester_aktif = ModelsSemester::find($id);
-        $semester_aktif->aktif_smt = 1;
-        $semester_aktif->save();
+        $semester_aktif = ModelsSemester::findOrfail($id);
 
-        $this->showAlert("Semester sekarang berhasil diubah.");
+        if ($semester_aktif->user_id == auth()->user()->id) {
+            $semester_aktif->aktif_smt = 1;
+            $semester_aktif->save();
+
+            $this->showAlert('success', 'Semester sekarang berhasil diubah.');
+        } else {
+            $this->showAlert('error', 'Semester sekarang tidak dapat diubah.');
+        }
     }
 
     public function confirmed()
     {
-        ModelsSemester::destroy($this->id_semester);
+        $semester =  ModelsSemester::findOrFail($this->id_semester);
+        if ($semester->user_id == auth()->user()->id) {
+            $semester->destroy($this->id_semester);
 
-        $this->showAlert('Semester berhasil dihapus.');
-        $this->id_semester = '';
+            $this->showAlert('success', 'Semester berhasil dihapus.');
+            $this->id_semester = '';
+        } else {
+            $this->showAlert('error', 'Semester tidak dapat dihapus.');
+        }
+
         $this->hideForm();
     }
 
@@ -175,7 +183,6 @@ class Semester extends Component
             'showConfirmButton' =>  false
         ]);
     }
-
 
     public function triggerConfirm($id)
     {

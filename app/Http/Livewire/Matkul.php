@@ -4,12 +4,14 @@ namespace App\Http\Livewire;
 
 use App\Models\Matkul as ModelsMatkul;
 use App\Models\Semester;
+use App\Traits\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 class Matkul extends Component
 {
     use WithPagination;
+    use LivewireAlert;
 
     public $form, $id_matkul, $name, $sks, $semesters, $semester_id = '';
     public $paginate_per_page = 5;
@@ -41,18 +43,21 @@ class Matkul extends Component
 
     public function render()
     {
-
-        //  ->orWhereHas('semester', function ($q) {
-        //     $q->where('semester_ke', 'like', '%' . $this->search . '%');
+        // ->whereHas('user', function ($q) {
+        //     $q->where('user_id', '=', auth()->user()->id);
         // })
 
-        $matkuls = ModelsMatkul::with('semester')
-            ->where('name', 'like', '%' . $this->search . '%')
+        $matkuls = ModelsMatkul::with('semester', 'user')
+            ->where('user_id', '=', auth()->user()->id)
+            ->orWhere('name', 'like', '%' . $this->search . '%')
             ->orWhere('sks', 'like', '%' . $this->search . '%')
             ->orWhere('created_at', 'like', '%' . $this->search . '%')
             ->orWhere('updated_at', 'like', '%' . $this->search . '%')
             ->orderBy('updated_at', 'desc')
             ->paginate($this->paginate_per_page);
+
+        // echo json_encode($matkuls);
+        // die;
 
         // get all semesters
         $this->semesters = Semester::get();
@@ -98,13 +103,14 @@ class Matkul extends Component
 
         $matkul = new ModelsMatkul;
         $matkul->name = $this->name;
+        $matkul->user_id = auth()->user()->id;
         $matkul->sks = $this->sks;
         $matkul->semester_id = $this->semester_id;
         $matkul->save();
 
         $this->hideForm();
 
-        $this->showAlert('Mata Kuliah berhasil ditambahkan.');
+        $this->showAlert('success', 'Mata Kuliah berhasil ditambahkan.');
     }
 
     public function show($id)
@@ -112,50 +118,54 @@ class Matkul extends Component
         $this->noValidate();
 
         $this->id_matkul = $id;
-        $matkul = ModelsMatkul::find($id);
+        $matkul = ModelsMatkul::findOrfail($id);
 
-        // get all semesters
-        $this->semesters = Semester::get();
+        if ($matkul->user_id == auth()->user()->id) {
+            // get all semesters
+            $this->semesters = Semester::get();
 
-        $this->name = $matkul->name;
-        $this->sks = $matkul->sks;
-        $this->semester_id = $matkul->semester_id;
-        $this->form = 'edit';
+            $this->name = $matkul->name;
+            $this->sks = $matkul->sks;
+            $this->semester_id = $matkul->semester_id;
+            $this->form = 'edit';
+        } else {
+            $this->showAlert('error', 'Mata Kuliah tidak dapat diubah.');
+        }
     }
 
     public function update($id)
     {
         $this->validate();
 
-        $matkul = ModelsMatkul::find($id);
-        $matkul->name = $this->name;
-        $matkul->sks = $this->sks;
-        $matkul->semester_id = $this->semester_id;
-        $matkul->save();
+        $matkul = ModelsMatkul::findOrFail($id);
+
+        if ($matkul->user_id == auth()->user()->id) {
+            $matkul->name = $this->name;
+            $matkul->sks = $this->sks;
+            $matkul->semester_id = $this->semester_id;
+            $matkul->save();
+
+            $this->showAlert('success', 'Mata Kuliah berhasil diubah.');
+        } else {
+            $this->showAlert('error', 'Mata Kuliah tidak dapat diubah.');
+        }
 
         $this->hideForm();
-
-        $this->showAlert('Mata Kuliah berhasil diubah.');
     }
 
-
-
-    public function showAlert($message)
-    {
-        $this->alert('success', $message, [
-            'position'          =>  'top',
-            'timer'             =>  1500,
-            'toast'             =>  true,
-            'showCancelButton'  =>  false,
-            'showConfirmButton' =>  false
-        ]);
-    }
 
     public function confirmed()
     {
-        ModelsMatkul::destroy($this->id_matkul);
+        $matkul = ModelsMatkul::findOrFail($this->id_matkul);
 
-        $this->showAlert('Mata Kuliah berhasil dihapus.');
+        if ($matkul->user_id == auth()->user()->id) {
+            $matkul->destroy($this->id_matkul);
+
+            $this->showAlert('success', 'Mata Kuliah berhasil dihapus.');
+        } else {
+            $this->showAlert('error', 'Mata Kuliah tidak dapat dihapus.');
+        }
+
         $this->id_matkul = '';
         $this->hideForm();
     }

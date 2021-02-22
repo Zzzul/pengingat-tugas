@@ -6,6 +6,9 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Tugas;
+use App\Models\Semester;
+use App\Models\Matkul;
 
 class User extends Authenticatable
 {
@@ -41,4 +44,20 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function matkuls()
+    {
+        return $this->hasMany(Matkul::class);
+    }
+
+
+    public function semesters()
+    {
+        return $this->hasMany(Matkul::class);
+    }
+
+    public function tugas()
+    {
+        return $this->hasMany(Matkul::class);
+    }
 }

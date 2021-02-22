@@ -4,15 +4,15 @@ namespace App\Http\Livewire;
 
 use App\Models\Matkul;
 use App\Models\Tugas as ModelsTugas;
+use App\Traits\LivewireAlert;
 use DateTime;
-use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 class Tugas extends Component
 {
-
     use WithPagination;
+    use LivewireAlert;
 
     public $form, $id_tugas, $deskripsi, $batas_waktu, $tugas, $selesai, $pertemuan_ke, $matkul = '', $matkuls, $tugas_yg_ga_selesai;
 
@@ -53,18 +53,10 @@ class Tugas extends Component
             },
             'tugas' => function ($q) {
                 $q->where([
-                    // ['batas_waktu', '<=', date('Y-m-d H:i')],
                     ['selesai', '=', null]
                 ]);
             }
         ])->get();
-
-        // echo json_encode($this->tugas_yg_ga_selesai);
-        // die;
-
-        // ->orWhereHas('matkul', function ($q) {
-        //     $q->where('name', 'like', '%' . $this->search . '%');
-        // })
 
         $all_tugas = ModelsTugas::with('matkul')
             ->where('deskripsi', 'like', '%' . $this->search . '%')
@@ -75,17 +67,6 @@ class Tugas extends Component
             ->orWhere('updated_at', 'like', '%' . $this->search . '%')
             ->orderBy('selesai', 'asc')
             ->paginate($this->paginate_per_page);
-
-        // test search using query builder, maybe work for heroku pgsql
-        // $all_tugas = DB::table('tugas')
-        //     ->select('*')
-        //     ->join('matkuls', 'tugas.matkul_id', '=', 'matkuls.id')
-        //     ->where('deskripsi', 'like', '%' . $this->search . '%')
-        //     ->orWhere('batas_waktu', 'like', '%' . $this->search . '%')
-        //     ->orWhere('selesai', 'like', '%' . $this->search . '%')
-        //     ->orWhere('name', 'like', '%' . $this->search . '%')
-        //     ->orderBy('selesai', 'asc')
-        //     ->paginate($this->paginate_per_page);
 
         // get all matkul
         $this->matkuls = Matkul::get();
@@ -125,14 +106,15 @@ class Tugas extends Component
 
         $matkul = new ModelsTugas;
         $matkul->matkul_id      = $this->matkul;
+        $matkul->user_id        = auth()->user()->id;
         $matkul->deskripsi      = $this->deskripsi;
         $matkul->batas_waktu    = $this->batas_waktu;
-        $matkul->pertemuan_ke    = $this->pertemuan_ke;
+        $matkul->pertemuan_ke   = $this->pertemuan_ke;
         $matkul->save();
 
         $this->hideForm();
 
-        $this->showAlert('Mata Kuliah berhasil ditambahkan.');
+        $this->showAlert('success', 'Mata Kuliah berhasil ditambahkan.');
     }
 
     public function show($id)
@@ -140,16 +122,20 @@ class Tugas extends Component
         $this->noValidate();
 
         $this->id_tugas = $id;
-        $tugas = ModelsTugas::find($id);
+        $tugas = ModelsTugas::findOrfail($id);
 
-        // get all matkul
-        $this->matkuls = Matkul::get();
-        $this->matkul       = $tugas->matkul_id;
-        $this->deskripsi    = $tugas->deskripsi;
-        $this->batas_waktu  = date('Y-m-d\TH:i', strtotime($tugas->batas_waktu));
-        $this->selesai      = !$tugas->selesai ? $tugas->selesai : date('Y-m-d\TH:i', strtotime($tugas->selesai));
-        $this->pertemuan_ke = $tugas->pertemuan_ke;
-        $this->form         = 'edit';
+        if ($tugas->user_id == auth()->user()->id) {
+            // get all matkul
+            $this->matkuls = Matkul::get();
+            $this->matkul       = $tugas->matkul_id;
+            $this->deskripsi    = $tugas->deskripsi;
+            $this->batas_waktu  = date('Y-m-d\TH:i', strtotime($tugas->batas_waktu));
+            $this->selesai      = !$tugas->selesai ? $tugas->selesai : date('Y-m-d\TH:i', strtotime($tugas->selesai));
+            $this->pertemuan_ke = $tugas->pertemuan_ke;
+            $this->form         = 'edit';
+        } else {
+            $this->showAlert('error', 'Tugas tidak dapat diubah.');
+        }
     }
 
     public function update($id)
@@ -165,38 +151,34 @@ class Tugas extends Component
 
         $tglSelesaiCount =  date('YmdHi', strtotime($this->selesai));
 
+        // cek jika tugas milik user yang sedang login
+        if ($tugas->user_id == auth()->user()->id) {
 
-        if ($tglSelesaiCount > $batasWaktuCount) {
-            // jika waktu telah habis
-            $sisa = 0;
-        } elseif ($tglSelesai->diff($batasWaktu)->days == 0) {
-            // jika sisa beberapa jam
-            $sisa = 1;
+            // jika batas waktu telah habis
+            if ($tglSelesaiCount > $batasWaktuCount) {
+
+                $this->selesai = null;
+
+                $this->validate(
+                    [
+                        'selesai' => 'required'
+                    ],
+                    ['required' => 'Tanggal selesai tidak boleh lebih besar dari batas waktu!']
+                );
+            } else {
+                $tugas->matkul_id      = $this->matkul;
+                $tugas->deskripsi      = $this->deskripsi;
+                $tugas->batas_waktu    = $this->batas_waktu;
+                $tugas->selesai        = $this->selesai;
+                $tugas->pertemuan_ke   = $this->pertemuan_ke;
+                $tugas->save();
+
+                $this->hideForm();
+
+                $this->showAlert('success', 'Mata Kuliah berhasil diubah.');
+            }
         } else {
-            $sisa = 1;
-        }
-
-        if ($sisa == 0) {
-
-            $this->selesai = null;
-
-            $this->validate(
-                [
-                    'selesai' => 'required'
-                ],
-                ['required' => 'Tanggal selesai tidak boleh lebih besar dari batas waktu!']
-            );
-        } else {
-            $tugas->matkul_id      = $this->matkul;
-            $tugas->deskripsi      = $this->deskripsi;
-            $tugas->batas_waktu    = $this->batas_waktu;
-            $tugas->selesai        = $this->selesai;
-            $tugas->pertemuan_ke   = $this->pertemuan_ke;
-            $tugas->save();
-
-            $this->hideForm();
-
-            $this->showAlert('Mata Kuliah berhasil diubah.');
+            $this->showAlert('error', 'Tugas tidak dapat diubah.');
         }
     }
 
@@ -211,22 +193,18 @@ class Tugas extends Component
         ]);
     }
 
-    public function showAlert($message)
-    {
-        $this->alert('success', $message, [
-            'position'          =>  'top',
-            'timer'             =>  1500,
-            'toast'             =>  true,
-            'showCancelButton'  =>  false,
-            'showConfirmButton' =>  false
-        ]);
-    }
 
     public function confirmed()
     {
-        ModelsTugas::destroy($this->id_tugas);
+        $tugas = ModelsTugas::findOrfail($this->id_tugas);
 
-        $this->showAlert('Tugas berhasil dihapus.');
+        if ($tugas->user_id == auth()->user()->id) {
+            $tugas->destroy($this->id_tugas);
+            $this->showAlert('success', 'Tugas berhasil dihapus.');
+        } else {
+            $this->showAlert('error', 'Tugas tidak dapat dihapus.');
+        }
+
         $this->id_tugas = '';
         $this->hideForm();
     }

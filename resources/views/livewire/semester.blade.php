@@ -29,7 +29,7 @@ $target = 'update';
                     <div class="row form-group">
                         <div class="col-md-3">
                             <label for="semester-ke">Semester</label>
-                            <input type="number" id="semester-ke"
+                            <input type="number" id="semester-ke" min="1" max="10"
                                 class="form-control @error('semester_ke')is-invalid @enderror" placeholder="Semester"
                                 wire:model="semester_ke" aria-describedby="semester-ke" {{ $form ? 'autofocus' : '' }}>
                             @error('semester_ke') <span class="text-danger">{{ $message }}</span> @enderror
@@ -51,7 +51,11 @@ $target = 'update';
                 <div class="col-md-10 mb-2">
                     <h5 class="card-title mb-0" for="semester-aktif">Semester</h5>
                     @if ($aktif_smt)
-                    <small>Semester Sekarang : <strong>{{ $aktif_smt['semester_ke'] }}</strong></small>
+                    <p class="mb-0">Semester Sekarang : <span
+                            class="font-weight-bold">{{ $aktif_smt['semester_ke'] }}</span></p>
+                    @else
+                    <p class="mb-0">Semester Sekarang : ?</p>
+                    <p class="mt-0 mb-2">Klik ikon bintang yang sesuai dengan semester kamu.</p>
                     @endif
                 </div>
                 <div class="col-md-2 justify-content-end mb-1">
