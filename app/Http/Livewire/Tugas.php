@@ -49,27 +49,33 @@ class Tugas extends Component
     {
         $this->tugas_yg_ga_selesai = Matkul::with([
             'semester' => function ($q) {
-                $q->where('aktif_smt', 1);
+                $q->where('user_id', auth()->user()->id)->where('aktif_smt', 1);
             },
             'tugas' => function ($q) {
-                $q->where([
-                    ['selesai', '=', null]
-                ]);
+                $q->where('user_id', auth()->user()->id)->where('selesai', null);
             }
         ])->get();
 
-        $all_tugas = ModelsTugas::with('matkul')
-            ->where('deskripsi', 'like', '%' . $this->search . '%')
-            ->orWhere('batas_waktu', 'like', '%' . $this->search . '%')
-            ->orWhere('selesai', 'like', '%' . $this->search . '%')
-            ->orWhere('pertemuan_ke', 'like', '%' . $this->search . '%')
-            ->orWhere('created_at', 'like', '%' . $this->search . '%')
-            ->orWhere('updated_at', 'like', '%' . $this->search . '%')
+        // echo json_encode($this->tugas_yg_ga_selesai);
+        // die;
+
+        $all_tugas = ModelsTugas::where('user_id', auth()->user()->id)
+            ->where(function ($q) {
+                $q->where('deskripsi', 'like', '%' . $this->search . '%')
+                    ->orWhere('batas_waktu', 'like', '%' . $this->search . '%')
+                    ->orWhere('selesai', 'like', '%' . $this->search . '%')
+                    ->orWhere('pertemuan_ke', 'like', '%' . $this->search . '%')
+                    ->orWhere('created_at', 'like', '%' . $this->search . '%')
+                    ->orWhere('updated_at', 'like', '%' . $this->search . '%')
+                    ->orWhereHas('matkul', function ($q) {
+                        $q->where('name', 'like', '%' . $this->search . '%');
+                    });
+            })
             ->orderBy('selesai', 'asc')
             ->paginate($this->paginate_per_page);
 
         // get all matkul
-        $this->matkuls = Matkul::get();
+        $this->matkuls = Matkul::where('user_id', auth()->user()->id)->get();
 
         return view('livewire.tugas', compact('all_tugas'));
     }

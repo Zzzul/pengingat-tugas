@@ -73,14 +73,15 @@
 
                 <div class="form-group">
                     <div class="d-none d-md-block">
-                        <button type="submit" class="btn btn-info">
+                        <button type="submit" class="btn btn-info" wire:loading.attr="disabled" wire:target="register">
                             {{ __('Register') }}
                             <x-loading target="{{ 'register' }}"></x-loading>
                         </button>
                     </div>
 
                     <div class=" d-md-none d-lg-none d-xl-none">
-                        <button type="submit" class="btn btn-info btn-block">
+                        <button type="submit" class="btn btn-info btn-block" wire:loading.attr="disabled"
+                            wire:target="register">
                             {{ __('Register') }}
                             <x-loading target="{{ 'register' }}"></x-loading>
                         </button>

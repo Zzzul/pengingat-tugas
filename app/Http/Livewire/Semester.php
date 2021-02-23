@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Semester as ModelsSemester;
 use App\Traits\LivewireAlert;
+use Exception;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -43,9 +44,17 @@ class Semester extends Component
     {
         $this->select_semesters = ModelsSemester::get();
 
-        $this->aktif_smt = ModelsSemester::select('id', 'semester_ke')->where('aktif_smt', 1)->first();
+        $this->aktif_smt = ModelsSemester::select('id', 'semester_ke')
+            ->where('user_id', auth()->user()->id)
+            ->where(function ($q) {
+                $q->where('aktif_smt', 1);
+            })->first();
 
-        $semesters = ModelsSemester::where('semester_ke', 'like', '%' . $this->search . '%')->orderBy('created_at', 'asc')->paginate($this->paginate_per_page);
+        $semesters = ModelsSemester::where('user_id', auth()->user()->id)
+            ->where(function ($q) {
+                $q->where('semester_ke', 'like', '%' . $this->search . '%');
+            })
+            ->orderBy('created_at', 'asc')->paginate($this->paginate_per_page);
         return view('livewire.semester', compact('semesters'));
     }
 
@@ -161,14 +170,19 @@ class Semester extends Component
     {
         $semester =  ModelsSemester::findOrFail($this->id_semester);
         if ($semester->user_id == auth()->user()->id) {
-            $semester->destroy($this->id_semester);
 
-            $this->showAlert('success', 'Semester berhasil dihapus.');
-            $this->id_semester = '';
+            // jika tidak terdapat relasi pada semester
+            try {
+                $semester->destroy($this->id_semester);
+                $this->showAlert('success', 'Semester berhasil dihapus.');
+            } catch (Exception $ex) {
+                $this->showAlert('error', 'Tidak dapat dihapus karena terdapat mata kuliah pada semester : ' . $semester->semester_ke);
+            }
         } else {
             $this->showAlert('error', 'Semester tidak dapat dihapus.');
         }
 
+        $this->id_semester = '';
         $this->hideForm();
     }
 

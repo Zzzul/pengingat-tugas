@@ -73,7 +73,16 @@ $target = 'update';
                             <th>Semester</th>
                             <th>Dibuat Pada</th>
                             <th>Terakhir Diubah</th>
-                            <th>Aksi</th>
+                            <th>Aksi
+                                <img wire:loading wire:target="show"
+                                    src="{{ asset('assets/Dual Ring-1s-16px-(2).svg') }}" class="mb-1" alt="Loading..">
+
+                                <img wire:loading wire:target="triggerConfirm"
+                                    src="{{ asset('assets/Dual Ring-1s-16px-(2).svg') }}" class="mb-1" alt="Loading..">
+
+                                <img wire:loading wire:target="setAktifSmt"
+                                    src="{{ asset('assets/Dual Ring-1s-16px-(2).svg') }}" class="mb-1" alt="Loading..">
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -85,16 +94,16 @@ $target = 'update';
                             <td>{{ $sms->created_at->diffForHumans()  }}</td>
                             <td>{{ $sms->updated_at->diffForHumans() }}</td>
                             <td>
-                                <button class="mb-2 btn btn-outline-info btn-sm mr-1"
+                                <button class="mb-2 btn btn-outline-info btn-sm mr-1" wire:loading.attr="disabled"
                                     wire:click="show('{{ $sms->id }}')">
                                     <i class="fas fa-edit"></i>
                                 </button>
 
-                                <button class="mb-2 btn btn-outline-danger btn-sm"
+                                <button class="mb-2 btn btn-outline-danger btn-sm" wire:loading.attr="disabled"
                                     wire:click="triggerConfirm('{{ $sms->id }}')">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
-                                <button class="mb-2 btn btn-outline-success btn-sm"
+                                <button class="mb-2 btn btn-outline-success btn-sm" wire:loading.attr="disabled"
                                     wire:click="setAktifSmt('{{ $sms->id }}')">
                                     {!! $sms->aktif_smt ? '<i class="fas fa-star"></i>' : '<i class="far fa-star"></i>'
                                     !!}

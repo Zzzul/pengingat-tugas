@@ -8,7 +8,7 @@ trait LivewireAlert
     {
         $this->alert($type, $message, [
             'position'          =>  'top',
-            'timer'             =>  1500,
+            'timer'             =>  2000,
             'toast'             =>  true,
             'showCancelButton'  =>  false,
             'showConfirmButton' =>  false

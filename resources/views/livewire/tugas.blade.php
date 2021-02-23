@@ -33,12 +33,15 @@ $target = 'update';
                             <div class="row form-group mb-0">
                                 <div class="col-md-{{ $form != 'add' ? '3' : '5' }}">
                                     <label for="matkul-id" class="mb-1">Mata Kuliah</label>
-                                    <select class="form-control mb-2 @error('matkul')is-invalid @enderror"
+                                    <select
+                                        class="form-control mb-2 @error('matkul')is-invalid @enderror{{ $matkuls->isEmpty() ? 'is-invalid' : '' }}"
                                         wire:model="matkul" id="matkul-id">
                                         <option value="" disabled>--Pilih Mata Kuliah--</option>
-                                        @foreach ($matkuls as $mk)
+                                        @forelse ($matkuls as $mk)
                                         <option value="{{ $mk->id }}">{{ $mk->name }}</option>
-                                        @endforeach
+                                        @empty
+                                        <option value="" disabled>Mata kuliah masih kosong!</option>
+                                        @endforelse
                                     </select>
                                     @error('matkul') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
@@ -125,7 +128,13 @@ $target = 'update';
                             <th>Pertemuan Ke</th>
                             <th>Dibuat Pada</th>
                             <th>Terkahir Diubah</th>
-                            <th>Aksi</th>
+                            <th>Aksi
+                                <img wire:loading wire:target="show"
+                                    src="{{ asset('assets/Dual Ring-1s-16px-(2).svg') }}" class="mb-1" alt="Loading..">
+
+                                <img wire:loading wire:target="triggerConfirm"
+                                    src="{{ asset('assets/Dual Ring-1s-16px-(2).svg') }}" class="mb-1" alt="Loading..">
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -191,10 +200,10 @@ $target = 'update';
                             <td>
                                 <button
                                     class="mb-2 btn btn-outline-{{ $selisih == 'Batas waktu telah habis!' && !$tgs->selesai ? 'warning' : 'info' }} btn-sm mb-2"
-                                    wire:click="show('{{ $tgs->id }}')">
+                                    wire:loading.attr="disabled" wire:click="show('{{ $tgs->id }}')">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button class="mb-2 btn btn-outline-danger btn-sm"
+                                <button class="mb-2 btn btn-outline-danger btn-sm" wire:loading.attr="disabled"
                                     wire:click="triggerConfirm('{{ $tgs->id }}')">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
@@ -254,6 +263,7 @@ $target = 'update';
     {{-- tugas yg ga dikerjain --}}
     @php
     $count=0;
+    $semester_skrg='';
     @endphp
     <div class="row">
         <div class="col-md-12 mt-2">
@@ -261,11 +271,8 @@ $target = 'update';
             <h6 class="mb-4 mt-1 text-center">(Semester sekarang)</h6>
             <div class="row">
                 @foreach ($tugas_yg_ga_selesai as $tgs)
-
                 @if ($tgs['semester'])
-
                 @foreach ($tgs['tugas'] as $tg)
-
                 @php
                 $count++;
                 @endphp
@@ -282,20 +289,20 @@ $target = 'update';
                     </div>
                 </div>
                 @endforeach
-
                 @endif
-
                 @endforeach
-
             </div>
 
+            {!! $semester_skrg !!}
+
+            @if ($count > 0)
             <p class="text-center mt-3">
                 <strong>Total : {{ $count }} Tugas</strong>
             </p>
+            @endif
 
         </div>
     </div>
-
 
 </div>
 {{-- end of container--}}

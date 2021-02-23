@@ -29,27 +29,30 @@ $target = 'update';
                     <div class="row form-group">
                         <div class="col-md-10">
                             <div class="row form-group">
-                                <div class="col-6">
-                                    <label for="name">Mata Kuliah</label>
-                                    <input type="text" class="form-control @error('name')is-invalid @enderror"
+                                <div class="col-md-6">
+                                    <label for="name" class="mb-1">Mata Kuliah</label>
+                                    <input type="text" class="form-control mb-2 @error('name')is-invalid @enderror"
                                         wire:model="name" placeholder="Nama Mata Kuliah" id="name">
                                     @error('name') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
-                                <div class="col-3">
-                                    <label for="sks">SKS</label>
-                                    <input type="number" class="form-control @error('sks')is-invalid @enderror"
+                                <div class="col-md-3">
+                                    <label for="sks" class="mb-1">SKS</label>
+                                    <input type="number" class="form-control mb-2 @error('sks')is-invalid @enderror"
                                         wire:model="sks" placeholder="SKS" id="sks" min="1" max="6">
                                     @error('sks') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
 
-                                <div class="col-3">
-                                    <label for="semester-id">Semester</label>
-                                    <select class="form-control @error('semester_id')is-invalid @enderror"
+                                <div class="col-md-3">
+                                    <label for="semester-id" class="mb-1">Semester</label>
+                                    <select
+                                        class="form-control mb-2 @error('semester_id')is-invalid @enderror{{ $semesters->isEmpty() ? 'is-invalid' : '' }}"
                                         wire:model="semester_id" id="semester-id">
                                         <option value="" disabled>--Pilih Semester--</option>
-                                        @foreach ($semesters as $sms)
+                                        @forelse ($semesters as $sms)
                                         <option value="{{ $sms->id }}">{{ $sms->semester_ke }}</option>
-                                        @endforeach
+                                        @empty
+                                        <option value="" disabled>Semester masih kosong!</option>
+                                        @endforelse
                                     </select>
                                     @error('semester_id') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
@@ -88,7 +91,13 @@ $target = 'update';
                             <th>Semester</th>
                             <th>Dibuat Pada</th>
                             <th>Terakhir Diubah</th>
-                            <th>Aksi</th>
+                            <th>Aksi
+                                <img wire:loading wire:target="show"
+                                    src="{{ asset('assets/Dual Ring-1s-16px-(2).svg') }}" class="mb-1" alt="Loading..">
+
+                                <img wire:loading wire:target="triggerConfirm"
+                                    src="{{ asset('assets/Dual Ring-1s-16px-(2).svg') }}" class="mb-1" alt="Loading..">
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -102,10 +111,10 @@ $target = 'update';
                             <td>{{ $mk->created_at->diffForHumans()  }}</td>
                             <td>{{ $mk->updated_at->diffForHumans() }}</td>
                             <td>
-                                <button class="mb-2 btn btn-outline-info btn-sm mr-1"
+                                <button class="mb-2 btn btn-outline-info btn-sm mr-1" wire:loading.attr="disabled"
                                     wire:click="show('{{ $mk->id }}')">
                                     <i class="fas fa-edit"></i></button>
-                                <button class="mb-2 btn btn-outline-danger btn-sm"
+                                <button class="mb-2 btn btn-outline-danger btn-sm" wire:loading.attr="disabled"
                                     wire:click="triggerConfirm('{{ $mk->id }}')">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>

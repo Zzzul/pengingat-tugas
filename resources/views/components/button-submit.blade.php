@@ -1,5 +1,5 @@
 <div>
-    <button type="button" class="btn btn-dark btn-block mr-2 mt-3" wire:click="hideForm()">
+    <button type="button" class="btn btn-dark btn-block mr-2 mt-3" wire:loading.attr="disabled" wire:click="hideForm()">
         <div wire:loading.remove wire:target="hideForm">
             <i class="fas fa-times mr-1"></i>
             Batal

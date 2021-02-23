@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Auth;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use Livewire\Component;
 
 class Login extends Component
@@ -39,7 +40,14 @@ class Login extends Component
                 'timer'    =>  1500,
                 'toast'    =>  true,
             ]);
-            redirect(route('home'));
+
+            $previousUrl = url()->previous();
+
+            if ($previousUrl == 'home' || $previousUrl == 'login' || $previousUrl == 'register') {
+                redirect('/home');
+            } else {
+                redirect('' . $previousUrl . '');
+            }
         } else {
             $this->alert('error', 'Username atau password salah!', [
                 'position' =>  'top',

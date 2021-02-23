@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\Matkul as ModelsMatkul;
 use App\Models\Semester;
 use App\Traits\LivewireAlert;
+use Exception;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -43,24 +44,22 @@ class Matkul extends Component
 
     public function render()
     {
-        // ->whereHas('user', function ($q) {
-        //     $q->where('user_id', '=', auth()->user()->id);
-        // })
 
-        $matkuls = ModelsMatkul::with('semester', 'user')
-            ->where('user_id', '=', auth()->user()->id)
-            ->orWhere('name', 'like', '%' . $this->search . '%')
-            ->orWhere('sks', 'like', '%' . $this->search . '%')
-            ->orWhere('created_at', 'like', '%' . $this->search . '%')
-            ->orWhere('updated_at', 'like', '%' . $this->search . '%')
+        $matkuls = ModelsMatkul::where('user_id', auth()->user()->id)
+            ->where(function ($q) {
+                $q->where('name', 'like', '%' . $this->search . '%')
+                    ->orWhere('sks', 'like', '%' . $this->search . '%')
+                    ->orWhere('created_at', 'like', '%' . $this->search . '%')
+                    ->orWhere('updated_at', 'like', '%' . $this->search . '%')
+                    ->orWhereHas('semester', function ($q) {
+                        $q->where('semester_ke', 'like', '%' . $this->search . '%');
+                    });
+            })
             ->orderBy('updated_at', 'desc')
             ->paginate($this->paginate_per_page);
 
-        // echo json_encode($matkuls);
-        // die;
-
         // get all semesters
-        $this->semesters = Semester::get();
+        $this->semesters = Semester::where('user_id', auth()->user()->id)->get();
 
         return view('livewire.matkul', compact('matkuls'));
     }
@@ -159,9 +158,12 @@ class Matkul extends Component
         $matkul = ModelsMatkul::findOrFail($this->id_matkul);
 
         if ($matkul->user_id == auth()->user()->id) {
-            $matkul->destroy($this->id_matkul);
-
-            $this->showAlert('success', 'Mata Kuliah berhasil dihapus.');
+            try {
+                $matkul->destroy($this->id_matkul);
+                $this->showAlert('success', 'Mata Kuliah berhasil dihapus.');
+            } catch (Exception $ex) {
+                $this->showAlert('error', 'Tidak dapat dihapus karena terdapat tugas pada mata kuliah : ' . $matkul->name);
+            }
         } else {
             $this->showAlert('error', 'Mata Kuliah tidak dapat dihapus.');
         }
