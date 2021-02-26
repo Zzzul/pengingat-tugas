@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Auth;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Livewire\Component;
 
@@ -35,6 +36,7 @@ class Login extends Component
                 'toast'    =>  true,
             ]);
         } elseif (!$user->isEmpty() && Auth::attempt(['username' => $this->username, 'password' => $this->password])) {
+
             $this->flash('success', 'Kamu berhasil login!', [
                 'position' =>  'top',
                 'timer'    =>  1500,

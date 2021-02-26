@@ -23,7 +23,8 @@
             <form wire:submit.prevent="update">
                 <div class="form-group">
                     <label for="username">{{ __('Username') }}</label>
-                    <input wire:model="username" id="username" type="text" class="form-control" readonly>
+                    <input wire:model="username" id="username" type="text" class="form-control" disabled
+                        style="cursor: not-allowed">
                 </div>
 
                 <div class="form-group">

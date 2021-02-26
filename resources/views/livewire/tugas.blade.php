@@ -167,7 +167,7 @@ $target = 'update';
                             <td>{{ $all_tugas->firstItem() + $key }}
                             </td>
                             <td>{{ $tgs['matkul']->name }}</td>
-                            <td>{{ nl2br($tgs->deskripsi) }}</td>
+                            <td>{!! nl2br($tgs->deskripsi) !!}</td>
                             <td>{{ date('d F Y - H:i ', strtotime($tgs->batas_waktu)) }}</td>
                             <td>
                                 {!! $selisih !!}
@@ -261,9 +261,9 @@ $target = 'update';
 
 
     {{-- tugas yg ga dikerjain --}}
+
     @php
     $count=0;
-    $semester_skrg='';
     @endphp
     <div class="row">
         <div class="col-md-12 mt-2">
@@ -293,13 +293,9 @@ $target = 'update';
                 @endforeach
             </div>
 
-            {!! $semester_skrg !!}
-
-            @if ($count > 0)
-            <p class="text-center mt-3">
-                <strong>Total : {{ $count }} Tugas</strong>
-            </p>
-            @endif
+            <h6 class="text-center mt-3">
+                Total : {{ $count }} Tugas
+            </h6>
 
         </div>
     </div>

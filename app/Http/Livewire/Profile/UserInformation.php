@@ -2,10 +2,10 @@
 
 namespace App\Http\Livewire\Profile;
 
-use App\Models\User as ModelsUser;
+use App\Models\User;
 use Livewire\Component;
 
-class User extends Component
+class UserInformation extends Component
 {
     public $username, $name, $email;
 
@@ -19,7 +19,7 @@ class User extends Component
 
     public function render()
     {
-        return view('livewire.profile.user');
+        return view('livewire.profile.user-information');
     }
 
     public function update()
@@ -29,7 +29,7 @@ class User extends Component
             'email' => 'required|email|unique:users,email,' . auth()->user()->id,
         ]);
 
-        $user = ModelsUser::find(auth()->user()->id);
+        $user = User::find(auth()->user()->id);
         $user->name = $this->name;
         $user->email = $this->email;
         $user->save();

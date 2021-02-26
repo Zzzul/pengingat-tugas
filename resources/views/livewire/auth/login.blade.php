@@ -61,4 +61,13 @@
             </form>
         </div>
     </div>
+
+
+    <div class="row text-center justify-content-center my-3">
+        <div class="col-md-6">
+            <h5 class="">Akun Demo</h5>
+            <h6 class="mb-1">Username : demo</h6>
+            <h6 class="mb-0">Password : password</h6>
+        </div>
+    </div>
 </div>

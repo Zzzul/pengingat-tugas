@@ -67,6 +67,11 @@
                                 href="{{ route('semester') }}">Semester</a>
                         </li>
 
+                        <li class="nav-item">
+                            <a class="nav-link{{ request()->is('user-list') ? ' active' : '' }}"
+                                href="{{ route('user-list') }}">User</a>
+                        </li>
+
                         <!-- Authentication Links -->
                         @guest
                         @if (Route::has('login'))

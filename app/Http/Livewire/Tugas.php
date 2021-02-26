@@ -56,9 +56,6 @@ class Tugas extends Component
             }
         ])->get();
 
-        // echo json_encode($this->tugas_yg_ga_selesai);
-        // die;
-
         $all_tugas = ModelsTugas::where('user_id', auth()->user()->id)
             ->where(function ($q) {
                 $q->where('deskripsi', 'like', '%' . $this->search . '%')
