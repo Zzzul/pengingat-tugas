@@ -28,14 +28,15 @@ hr {
 
 ::-webkit-scrollbar-track {
     border: 1px solid black;
-    background-color: #F5F5F5;
+    background-color: white;
 }
 
 ::-webkit-scrollbar {
+    height: 4px;
     width: 7px;
-    background-color: #F5F5F5;
+    background-color: white;
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: #000000;
+    background-color: black;
 }

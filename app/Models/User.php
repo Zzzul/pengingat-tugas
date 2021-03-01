@@ -9,10 +9,11 @@ use Illuminate\Notifications\Notifiable;
 use App\Models\Tugas;
 use App\Models\Semester;
 use App\Models\Matkul;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.

@@ -117,7 +117,7 @@ class Tugas extends Component
 
         $this->hideForm();
 
-        $this->showAlert('success', 'Mata Kuliah berhasil ditambahkan.');
+        $this->showAlert('success', 'Tugas berhasil ditambahkan.');
     }
 
     public function show($id)
@@ -178,7 +178,7 @@ class Tugas extends Component
 
                 $this->hideForm();
 
-                $this->showAlert('success', 'Mata Kuliah berhasil diubah.');
+                $this->showAlert('success', 'Tugas berhasil diubah.');
             }
         } else {
             $this->showAlert('error', 'Tugas tidak dapat diubah.');

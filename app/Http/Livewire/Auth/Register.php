@@ -25,12 +25,15 @@ class Register extends Component
     {
         $this->validate();
 
-        User::create([
+        $user = User::create([
             'name'      => $this->name,
             'username'  => $this->username,
             'email'     => $this->email,
             'password'  => bcrypt($this->password),
         ]);
+
+        $user->assignRole('user');
+        $user->givePermissionTo(['tugas', 'semester', 'matkul', 'edit profile', 'change password']);
 
         $this->flash('success', 'Akun berhasil didaftarkan silahkan login!', [
             'position'  =>  'top',
