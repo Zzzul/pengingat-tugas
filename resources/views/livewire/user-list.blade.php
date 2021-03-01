@@ -18,105 +18,96 @@ $target = 'update';
             </ol>
         </div>
 
+        {{-- {{ Auth::user()->hasRole('admin') }} --}}
+
         {{-- {{ isset($user_roles) ?  $user_roles[0]['id'] : '' }} --}}
         @if ($form)
         <div class="col-md-12 mt-3 mb-0">
-            @if ($form == 'add')
-            <form wire:submit.prevent="store">
-                @else
-                <form wire:submit.prevent="update('{{ $id_user }}')">
-                    @endif
-
-                    <div class="row form-group">
-                        {{-- Username --}}
-                        <div class="col-md-3 mb-2">
-                            <label for="username">Username</label>
-                            <input type="text" id="username" class="form-control @error('username')is-invalid @enderror"
-                                placeholder="username" wire:model="username" aria-describedby="username" disabled
-                                style="cursor: not-allowed">
-                            @error('username') <span class="text-danger" class="invalid-feedback"
-                                role="alert">{{ $message }}</span> @enderror
-                        </div>
-
-                        {{-- Name --}}
-                        <div class="col-md-3 mb-2">
-                            <label for="name">Name</label>
-                            <input type="text" id="name" min="1" max="10"
-                                class="form-control @error('name')is-invalid @enderror" placeholder="Name"
-                                wire:model="name" aria-describedby="name" {{ $form ? 'autofocus' : '' }}>
-                            @error('name') <span class="text-danger" class="invalid-feedback"
-                                role="alert">{{ $message }}</span> @enderror
-                        </div>
-
-                        {{-- Email --}}
-                        <div class="col-md-3  mb-2">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" class="form-control @error('email')is-invalid @enderror"
-                                placeholder="Email" wire:model="email" aria-describedby="email"
-                                {{ $form ? 'autofocus' : '' }}>
-                            @error('email') <span class="text-danger" class="invalid-feedback"
-                                role="alert">{{ $message }}</span> @enderror
-                        </div>
-
-
-                        {{-- role --}}
-                        <div class="col-md-3  mb-2">
-                            <label for="role">Role</label>
-                            <select name="role" id="role" wire:model="user_roles"
-                                class="form-control @error('role')is-invalid @enderror">
-                                <option value="" disabled>--Pilih Role--</option>
-                                @foreach ($all_roles as $role)
-                                {{-- {{ $user_roles == $role->name ? 'selected' : ''}} --}}
-                                <option value="{{ $role->id }}">
-                                    {{ ucfirst($role->name) }}</option>
-                                @endforeach
-                            </select>
-                            @error('user_roles') <span class="text-danger" class="invalid-feedback"
-                                role="alert">{{ $message }}</span> @enderror
-                        </div>
-
-
-                        <div class="col-md-10 col-sm-12">
-                            <label class="mb-1 mt-2 @error('permissions')text-danger @enderror">Permissions</label>
-
-                            @foreach ($user_permissions as $permis)
-                            <label class="form-check-label" style="cursor : pointer;">
-                                <input class="form-check-input ml-2 mr-0" type="checkbox" value="{{ $permis->id }}"
-                                    id="permis-{{ $permis->id }}" wire:model="permissions.{{ $permis->id-1 }}">
-                                {{ ucfirst($permis->name) }}
-                            </label>
-                            @endforeach
-
-                            @foreach ($not_user_permissions as $not_permis)
-                            <label class="form-check-label" style="cursor : pointer;">
-                                <input class="form-check-input ml-2 mr-0" type="checkbox"
-                                    id="permis-{{ $not_permis->id }}" value="{{ $not_permis->id }}"
-                                    wire:model="permissions.{{ $not_permis->id-1 }}">
-                                {{ ucfirst($not_permis->name)  }}
-                            </label>
-                            @endforeach
-
-                            @error('permissions')
-                            <small class="text-danger">
-                                {{ $message }}
-                            </small>
-                            @enderror
-                        </div>
-
-
-                        {{--<div class="col-md-7"></div> --}}
-                        <div class="col-md-2 mt-0">
-                            <x-button-submit target="{{ $target }}"></x-button-submit>
-                        </div>
+            <form wire:submit.prevent="update('{{ $id_user }}')">
+                <div class="row form-group">
+                    {{-- Username --}}
+                    <div class="col-md-3 mb-2">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" class="form-control @error('username')is-invalid @enderror"
+                            placeholder="username" wire:model="username" aria-describedby="username" disabled
+                            style="cursor: not-allowed">
+                        @error('username') <span class="text-danger" class="invalid-feedback"
+                            role="alert">{{ $message }}</span> @enderror
                     </div>
-                    {{-- end of row form-group--}}
 
+                    {{-- Name --}}
+                    <div class="col-md-3 mb-2">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" min="1" max="10"
+                            class="form-control @error('name')is-invalid @enderror" placeholder="Name" wire:model="name"
+                            aria-describedby="name" {{ $form ? 'autofocus' : '' }}>
+                        @error('name') <span class="text-danger" class="invalid-feedback"
+                            role="alert">{{ $message }}</span> @enderror
+                    </div>
 
-                </form>
+                    {{-- Email --}}
+                    <div class="col-md-3  mb-2">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" class="form-control @error('email')is-invalid @enderror"
+                            placeholder="Email" wire:model="email" aria-describedby="email"
+                            {{ $form ? 'autofocus' : '' }}>
+                        @error('email') <span class="text-danger" class="invalid-feedback"
+                            role="alert">{{ $message }}</span> @enderror
+                    </div>
+
+                    {{-- role --}}
+                    <div class="col-md-3  mb-2">
+                        <label for="role">Role</label>
+                        <select name="role" id="role" wire:model="user_roles"
+                            class="form-control @error('role')is-invalid @enderror">
+                            <option value="" disabled>--Pilih Role--</option>
+                            @foreach ($all_roles as $role)
+                            {{-- {{ $user_roles == $role->name ? 'selected' : ''}} --}}
+                            <option value="{{ $role->id }}">
+                                {{ ucfirst($role->name) }}</option>
+                            @endforeach
+                        </select>
+                        @error('user_roles') <span class="text-danger" class="invalid-feedback"
+                            role="alert">{{ $message }}</span> @enderror
+                    </div>
+
+                    {{-- Permissions --}}
+                    <div class="col-md-10 col-sm-12">
+                        <label class="mb-1 mt-2 @error('permissions')text-danger @enderror">Permissions</label>
+
+                        @foreach ($user_permissions as $permis)
+                        <label class="form-check-label" style="cursor : pointer;">
+                            <input class="form-check-input ml-2 mr-0" type="checkbox" value="{{ $permis->id }}"
+                                id="permis-{{ $permis->id }}" wire:model="permissions.{{ $permis->id-1 }}">
+                            {{ ucfirst($permis->name) }}
+                        </label>
+                        @endforeach
+
+                        @foreach ($not_user_permissions as $not_permis)
+                        <label class="form-check-label" style="cursor : pointer;">
+                            <input class="form-check-input ml-2 mr-0" type="checkbox" id="permis-{{ $not_permis->id }}"
+                                value="{{ $not_permis->id }}" wire:model="permissions.{{ $not_permis->id-1 }}">
+                            {{ ucfirst($not_permis->name)  }}
+                        </label>
+                        @endforeach
+
+                        @error('permissions')
+                        <small class="text-danger">
+                            {{ $message }}
+                        </small>
+                        @enderror
+                    </div>
+
+                    {{--<div class="col-md-7"></div> --}}
+                    <div class="col-md-2 mt-0">
+                        <x-button-submit target="{{ $target }}"></x-button-submit>
+                    </div>
+                </div>
+                {{-- end of row form-group--}}
+            </form>
         </div>
         {{-- end of --}}
         @endif
-
 
         <div class="col-md-12">
             {{-- button create --}}

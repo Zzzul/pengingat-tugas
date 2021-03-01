@@ -120,6 +120,9 @@ $target = 'update';
                     <thead>
                         <tr>
                             <th>#</th>
+                            @role('admin')
+                            <th>User</th>
+                            @endrole
                             <th>Mata Kuliah</th>
                             <th>Deskripsi</th>
                             <th>Batas Waktu</th>
@@ -166,6 +169,13 @@ $target = 'update';
                         <tr class="table-active">
                             <td>{{ $all_tugas->firstItem() + $key }}
                             </td>
+
+                            @role('admin')
+                            <td>{{ $tgs['user']->name }}
+                                {!! $tgs['user']->id == auth()->id() ? '<i class="fas fa-check-circle"></i>' : '' !!}
+                            </td>
+                            @endrole
+
                             <td>{{ $tgs['matkul']->name }}</td>
                             <td>{!! nl2br($tgs->deskripsi) !!}</td>
                             <td>{{ date('d F Y - H:i ', strtotime($tgs->batas_waktu)) }}</td>
@@ -261,14 +271,20 @@ $target = 'update';
 
 
     {{-- tugas yg ga dikerjain --}}
-
     @php
     $count=0;
     @endphp
     <div class="row">
         <div class="col-md-12 mt-2">
+            @role('admin')
+            <h4 class="text-center my-4 mb-0">Tugas yang belum/tidak dikerjakan</h4>
+            @endrole
+
+            @role('user|demo')
             <h4 class="text-center mt-4 mb-0">Tugas yang belum/tidak kamu dikerjakan</h4>
             <h6 class="mb-4 mt-1 text-center">(Semester sekarang)</h6>
+            @endrole
+
             <div class="row">
                 @foreach ($tugas_yg_ga_selesai as $tgs)
                 @if ($tgs['semester'])
@@ -279,7 +295,14 @@ $target = 'update';
                 <div class="col-md-4">
                     <div class="card card-tugas mb-3">
                         <div class="card-body">
-                            <p class="m-0 matkul">Mata Kuliah :
+                            @role('admin')
+                            <p class="m-0">
+                                User :
+                                <b>{{ $tgs['user']->name }}</b> {!! $tgs['user']->id
+                                == auth()->id() ? '<i class="fas fa-check-circle"></i>' : '' !!}
+                            </p>
+                            @endrole
+                            <p class="m-0">Mata Kuliah :
                                 <b>{{ $tgs->name }}</b>
                             </p>
                             <p class="m-0">Pertemuan Ke :
@@ -299,6 +322,10 @@ $target = 'update';
 
         </div>
     </div>
+
+
+
+
 
 </div>
 {{-- end of container--}}

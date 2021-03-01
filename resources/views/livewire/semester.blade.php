@@ -70,6 +70,9 @@ $target = 'update';
                     <thead>
                         <tr>
                             <th>#</th>
+                            @role('admin')
+                            <th>User</th>
+                            @endrole
                             <th>Semester</th>
                             <th>Dibuat Pada</th>
                             <th>Terakhir Diubah</th>
@@ -90,6 +93,11 @@ $target = 'update';
                         <tr class="table-active">
                             <td>{{ $semesters->firstItem() + $key }}
                             </td>
+                            @role('admin')
+                            <td>{{ $sms['user']->name }}
+                                {!! $sms['user']->id == auth()->id() ? '<i class="fas fa-check-circle"></i>' : '' !!}
+                            </td>
+                            @endrole
                             <td>{{ $sms->semester_ke }}</td>
                             <td>{{ $sms->created_at->diffForHumans()  }}</td>
                             <td>{{ $sms->updated_at->diffForHumans() }}</td>

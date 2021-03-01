@@ -55,14 +55,14 @@
                 <div class="form-groupmb-0">
                     <div class="d-none d-md-block">
                         <button type="submit" class="btn btn-info">
-                            {{ __('Update Profile') }}
+                            {{ __('Ubah Profile') }}
                             <x-loading target="{{ 'update' }}"></x-loading>
                         </button>
                     </div>
 
                     <div class=" d-md-none d-lg-none d-xl-none">
                         <button type="submit" class="btn btn-info btn-block">
-                            {{ __('Update Profile') }}
+                            {{ __('Ubah Profile') }}
                             <x-loading target="{{ 'update' }}"></x-loading>
                         </button>
                     </div>

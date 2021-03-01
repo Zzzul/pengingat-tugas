@@ -26,19 +26,22 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home')->name('home');
 
-Route::group(['middleware' => ['auth']], function () {
+Route::group(['middleware' => ['auth', 'role:admin|user|demo']], function () {
     Route::get('semester', Semester::class)->name('semester');
     Route::get('mata-kuliah', Matkul::class)->name('matkul');
     Route::get('tugas', Tugas::class)->name('tugas');
-
-
-    Route::get('user-list', UserList::class)->name('user-list');
 
     // Profile
     Route::get('setting', Setting::class)->name('setting');
     Route::get('profile', UserInformation::class)->name('user-profile');
     Route::get('change-password', Password::class)->name('change-password');
 });
+
+Route::group(['middleware' => ['auth', 'role:admin']], function () {
+    Route::get('user-list', UserList::class)->name('user-list');
+});
+
+
 
 Route::group(['middleware' => ['guest']], function () {
     Route::get('register', Register::class)->name('register');

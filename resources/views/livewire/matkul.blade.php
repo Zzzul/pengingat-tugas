@@ -86,6 +86,9 @@ $target = 'update';
                     <thead>
                         <tr>
                             <th>#</th>
+                            @role('admin')
+                            <th>User</th>
+                            @endrole
                             <th>Mata Kuliah</th>
                             <th>SKS</th>
                             <th>Semester</th>
@@ -105,6 +108,11 @@ $target = 'update';
 
                         <tr class="table-active">
                             <td>{{ $matkuls->firstItem() + $key }}</td>
+                            @role('admin')
+                            <td>{{ $mk['user']->name }}
+                                {!! $mk['user']->id == auth()->id() ? '<i class="fas fa-check-circle"></i>' : '' !!}
+                            </td>
+                            @endrole
                             <td>{{ $mk->name }}</td>
                             <td>{{ $mk->sks }}</td>
                             <td>{{ $mk['semester']->semester_ke }}</td>

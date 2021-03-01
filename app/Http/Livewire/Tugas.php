@@ -14,7 +14,7 @@ class Tugas extends Component
     use WithPagination;
     use LivewireAlert;
 
-    public $form, $id_tugas, $deskripsi, $batas_waktu, $tugas, $selesai, $pertemuan_ke, $matkul = '', $matkuls, $tugas_yg_ga_selesai;
+    public $form, $id_tugas, $deskripsi, $batas_waktu, $tugas, $selesai, $pertemuan_ke, $matkul = '', $matkuls;
 
     public $paginate_per_page = 5;
 
@@ -47,6 +47,7 @@ class Tugas extends Component
 
     public function render()
     {
+
         $this->tugas_yg_ga_selesai = Matkul::with([
             'semester' => function ($q) {
                 $q->where('user_id', auth()->user()->id)->where('aktif_smt', 1);
@@ -56,25 +57,61 @@ class Tugas extends Component
             }
         ])->get();
 
-        $all_tugas = ModelsTugas::where('user_id', auth()->user()->id)
-            ->where(function ($q) {
-                $q->where('deskripsi', 'like', '%' . $this->search . '%')
-                    ->orWhere('batas_waktu', 'like', '%' . $this->search . '%')
-                    ->orWhere('selesai', 'like', '%' . $this->search . '%')
-                    ->orWhere('pertemuan_ke', 'like', '%' . $this->search . '%')
-                    ->orWhere('created_at', 'like', '%' . $this->search . '%')
-                    ->orWhere('updated_at', 'like', '%' . $this->search . '%')
-                    ->orWhereHas('matkul', function ($q) {
-                        $q->where('name', 'like', '%' . $this->search . '%');
-                    });
-            })
-            ->orderBy('selesai', 'asc')
-            ->paginate($this->paginate_per_page);
+        if (auth()->user()->hasRole('admin')) {
+
+            $all_tugas = ModelsTugas::where('deskripsi', 'like', '%' . $this->search . '%')
+                ->orWhere('batas_waktu', 'like', '%' . $this->search . '%')
+                ->orWhere('selesai', 'like', '%' . $this->search . '%')
+                ->orWhere('pertemuan_ke', 'like', '%' . $this->search . '%')
+                ->orWhere('created_at', 'like', '%' . $this->search . '%')
+                ->orWhere('updated_at', 'like', '%' . $this->search . '%')
+                ->orWhereHas('matkul', function ($q) {
+                    $q->where('name', 'like', '%' . $this->search . '%');
+                })
+                ->orWhereHas('user', function ($q) {
+                    $q->where('name', 'like', '%' . $this->search . '%')
+                        ->orWhere('username', 'like', '%' . $this->search . '%')
+                        ->groupBy('name');
+                })
+                ->orderBy('selesai', 'asc')
+                ->paginate($this->paginate_per_page);
+
+            $tugas_yg_ga_selesai = Matkul::with([
+                'semester',
+                'tugas' => function ($q) {
+                    $q->where('selesai', null);
+                }
+            ])->get();
+        } else {
+            $all_tugas = ModelsTugas::where('user_id', auth()->user()->id)
+                ->where(function ($q) {
+                    $q->where('deskripsi', 'like', '%' . $this->search . '%')
+                        ->orWhere('batas_waktu', 'like', '%' . $this->search . '%')
+                        ->orWhere('selesai', 'like', '%' . $this->search . '%')
+                        ->orWhere('pertemuan_ke', 'like', '%' . $this->search . '%')
+                        ->orWhere('created_at', 'like', '%' . $this->search . '%')
+                        ->orWhere('updated_at', 'like', '%' . $this->search . '%')
+                        ->orWhereHas('matkul', function ($q) {
+                            $q->where('name', 'like', '%' . $this->search . '%');
+                        });
+                })
+                ->orderBy('selesai', 'asc')
+                ->paginate($this->paginate_per_page);
+
+            $tugas_yg_ga_selesai = Matkul::with([
+                'semester' => function ($q) {
+                    $q->where('user_id', auth()->user()->id)->where('aktif_smt', 1);
+                },
+                'tugas' => function ($q) {
+                    $q->where('user_id', auth()->user()->id)->where('selesai', null);
+                }
+            ])->get();
+        }
 
         // get all matkul
         $this->matkuls = Matkul::where('user_id', auth()->user()->id)->get();
 
-        return view('livewire.tugas', compact('all_tugas'));
+        return view('livewire.tugas', compact('all_tugas', 'tugas_yg_ga_selesai'));
     }
 
     public function showForm($type)
@@ -127,7 +164,7 @@ class Tugas extends Component
         $this->id_tugas = $id;
         $tugas = ModelsTugas::findOrfail($id);
 
-        if ($tugas->user_id == auth()->user()->id) {
+        if (auth()->user()->hasRole('admin') || $tugas->user_id == auth()->user()->id) {
             // get all matkul
             $this->matkuls = Matkul::get();
             $this->matkul       = $tugas->matkul_id;
@@ -155,7 +192,7 @@ class Tugas extends Component
         $tglSelesaiCount =  date('YmdHi', strtotime($this->selesai));
 
         // cek jika tugas milik user yang sedang login
-        if ($tugas->user_id == auth()->user()->id) {
+        if (auth()->user()->hasRole('admin') || $tugas->user_id == auth()->user()->id) {
 
             // jika batas waktu telah habis
             if ($tglSelesaiCount > $batasWaktuCount) {
@@ -201,7 +238,7 @@ class Tugas extends Component
     {
         $tugas = ModelsTugas::findOrfail($this->id_tugas);
 
-        if ($tugas->user_id == auth()->user()->id) {
+        if (auth()->user()->hasRole('admin') || $tugas->user_id == auth()->user()->id) {
             $tugas->destroy($this->id_tugas);
             $this->showAlert('success', 'Tugas berhasil dihapus.');
         } else {

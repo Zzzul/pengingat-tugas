@@ -19,29 +19,32 @@ class Password extends Component
 
     public function update()
     {
-
-        $this->validate([
-            'current_password' => 'required',
-            'password' => 'required|min:8|confirmed',
-            'password_confirmation' => 'required',
-        ]);
-
-        if (Hash::check($this->current_password, auth()->user()->password)) {
-            auth()->user()->update([
-                'password' => bcrypt($this->password)
+        if (auth()->user()->hasPermissionTo('change password')) {
+            $this->validate([
+                'current_password' => 'required',
+                'password' => 'required|min:8|confirmed',
+                'password_confirmation' => 'required',
             ]);
 
-            $this->flash('success', 'Password berhasil diubah, silahkan login ulang!', [
-                'position'  =>  'top',
-                'timer'     =>  1500,
-                'toast'     =>  true,
-            ]);
+            if (Hash::check($this->current_password, auth()->user()->password)) {
+                auth()->user()->update([
+                    'password' => bcrypt($this->password)
+                ]);
 
-            Auth::logout();
+                $this->flash('success', 'Password berhasil diubah, silahkan login ulang!', [
+                    'position'  =>  'top',
+                    'timer'     =>  1500,
+                    'toast'     =>  true,
+                ]);
 
-            return redirect(route('home'));
+                Auth::logout();
+
+                return redirect(route('home'));
+            } else {
+                $this->showAlert('error', 'Password lama salah!');
+            }
         } else {
-            $this->showAlert('error', 'Password lama salah!');
+            $this->showAlert('error', 'Kamu tidak bisa mengganti password!');
         }
     }
 

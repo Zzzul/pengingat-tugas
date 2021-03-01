@@ -2,8 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class UserSeeder extends Seeder
 {
@@ -14,11 +17,36 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')->insert([
-            'name' => 'Akun Demo',
-            'username' => 'demo',
-            'email' => 'demo@mail.test',
+        // Reset cached roles and permissions
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+
+        $user = User::create([
+            'name' => 'Ini Admin',
+            'username' => 'admin',
+            'email' => 'admin@gmail.com',
             'password' => bcrypt('password'),
         ]);
+        $user->assignRole('admin');
+        $user->givePermissionTo(Permission::all());
+
+
+        $user = User::create([
+            'name' => 'User Biasa',
+            'username' => 'userBiasa',
+            'email' => 'user@gmail.com',
+            'password' => bcrypt('password'),
+        ]);
+        $user->assignRole('user');
+        $user->givePermissionTo(['tugas', 'semester', 'matkul', 'edit profile', 'change password']);
+
+
+        $user = User::create([
+            'name' => 'Akun Demo',
+            'username' => 'demo',
+            'email' => 'demo@gmail.com',
+            'password' => bcrypt('password'),
+        ]);
+        $user->assignRole('demo');
+        $user->givePermissionTo(['tugas', 'semester', 'matkul', 'edit profile']);
     }
 }

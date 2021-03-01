@@ -45,18 +45,33 @@ class Matkul extends Component
     public function render()
     {
 
-        $matkuls = ModelsMatkul::where('user_id', auth()->user()->id)
-            ->where(function ($q) {
-                $q->where('name', 'like', '%' . $this->search . '%')
-                    ->orWhere('sks', 'like', '%' . $this->search . '%')
-                    ->orWhere('created_at', 'like', '%' . $this->search . '%')
-                    ->orWhere('updated_at', 'like', '%' . $this->search . '%')
-                    ->orWhereHas('semester', function ($q) {
-                        $q->where('semester_ke', 'like', '%' . $this->search . '%');
-                    });
-            })
-            ->orderBy('updated_at', 'desc')
-            ->paginate($this->paginate_per_page);
+        if (auth()->user()->hasRole('admin')) {
+            $matkuls = ModelsMatkul::where('name', 'like', '%' . $this->search . '%')
+                ->orWhere('sks', 'like', '%' . $this->search . '%')
+                ->orWhere('created_at', 'like', '%' . $this->search . '%')
+                ->orWhere('updated_at', 'like', '%' . $this->search . '%')
+                ->orWhereHas('semester', function ($q) {
+                    $q->where('semester_ke', 'like', '%' . $this->search . '%');
+                })
+                ->orWhereHas('user', function ($q) {
+                    $q->where('name', 'like', '%' . $this->search . '%');
+                })
+                ->orderBy('updated_at', 'desc')
+                ->paginate($this->paginate_per_page);
+        } else {
+            $matkuls = ModelsMatkul::where('user_id', auth()->user()->id)
+                ->where(function ($q) {
+                    $q->where('name', 'like', '%' . $this->search . '%')
+                        ->orWhere('sks', 'like', '%' . $this->search . '%')
+                        ->orWhere('created_at', 'like', '%' . $this->search . '%')
+                        ->orWhere('updated_at', 'like', '%' . $this->search . '%')
+                        ->orWhereHas('semester', function ($q) {
+                            $q->where('semester_ke', 'like', '%' . $this->search . '%');
+                        });
+                })
+                ->orderBy('updated_at', 'desc')
+                ->paginate($this->paginate_per_page);
+        }
 
         // get all semesters
         $this->semesters = Semester::where('user_id', auth()->user()->id)->get();
@@ -119,7 +134,7 @@ class Matkul extends Component
         $this->id_matkul = $id;
         $matkul = ModelsMatkul::findOrfail($id);
 
-        if ($matkul->user_id == auth()->user()->id) {
+        if (auth()->user()->hasRole('admin') || $matkul->user_id == auth()->user()->id) {
             // get all semesters
             $this->semesters = Semester::get();
 
@@ -138,7 +153,7 @@ class Matkul extends Component
 
         $matkul = ModelsMatkul::findOrFail($id);
 
-        if ($matkul->user_id == auth()->user()->id) {
+        if (auth()->user()->hasRole('admin') || $matkul->user_id == auth()->user()->id) {
             $matkul->name = $this->name;
             $matkul->sks = $this->sks;
             $matkul->semester_id = $this->semester_id;
@@ -157,7 +172,7 @@ class Matkul extends Component
     {
         $matkul = ModelsMatkul::findOrFail($this->id_matkul);
 
-        if ($matkul->user_id == auth()->user()->id) {
+        if (auth()->user()->hasRole('admin') || $matkul->user_id == auth()->user()->id) {
             try {
                 $matkul->destroy($this->id_matkul);
                 $this->showAlert('success', 'Mata Kuliah berhasil dihapus.');

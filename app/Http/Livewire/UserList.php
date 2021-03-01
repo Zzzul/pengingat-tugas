@@ -44,7 +44,9 @@ class UserList extends Component
         $users = User::where('name', 'like', '%' . $this->search . '%')
             ->orWhere('username', 'like', '%' . $this->search . '%')
             ->orWhere('email', 'like', '%' . $this->search . '%')
-            // ->orWhereHas('role,name', 'like', '%' . $this->search . '%')
+            ->orWhereHas('roles', function ($q) {
+                $q->where('name', 'like', '%' . $this->search . '%');
+            })
             ->orderBy('created_at', 'asc')->paginate($this->paginate_per_page);
 
         // $this->all_roles = Role::get();
@@ -111,7 +113,8 @@ class UserList extends Component
 
         $user = User::findOrFail($id);
         $user_roles = Role::find($this->user_roles);
-        $role_name = $user->getRoleNames()[0]; // result = 'admin' or 'demo'
+        $user->getRoleNames()->isEmpty() ? $role_name = '' : $role_name = $user->getRoleNames()[0];
+        // $role_name = $user->getRoleNames()[0]; // result = 'admin' or 'demo'
         $permission_name = $user->permissions;
 
         // dd($this->permissions);
@@ -178,6 +181,8 @@ class UserList extends Component
                 $this->showAlert('success', 'User berhasil dihapus.');
             } catch (\Exception $ex) {
                 $this->showAlert('error', 'Tidak dapat dihapus karena terdapat semester pada user : ' . $user->name);
+                $user->assignRole('user');
+                $user->givePermissionTo(['tugas', 'semester', 'matkul', 'edit profile', 'change password']);
             }
         } else {
             $this->showAlert('error', 'User tidak dapat dihapus karena sedang kamu pakai sekarang!.');

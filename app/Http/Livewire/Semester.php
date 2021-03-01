@@ -50,11 +50,19 @@ class Semester extends Component
                 $q->where('aktif_smt', 1);
             })->first();
 
-        $semesters = ModelsSemester::where('user_id', auth()->user()->id)
-            ->where(function ($q) {
-                $q->where('semester_ke', 'like', '%' . $this->search . '%');
-            })
-            ->orderBy('created_at', 'asc')->paginate($this->paginate_per_page);
+        if (auth()->user()->hasRole('admin')) {
+            $semesters = ModelsSemester::where('semester_ke', 'like', '%' . $this->search . '%')
+                ->orWhereHas('user', function ($q) {
+                    $q->where('name', 'like', '%' . $this->search . '%');
+                })
+                ->orderBy('created_at', 'asc')->paginate($this->paginate_per_page);
+        } else {
+            $semesters = ModelsSemester::where('user_id', auth()->user()->id)
+                ->where(function ($q) {
+                    $q->where('semester_ke', 'like', '%' . $this->search . '%');
+                })
+                ->orderBy('created_at', 'asc')->paginate($this->paginate_per_page);
+        }
         return view('livewire.semester', compact('semesters'));
     }
 
@@ -104,7 +112,7 @@ class Semester extends Component
 
         $semester = ModelsSemester::findOrFail($id);
 
-        if ($semester->user_id == auth()->user()->id) {
+        if (auth()->user()->hasRole('admin') || $semester->user_id == auth()->user()->id) {
             $this->semester_ke = $semester->semester_ke;
             $this->form = 'edit';
         } else {
@@ -119,7 +127,7 @@ class Semester extends Component
         $semester = ModelsSemester::findOrFail($id);
 
         // jika user ingin edit data yang bukan miliknya
-        if ($semester->user_id == auth()->user()->id) {
+        if (auth()->user()->hasRole('admin') || $semester->user_id == auth()->user()->id) {
             $semester->user_id = auth()->user()->id;
             $semester->semester_ke = $this->semester_ke;
             $semester->save();
@@ -169,7 +177,7 @@ class Semester extends Component
     public function confirmed()
     {
         $semester =  ModelsSemester::findOrFail($this->id_semester);
-        if ($semester->user_id == auth()->user()->id) {
+        if (auth()->user()->hasRole('admin') || $semester->user_id == auth()->user()->id) {
 
             // jika tidak terdapat relasi pada semester
             try {

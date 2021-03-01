@@ -5,7 +5,7 @@
             <div class="d-none d-md-block">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Home</a></li>
-                    <li class="breadcrumb-item active">Profile</li>
+                    <li class="breadcrumb-item active">Ganti Password</li>
                 </ol>
             </div>
 
@@ -19,6 +19,11 @@
         </div>
 
         <div class="col-md-6 my-3">
+            @role('demo')
+            <div class="alert alert-danger mb-3">
+                Akun demo tidak dapat mengganti password!
+            </div>
+            @endrole
 
             <form wire:submit.prevent="update">
                 <div class="form-group">
@@ -56,22 +61,23 @@
                         placeholder="••••••••••" name="password_confirmation" required autocomplete="new-password">
                 </div>
 
-
+                @can('change password')
                 <div class="form-groupmb-0">
                     <div class="d-none d-md-block">
                         <button type="submit" class="btn btn-info">
-                            {{ __('Update Password') }}
+                            {{ __('Ubah Password') }}
                             <x-loading target="{{ 'update' }}"></x-loading>
                         </button>
                     </div>
 
                     <div class=" d-md-none d-lg-none d-xl-none">
                         <button type="submit" class="btn btn-info btn-block">
-                            {{ __('Update Password') }}
+                            {{ __('Ubah Password') }}
                             <x-loading target="{{ 'update' }}"></x-loading>
                         </button>
                     </div>
                 </div>
+                @endcan
 
             </form>
         </div>

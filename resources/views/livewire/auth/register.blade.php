@@ -26,7 +26,7 @@
                     <label for="username">{{ __('Username') }}</label>
                     <input wire:model="username" id="username" type="text"
                         class="form-control @error('username') is-invalid @enderror" name="username"
-                        placeholder="BrunoBuccirati" value="{{ old('username') }}" required autocomplete="username"
+                        placeholder="brunoBucciarati" value="{{ old('username') }}" required autocomplete="username"
                         autofocus>
 
                     @error('username')
