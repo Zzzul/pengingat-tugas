@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Matkul as ModelsMatkul;
 use App\Models\Semester;
+use App\Models\User;
 use App\Traits\LivewireAlert;
 use Exception;
 use Livewire\Component;
@@ -14,7 +15,7 @@ class Matkul extends Component
     use WithPagination;
     use LivewireAlert;
 
-    public $form, $id_matkul, $name, $sks, $semesters, $semester_id = '';
+    public $form, $id_matkul, $name, $sks, $semesters, $semester_id = '', $milik_user;
     public $paginate_per_page = 5;
     protected $paginationTheme = 'bootstrap';
 
@@ -74,7 +75,7 @@ class Matkul extends Component
         }
 
         // get all semesters
-        $this->semesters = Semester::where('user_id', auth()->user()->id)->get();
+        // $this->semesters = Semester::where('user_id', auth()->user()->id)->get();
 
         return view('livewire.matkul', compact('matkuls'));
     }
@@ -83,7 +84,9 @@ class Matkul extends Component
     {
         $this->form = $type;
 
-        if ($this->name) {
+        if ($type == 'add') {
+            // get all semesters
+            $this->semesters = Semester::where('user_id', auth()->user()->id)->get();
             $this->emptyItems();
         }
     }
@@ -135,8 +138,15 @@ class Matkul extends Component
         $matkul = ModelsMatkul::findOrfail($id);
 
         if (auth()->user()->hasRole('admin') || $matkul->user_id == auth()->user()->id) {
-            // get all semesters
-            $this->semesters = Semester::get();
+
+            if ($matkul->user_id != auth()->user()->id) {
+                $this->showAlert('info', 'Kamu sedang mengubah mata kuliah user lain!.');
+                $this->milik_user = User::find($matkul->user_id);
+                $this->semesters =  Semester::where('user_id', $matkul->user_id)->get();
+            } else {
+                $this->semesters = Semester::where('user_id', auth()->user()->id)->get();
+                $this->milik_user = [];
+            }
 
             $this->name = $matkul->name;
             $this->sks = $matkul->sks;

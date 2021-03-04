@@ -22,6 +22,16 @@ $target = 'update';
 
         @if ($form)
         <div class="col-md-12 mt-3">
+            @role('admin')
+            @if ($milik_user)
+            <div class="alert alert-info" role="alert">
+                Tugas ini milik : <span
+                    class="font-weight bold">{{ '@'. $milik_user->username .' - '. $milik_user->name  }}</span>
+            </div>
+            @endif
+            @endrole
+
+
             @if ($form === 'add')
             <form wire:submit.prevent="store">
                 @else
@@ -31,8 +41,11 @@ $target = 'update';
                     <div class="row form-group">
                         <div class="col-md-12">
                             <div class="row form-group mb-0">
+
                                 <div class="col-md-{{ $form != 'add' ? '3' : '5' }}">
-                                    <label for="matkul-id" class="mb-1">Mata Kuliah</label>
+                                    <label for="matkul-id" class="mb-1">
+                                        Mata Kuliah
+                                    </label>
                                     <select
                                         class="form-control mb-2 @error('matkul')is-invalid @enderror{{ $matkuls->isEmpty() ? 'is-invalid' : '' }}"
                                         wire:model="matkul" id="matkul-id">
@@ -300,6 +313,9 @@ $target = 'update';
                                 User :
                                 <b>{{ $tgs['user']->name }}</b> {!! $tgs['user']->id
                                 == auth()->id() ? '<i class="fas fa-check-circle"></i>' : '' !!}
+                            </p>
+                            <p class="m-0">Semester :
+                                <b>{{ $tgs['semester']->semester_ke }}</b>
                             </p>
                             @endrole
                             <p class="m-0">Mata Kuliah :

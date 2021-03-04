@@ -20,6 +20,15 @@ $target = 'update';
 
         @if ($form)
         <div class="col-md-12 mt-3">
+            @role('admin')
+            @if ($milik_user)
+            <div class="alert alert-info" role="alert">
+                Semester ini milik : <span
+                    class="font-weight bold">{{ '@'. $milik_user->username .' - '. $milik_user->name  }}</span>
+            </div>
+            @endif
+            @endrole
+
             @if ($form == 'add')
             <form wire:submit.prevent="store">
                 @else

@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Matkul;
 use App\Models\Tugas as ModelsTugas;
+use App\Models\User;
 use App\Traits\LivewireAlert;
 use DateTime;
 use Livewire\Component;
@@ -14,7 +15,7 @@ class Tugas extends Component
     use WithPagination;
     use LivewireAlert;
 
-    public $form, $id_tugas, $deskripsi, $batas_waktu, $tugas, $selesai, $pertemuan_ke, $matkul = '', $matkuls;
+    public $form, $id_tugas, $deskripsi, $batas_waktu, $tugas, $selesai, $pertemuan_ke, $matkul = '', $matkuls, $milik_user;
 
     public $paginate_per_page = 5;
 
@@ -58,7 +59,7 @@ class Tugas extends Component
         ])->get();
 
         if (auth()->user()->hasRole('admin')) {
-
+            // jika yg login admin
             $all_tugas = ModelsTugas::where('deskripsi', 'like', '%' . $this->search . '%')
                 ->orWhere('batas_waktu', 'like', '%' . $this->search . '%')
                 ->orWhere('selesai', 'like', '%' . $this->search . '%')
@@ -83,6 +84,7 @@ class Tugas extends Component
                 }
             ])->get();
         } else {
+            // jika yg login user biasa
             $all_tugas = ModelsTugas::where('user_id', auth()->user()->id)
                 ->where(function ($q) {
                     $q->where('deskripsi', 'like', '%' . $this->search . '%')
@@ -109,7 +111,7 @@ class Tugas extends Component
         }
 
         // get all matkul
-        $this->matkuls = Matkul::where('user_id', auth()->user()->id)->get();
+        // $this->matkuls = Matkul::where('user_id', auth()->user()->id)->get();
 
         return view('livewire.tugas', compact('all_tugas', 'tugas_yg_ga_selesai'));
     }
@@ -118,7 +120,8 @@ class Tugas extends Component
     {
         $this->form = $type;
 
-        if ($this->deskripsi) {
+        if ($type == 'add') {
+            $this->matkuls = Matkul::where('user_id', auth()->user()->id)->get();
             $this->emptyItems();
         }
     }
@@ -160,13 +163,24 @@ class Tugas extends Component
     public function show($id)
     {
         $this->noValidate();
-
         $this->id_tugas = $id;
         $tugas = ModelsTugas::findOrfail($id);
 
         if (auth()->user()->hasRole('admin') || $tugas->user_id == auth()->user()->id) {
-            // get all matkul
-            $this->matkuls = Matkul::get();
+
+            if ($tugas->user_id != auth()->user()->id) {
+                // jika admin yg edit
+                $this->showAlert('info', 'Kamu sedang mengubah tugas user lain!.');
+                $this->milik_user = User::find($tugas->user_id);
+                // matkul sesuai user_id tugas
+                $this->matkuls = Matkul::where('user_id', $tugas->user_id)->get();
+            } else {
+                // user biasa yg edit
+                // matkul sesuai user yg login
+                $this->matkuls = Matkul::where('user_id', auth()->user()->id)->get();
+                $this->milik_user = [];
+            }
+
             $this->matkul       = $tugas->matkul_id;
             $this->deskripsi    = $tugas->deskripsi;
             $this->batas_waktu  = date('Y-m-d\TH:i', strtotime($tugas->batas_waktu));

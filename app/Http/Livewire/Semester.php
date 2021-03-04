@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Semester as ModelsSemester;
+use App\Models\User;
 use App\Traits\LivewireAlert;
 use Exception;
 use Livewire\Component;
@@ -13,7 +14,7 @@ class Semester extends Component
     use WithPagination;
     use LivewireAlert;
 
-    public $form, $id_semester, $semester_ke, $aktif_smt, $select_semesters = [];
+    public $form, $id_semester, $semester_ke, $aktif_smt, $select_semesters = [], $milik_user;
 
     public $search = '';
     public $page = 1;
@@ -113,6 +114,14 @@ class Semester extends Component
         $semester = ModelsSemester::findOrFail($id);
 
         if (auth()->user()->hasRole('admin') || $semester->user_id == auth()->user()->id) {
+
+            if ($semester->user_id != auth()->user()->id) {
+                $this->showAlert('info', 'Kamu sedang mengubah semester user lain!.');
+                $this->milik_user = User::find($semester->user_id);
+            } else {
+                $this->milik_user = [];
+            }
+
             $this->semester_ke = $semester->semester_ke;
             $this->form = 'edit';
         } else {
