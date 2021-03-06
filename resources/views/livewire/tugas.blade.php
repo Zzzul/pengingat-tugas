@@ -12,16 +12,68 @@ $target = 'update';
 @section('title', 'Tugas')
 <div class="container py-3">
     <div class="row justify-content-md-center">
-
         <div class="col-md-12">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
                 <li class="breadcrumb-item active">Tugas</li>
             </ol>
         </div>
+    </div>
 
+    {{-- tugas yg ga dikerjain --}}
+    @if (!$tugas_yg_ga_selesai->isEmpty())
+    <div class="row justify-content-md-center mt-2">
+        <div class="col-md-12">
+            @role('admin')
+            <h5 class="text-center mb-3">Tugas yang belum/tidak dikerjakan</h5>
+            @endrole
+
+            @role('user|demo')
+            <h5 class="text-center mb-0">Tugas yang belum/tidak kamu dikerjakan</h5>
+            <h6 class="mt-1 mb-3 text-center">(Semester sekarang)</h6>
+            @endrole
+        </div>
+        @foreach ($tugas_yg_ga_selesai as $tgs)
+        <div class="col-md-4">
+            <div class="card card-hover mb-3">
+                <div class="card-body p-3">
+                    @role('admin')
+                    <p class="m-0">
+                        User :
+                        <b>{{ $tgs->user_fullname }}</b> {!! $tgs->id_user
+                        == auth()->id() ? '<i class="fas fa-check-circle"></i>' : '' !!}
+                    </p>
+                    <p class="m-0">Semester :
+                        <b>{{ $tgs->semester_ke }}</b>
+                    </p>
+                    @endrole
+
+                    <p class="m-0">Mata Kuliah :
+                        <b>{{ $tgs->name }}</b>
+                    </p>
+                    <p class="m-0">Pertemuan Ke :
+                        <b>{{ $tgs->pertemuan_ke }}</b>
+                    </p>
+
+                    @if (date('YmdHi', strtotime($tgs->batas_waktu)) > date('YmdHi'))
+                    <p class="m-0">Batas Waktu :
+                        <b>{{ date('d F Y - H:i', strtotime($tgs->batas_waktu)) }}</b>
+                    </p>
+                    @else
+                    <p class="m-0">Batas Waktu : Telah habis
+                    </p>
+                    @endif
+
+                </div>
+            </div>
+        </div>
+        @endforeach
+    </div>
+    @endif
+
+    <div class="row justify-content-md-center mt-2">
         @if ($form)
-        <div class="col-md-12 mt-3">
+        <div class="col-md-12 mt-3 mb-0">
             @role('admin')
             @if ($milik_user)
             <div class="alert alert-info" role="alert">
@@ -42,12 +94,12 @@ $target = 'update';
                         <div class="col-md-12">
                             <div class="row form-group mb-0">
 
-                                <div class="col-md-{{ $form != 'add' ? '3' : '5' }}">
+                                <div class="col-md-{{ $form != 'add' ? '3' : '5' }} mb-1">
                                     <label for="matkul-id" class="mb-1">
                                         Mata Kuliah
                                     </label>
                                     <select
-                                        class="form-control mb-2 @error('matkul')is-invalid @enderror{{ $matkuls->isEmpty() ? 'is-invalid' : '' }}"
+                                        class="form-control @error('matkul')is-invalid @enderror{{ $matkuls->isEmpty() ? 'is-invalid' : '' }}"
                                         wire:model="matkul" id="matkul-id">
                                         <option value="" disabled>--Pilih Mata Kuliah--</option>
                                         @forelse ($matkuls as $mk)
@@ -59,29 +111,28 @@ $target = 'update';
                                     @error('matkul') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
 
-                                <div class="col-md-{{ $form != 'add' ? '3' : '4' }}">
+                                <div class="col-md-{{ $form != 'add' ? '3' : '4' }} mb-1">
                                     <label for="batas_waktu" class="mb-1">Batas Waktu</label>
                                     <input type="datetime-local" id="batas_waktu"
-                                        class="form-control mb-2  @error('batas_waktu')is-invalid @enderror"
+                                        class="form-control @error('batas_waktu')is-invalid @enderror"
                                         wire:model="batas_waktu" id="batas_waktu">
                                     @error('batas_waktu') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col-md-3 mb-1">
                                     <label for="pertemuan_ke" class="mb-1">Pertemuan Ke</label>
-                                    <input type="number"
-                                        class="form-control mb-2  @error('pertemuan_ke')is-invalid @enderror"
+                                    <input type="number" class="form-control @error('pertemuan_ke')is-invalid @enderror"
                                         wire:model="pertemuan_ke" placeholder="Pertemuan Ke" id="pertemuan_ke" min="1"
                                         max="18">
                                     @error('pertemuan_ke') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
 
                                 @if ($form != 'add')
-                                <div class="col-md-3">
+                                <div class="col-md-3 mb-1">
                                     <label for="selesai" class="mb-1">Selesai Pada</label>
                                     <input type="datetime-local" id="selesai"
-                                        class="form-control mb-2  @error('selesai')is-invalid @enderror"
-                                        wire:model="selesai" placeholder="{{ $selesai }}">
+                                        class="form-control @error('selesai')is-invalid @enderror" wire:model="selesai"
+                                        placeholder="{{ $selesai }}">
                                     @error('selesai') <span class="text-danger mt-0 mb-5">{{ $message }}</span>
                                     @enderror
                                 </div>
@@ -90,7 +141,7 @@ $target = 'update';
                             {{-- end of row group --}}
 
                             <div class="row mt-0">
-                                <div class="col-md-10">
+                                <div class="col-md-10 mb-1">
                                     <div class="form-group">
                                         <label for="deskripsi" class="mb-1">Deskripsi</label>
                                         <textarea class="form-control @error('deskripsi')is-invalid @enderror"
@@ -115,7 +166,7 @@ $target = 'update';
         {{-- table --}}
         <div class="col-md-12">
             {{-- button create --}}
-            <div class="row my-2">
+            <div class="row">
                 <div class="col-md-10 mb-2">
                     <h5 class="card-title mb-0">Tugas</h5>
                     <p class="mb-0"> <b>Tanggal Sekarang : {{ date('d F Y') }}</b> </p cmlaclass="mb-0">
@@ -126,7 +177,6 @@ $target = 'update';
             </div>
 
             <x-search-input></x-search-input>
-
 
             <div class="table-responsive">
                 <table class="table table-hover table-striped table-sm">
@@ -232,9 +282,6 @@ $target = 'update';
                                 </button>
                             </td>
                         </tr>
-                        @php
-                        $data_yg_ditampilkan = $loop->index+1;
-                        @endphp
                         @empty
                         <tr>
                             <td colspan="10" class="text-center">Data tidak ada/ditemukan.</td>
@@ -281,67 +328,6 @@ $target = 'update';
         </div>
     </div>
     {{-- d-sm-block d-md-none --}}
-
-
-    {{-- tugas yg ga dikerjain --}}
-    @php
-    $count=0;
-    @endphp
-    <div class="row">
-        <div class="col-md-12 mt-2">
-            @role('admin')
-            <h4 class="text-center my-4 mb-0">Tugas yang belum/tidak dikerjakan</h4>
-            @endrole
-
-            @role('user|demo')
-            <h4 class="text-center mt-4 mb-0">Tugas yang belum/tidak kamu dikerjakan</h4>
-            <h6 class="mb-4 mt-1 text-center">(Semester sekarang)</h6>
-            @endrole
-
-            <div class="row">
-                @foreach ($tugas_yg_ga_selesai as $tgs)
-                @if ($tgs['semester'])
-                @foreach ($tgs['tugas'] as $tg)
-                @php
-                $count++;
-                @endphp
-                <div class="col-md-4">
-                    <div class="card card-tugas mb-3">
-                        <div class="card-body">
-                            @role('admin')
-                            <p class="m-0">
-                                User :
-                                <b>{{ $tgs['user']->name }}</b> {!! $tgs['user']->id
-                                == auth()->id() ? '<i class="fas fa-check-circle"></i>' : '' !!}
-                            </p>
-                            <p class="m-0">Semester :
-                                <b>{{ $tgs['semester']->semester_ke }}</b>
-                            </p>
-                            @endrole
-                            <p class="m-0">Mata Kuliah :
-                                <b>{{ $tgs->name }}</b>
-                            </p>
-                            <p class="m-0">Pertemuan Ke :
-                                <b>{{ $tg->pertemuan_ke }}</b>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                @endforeach
-                @endif
-                @endforeach
-            </div>
-
-            <h6 class="text-center mt-3">
-                Total : {{ $count }} Tugas
-            </h6>
-
-        </div>
-    </div>
-
-
-
-
 
 </div>
 {{-- end of container--}}

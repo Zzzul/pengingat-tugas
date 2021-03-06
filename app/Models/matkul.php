@@ -26,4 +26,9 @@ class Matkul extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function jadwal()
+    {
+        return $this->belongsTo(jadwal::class);
+    }
 }

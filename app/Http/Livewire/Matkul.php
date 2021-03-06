@@ -15,7 +15,7 @@ class Matkul extends Component
     use WithPagination;
     use LivewireAlert;
 
-    public $form, $id_matkul, $name, $sks, $semesters, $semester_id = '', $milik_user;
+    public $form, $id_matkul, $name, $dosen, $hari, $jam_mulai, $jam_selesai, $sks, $semesters, $semester_id = '', $milik_user;
     public $paginate_per_page = 5;
     protected $paginationTheme = 'bootstrap';
 
@@ -24,6 +24,10 @@ class Matkul extends Component
 
     protected $rules = [
         'name' => 'required',
+        'dosen' => 'required',
+        'hari' => 'required',
+        'jam_mulai' => 'required',
+        'jam_selesai' => 'required',
         'sks' => 'required',
         'semester_id' => 'required',
     ];
@@ -45,9 +49,15 @@ class Matkul extends Component
 
     public function render()
     {
+        $today = $this->checkDay(date('l'));
 
         if (auth()->user()->hasRole('admin')) {
+            // admin
             $matkuls = ModelsMatkul::where('name', 'like', '%' . $this->search . '%')
+                ->orWhere('hari', 'like', '%' . $this->search . '%')
+                ->orWhere('dosen', 'like', '%' . $this->search . '%')
+                ->orWhere('jam_mulai', 'like', '%' . $this->search . '%')
+                ->orWhere('jam_selesai', 'like', '%' . $this->search . '%')
                 ->orWhere('sks', 'like', '%' . $this->search . '%')
                 ->orWhere('created_at', 'like', '%' . $this->search . '%')
                 ->orWhere('updated_at', 'like', '%' . $this->search . '%')
@@ -59,10 +69,23 @@ class Matkul extends Component
                 })
                 ->orderBy('updated_at', 'desc')
                 ->paginate($this->paginate_per_page);
+
+            $jadwal_hari_ini = ModelsMatkul::with([
+                'semester' => function ($q) {
+                    $q->where('aktif_smt', 1);
+                }
+            ])
+                ->where('hari', $today)
+                ->get();
         } else {
+            // end user
             $matkuls = ModelsMatkul::where('user_id', auth()->user()->id)
                 ->where(function ($q) {
                     $q->where('name', 'like', '%' . $this->search . '%')
+                        ->orWhere('hari', 'like', '%' . $this->search . '%')
+                        ->orWhere('dosen', 'like', '%' . $this->search . '%')
+                        ->orWhere('jam_mulai', 'like', '%' . $this->search . '%')
+                        ->orWhere('jam_selesai', 'like', '%' . $this->search . '%')
                         ->orWhere('sks', 'like', '%' . $this->search . '%')
                         ->orWhere('created_at', 'like', '%' . $this->search . '%')
                         ->orWhere('updated_at', 'like', '%' . $this->search . '%')
@@ -72,12 +95,18 @@ class Matkul extends Component
                 })
                 ->orderBy('updated_at', 'desc')
                 ->paginate($this->paginate_per_page);
+
+            $jadwal_hari_ini = ModelsMatkul::with([
+                'semester' => function ($q) {
+                    $q->where('user_id', auth()->user()->id)->where('aktif_smt', 1);
+                }
+            ])
+                ->where('user_id', auth()->user()->id)
+                ->where('hari', $today)
+                ->get();
         }
 
-        // get all semesters
-        // $this->semesters = Semester::where('user_id', auth()->user()->id)->get();
-
-        return view('livewire.matkul', compact('matkuls'));
+        return view('livewire.matkul', compact('matkuls', 'jadwal_hari_ini'));
     }
 
     public function showForm($type)
@@ -102,6 +131,10 @@ class Matkul extends Component
     {
         $this->validate([
             'name' => '',
+            'dosen' => '',
+            'hari' => '',
+            'jam_mulai' => '',
+            'jam_selesai' => '',
             'sks' => '',
             'semester_id' => ''
         ]);
@@ -110,6 +143,10 @@ class Matkul extends Component
     public function emptyItems()
     {
         $this->name = '';
+        $this->hari = '';
+        $this->dosen = '';
+        $this->jam_selesai = '';
+        $this->jam_mulai = '';
         $this->sks = '';
         $this->semester_id = '';
     }
@@ -118,16 +155,50 @@ class Matkul extends Component
     {
         $this->validate();
 
-        $matkul = new ModelsMatkul;
-        $matkul->name = $this->name;
-        $matkul->user_id = auth()->user()->id;
-        $matkul->sks = $this->sks;
-        $matkul->semester_id = $this->semester_id;
-        $matkul->save();
+        if ($this->jam_mulai > $this->jam_selesai) {
+            $this->jam_selesai = null;
+            $this->validate(
+                [
+                    'jam_selesai' => 'required'
+                ],
+                ['required' => 'Jam Selesai selesai tidak boleh lebih kecil dari Jam Mulai!']
+            );
+        } else {
+            $matkul = new ModelsMatkul;
+            $matkul->name = $this->name;
+            $matkul->dosen = $this->dosen;
+            $matkul->hari = $this->hari;
+            $matkul->jam_mulai = $this->jam_mulai;
+            $matkul->jam_selesai = $this->jam_selesai;
 
-        $this->hideForm();
+            $matkul->user_id = auth()->user()->id;
+            $matkul->sks = $this->sks;
+            $matkul->semester_id = $this->semester_id;
+            $matkul->save();
 
-        $this->showAlert('success', 'Mata Kuliah berhasil ditambahkan.');
+            $this->hideForm();
+
+            $this->showAlert('success', 'Mata Kuliah berhasil ditambahkan.');
+        }
+    }
+
+    public function checkDay($day)
+    {
+        if ($day == 'Monday') {
+            $day = 'senin';
+        } elseif ($day == 'Tuesday') {
+            $day = 'selasa';
+        } elseif ($day == 'Wednesday') {
+            $day = 'rabu';
+        } elseif ($day == 'Thursday') {
+            $day = 'kamis';
+        } elseif ($day == 'Friday') {
+            $day = 'jumat';
+        } elseif ($day == 'Saturday') {
+            $day = 'sabtu';
+        }
+
+        return $day;
     }
 
     public function show($id)
@@ -149,6 +220,10 @@ class Matkul extends Component
             }
 
             $this->name = $matkul->name;
+            $this->dosen = $matkul->dosen;
+            $this->hari = $matkul->hari;
+            $this->jam_mulai = $matkul->jam_mulai;
+            $this->jam_selesai = $matkul->jam_selesai;
             $this->sks = $matkul->sks;
             $this->semester_id = $matkul->semester_id;
             $this->form = 'edit';
@@ -161,22 +236,37 @@ class Matkul extends Component
     {
         $this->validate();
 
+
         $matkul = ModelsMatkul::findOrFail($id);
 
         if (auth()->user()->hasRole('admin') || $matkul->user_id == auth()->user()->id) {
-            $matkul->name = $this->name;
-            $matkul->sks = $this->sks;
-            $matkul->semester_id = $this->semester_id;
-            $matkul->save();
 
-            $this->showAlert('success', 'Mata Kuliah berhasil diubah.');
+            if ($this->jam_mulai > $this->jam_selesai) {
+                $this->jam_selesai = null;
+                $this->validate(
+                    [
+                        'jam_selesai' => 'required'
+                    ],
+                    ['required' => 'Jam Selesai selesai tidak boleh lebih kecil dari Jam Mulai!']
+                );
+            } else {
+                $matkul->name = $this->name;
+                $matkul->dosen = $this->dosen;
+                $matkul->hari = $this->hari;
+                $matkul->jam_mulai = $this->jam_mulai;
+                $matkul->jam_selesai = $this->jam_selesai;
+                $matkul->sks = $this->sks;
+                $matkul->semester_id = $this->semester_id;
+                $matkul->save();
+
+                $this->showAlert('success', 'Mata Kuliah berhasil diubah.');
+            }
         } else {
             $this->showAlert('error', 'Mata Kuliah tidak dapat diubah.');
         }
 
         $this->hideForm();
     }
-
 
     public function confirmed()
     {
@@ -208,7 +298,6 @@ class Matkul extends Component
             'showConfirmButton' =>  false
         ]);
     }
-
 
     public function triggerConfirm($id)
     {

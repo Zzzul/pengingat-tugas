@@ -139,13 +139,11 @@
                     <a class="mb-0 pb-0 nav-link{{ request()->is('tugas') ? ' active' : '' }}"
                         href="{{ route('tugas') }}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" fill="currentColor"
-                            class="bi bi-list-task" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                d="M2 2.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V3a.5.5 0 0 0-.5-.5H2zM3 3H2v1h1V3z" />
+                            class="bi bi-file-earmark-text" viewBox="0 0 16 16">
                             <path
-                                d="M5 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM5.5 7a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9zm0 4a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9z" />
-                            <path fill-rule="evenodd"
-                                d="M1.5 7a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5V7zM2 7h1v1H2V7zm0 3.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5H2zm1 .5H2v1h1v-1z" />
+                                d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
+                            <path
+                                d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5L9.5 0zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z" />
                         </svg>
                         <br>
                         <small class="m-0 p-0">Tugas</small>
@@ -242,23 +240,39 @@
         </main>
     </div>
 
-
-    <footer class="mb-5">
-        <div class="container">
-            <div class="row justify-content-md-center">
-                <div class="col-md-12">
-                    <hr>
-                    <p class="text-center">Created with 🖤 by
-                        <a href="https://github.com/zzzul/" target="_blank">Mohammad Zulfahmi</a>
-                        {{-- &bullet; Menggunakan <a href="https://laravel.com/" target="_blank">Laravel</a> & <a
-                        href="https://laravel-livewire.com/" target="_blank">Livewire</a> --}}
+    {{-- footer for desktop --}}
+    <div class="d-none d-md-block">
+        <footer>
+            <div class="container">
+                <div class="row justify-content-md-center">
+                    <div class="col-md-12">
+                        <hr>
+                        <p class="text-center">Created with 🖤 by
+                            <a href="https://github.com/zzzul/" target="_blank">Mohammad Zulfahmi</a>
+                            {{-- &bullet; Using <a href="https://laravel.com/" target="_blank">Laravel</a> & <a
+                                href="https://laravel-livewire.com/" target="_blank">Livewire</a> --}}
+                    </div>
                 </div>
             </div>
-            {{-- end of row --}}
-        </div>
-    </footer>
+        </footer>
+    </div>
 
-    <br>
+    {{-- footer for mobile --}}
+    <div class=" d-md-none d-lg-none d-xl-none">
+        <footer class="mb-5">
+            <div class="container">
+                <div class="row justify-content-md-center">
+                    <div class="col-md-12">
+                        <hr>
+                        <p class="text-center">Created with 🖤 by
+                            <a href="https://github.com/zzzul/" target="_blank">Mohammad Zulfahmi</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <br>
+    </div>
+
     @livewireScripts
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>

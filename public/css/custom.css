@@ -1,4 +1,4 @@
-.card-tugas {
+.card-hover {
     -webkit-transition-duration: 0.3s;
     transition-duration: 0.3s;
     -webkit-transition-property: transform;
@@ -7,9 +7,9 @@
     transition-timing-function: ease-out;
 }
 
-.card-tugas:hover,
-.card-tugas:focus,
-.card-tugas:active {
+.card-hover:hover,
+.card-hover:focus,
+.card-hover:active {
     -webkit-transform: translateY(5px);
     transform: translateY(5px);
     -webkit-box-shadow: 4px 3px 0px 1px rgb(0, 0, 0) !important;
@@ -33,7 +33,7 @@ hr {
 
 ::-webkit-scrollbar {
     height: 4px;
-    width: 7px;
+    width: 8px;
     background-color: white;
 }
 

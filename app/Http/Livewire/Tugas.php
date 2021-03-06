@@ -7,6 +7,7 @@ use App\Models\Tugas as ModelsTugas;
 use App\Models\User;
 use App\Traits\LivewireAlert;
 use DateTime;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -48,16 +49,6 @@ class Tugas extends Component
 
     public function render()
     {
-
-        $this->tugas_yg_ga_selesai = Matkul::with([
-            'semester' => function ($q) {
-                $q->where('user_id', auth()->user()->id)->where('aktif_smt', 1);
-            },
-            'tugas' => function ($q) {
-                $q->where('user_id', auth()->user()->id)->where('selesai', null);
-            }
-        ])->get();
-
         if (auth()->user()->hasRole('admin')) {
             // jika yg login admin
             $all_tugas = ModelsTugas::where('deskripsi', 'like', '%' . $this->search . '%')
@@ -77,12 +68,13 @@ class Tugas extends Component
                 ->orderBy('selesai', 'asc')
                 ->paginate($this->paginate_per_page);
 
-            $tugas_yg_ga_selesai = Matkul::with([
-                'semester',
-                'tugas' => function ($q) {
-                    $q->where('selesai', null);
-                }
-            ])->get();
+            $tugas_yg_ga_selesai = DB::table('tugas')
+                ->join('users', 'users.id', '=', 'tugas.user_id')
+                ->join('matkuls', 'matkuls.id', '=', 'tugas.matkul_id')
+                ->join('semesters', 'semesters.id', '=', 'matkuls.semester_id')
+                ->select('*', 'users.name as user_fullname', 'users.id as id_user')
+                ->where('tugas.selesai', null)
+                ->get();
         } else {
             // jika yg login user biasa
             $all_tugas = ModelsTugas::where('user_id', auth()->user()->id)
@@ -100,18 +92,17 @@ class Tugas extends Component
                 ->orderBy('selesai', 'asc')
                 ->paginate($this->paginate_per_page);
 
-            $tugas_yg_ga_selesai = Matkul::with([
-                'semester' => function ($q) {
-                    $q->where('user_id', auth()->user()->id)->where('aktif_smt', 1);
-                },
-                'tugas' => function ($q) {
-                    $q->where('user_id', auth()->user()->id)->where('selesai', null);
-                }
-            ])->get();
+            $tugas_yg_ga_selesai = DB::table('tugas')
+                ->join('matkuls', 'matkuls.id', '=', 'tugas.matkul_id')
+                ->join('semesters', 'semesters.id', '=', 'matkuls.semester_id')
+                ->select('*')
+                ->where('tugas.selesai', null)
+                ->where('tugas.user_id', auth()->user()->id)
+                ->where('matkuls.user_id', auth()->user()->id)
+                ->where('semesters.user_id', auth()->user()->id)
+                ->where('semesters.aktif_smt', '!=', null)
+                ->get();
         }
-
-        // get all matkul
-        // $this->matkuls = Matkul::where('user_id', auth()->user()->id)->get();
 
         return view('livewire.tugas', compact('all_tugas', 'tugas_yg_ga_selesai'));
     }
@@ -132,7 +123,6 @@ class Tugas extends Component
         $this->emptyItems();
         $this->noValidate();
     }
-
 
     public function emptyItems()
     {
@@ -198,9 +188,6 @@ class Tugas extends Component
 
         $tugas = ModelsTugas::find($id);
 
-        $batasWaktu = new DateTime($this->batas_waktu);
-        $tglSelesai = new DateTime($this->selesai);
-
         $batasWaktuCount = date('YmdHi', strtotime($this->batas_waktu));
 
         $tglSelesaiCount =  date('YmdHi', strtotime($this->selesai));
@@ -236,7 +223,6 @@ class Tugas extends Component
         }
     }
 
-
     public function noValidate()
     {
         $this->validate([
@@ -246,7 +232,6 @@ class Tugas extends Component
             'selesai'       => ''
         ]);
     }
-
 
     public function confirmed()
     {
@@ -274,7 +259,6 @@ class Tugas extends Component
             'showConfirmButton' =>  false
         ]);
     }
-
 
     public function triggerConfirm($id)
     {

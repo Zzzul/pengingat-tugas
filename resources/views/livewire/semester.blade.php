@@ -127,9 +127,6 @@ $target = 'update';
                                 </button>
                             </td>
                         </tr>
-                        @php
-                        $data_yg_ditampilkan = $loop->index+1;
-                        @endphp
                         @empty
                         <tr>
                             <td colspan="5" class="text-center">Data tidak ada/ditemukan.</td>
