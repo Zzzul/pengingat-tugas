@@ -5,11 +5,11 @@ namespace App\Http\Livewire\Profile;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
-class Setting extends Component
+class Lainnya extends Component
 {
     public function render()
     {
-        return view('livewire.profile.setting');
+        return view('livewire.profile.lainnya');
     }
 
     public function logout()

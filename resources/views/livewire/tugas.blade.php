@@ -171,7 +171,7 @@ $target = 'update';
                     <h5 class="card-title mb-0">Tugas</h5>
                     <p class="mb-0"> <b>Tanggal Sekarang : {{ date('d F Y') }}</b> </p cmlaclass="mb-0">
                 </div>
-                <div class="col-md-2 justify-content-end mb-1">
+                <div class="col-md-2 justify-content-end mb-2">
                     <x-button-create></x-button-create>
                 </div>
             </div>
@@ -216,7 +216,7 @@ $target = 'update';
                         if($todayCount > $batasWaktuCount){
                         // jika waktu telah habis
                         $sisa = 0;
-                        $selisih = 'Batas waktu telah habis!';
+                        $selisih = 'Sisa waktu telah habis!';
 
                         }elseif($today->diff($batasWaktu)->days == 0){
                         // jika sisa beberapa jam
@@ -272,7 +272,7 @@ $target = 'update';
                             <td>{{ $tgs->updated_at->diffForHumans() }}</td>
                             <td>
                                 <button
-                                    class="mb-2 btn btn-outline-{{ $selisih == 'Batas waktu telah habis!' && !$tgs->selesai ? 'warning' : 'info' }} btn-sm mb-2"
+                                    class="mb-2 btn btn-outline-{{ $selisih == 'Sisa waktu telah habis!' && !$tgs->selesai ? 'warning' : 'info' }} btn-sm mb-2"
                                     wire:loading.attr="disabled" wire:click="show('{{ $tgs->id }}')">
                                     <i class="fas fa-edit"></i>
                                 </button>

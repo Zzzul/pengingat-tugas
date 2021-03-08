@@ -13,7 +13,7 @@
             <div class=" d-md-none d-lg-none d-xl-none">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Home</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('setting') }}">Setting</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('lainnya') }}">Lainnya</a></li>
                     <li class="breadcrumb-item active">Profile</li>
                 </ol>
             </div>

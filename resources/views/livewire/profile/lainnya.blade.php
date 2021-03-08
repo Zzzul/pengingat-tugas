@@ -1,17 +1,17 @@
-@section('title', 'Setting')
+@section('title', 'Lainnya')
 <div class="container py-3">
     <div class="row">
         {{-- breadcumb --}}
         <div class="col-md-12">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item active">Setting</li>
+                <li class="breadcrumb-item active">Lainnya</li>
             </ol>
         </div>
         {{-- end of breadcumb --}}
 
         <div class="col-md-12 mt-3 text-center">
-            {{-- <img src="https://avatars.githubusercontent.com/u/62506582?s=400&u=ba159f8a0037ea86e54a208efff8aa47ef8e9ba0&v=4"
+            {{-- <img src="#"
                 class="img-fluid rounded-circle p-0" width="25%" alt="Profile Picture"> --}}
 
             <h4 class="mb-3">{{ Auth::user()->name }}</h4>
@@ -26,7 +26,7 @@
                 <table class="table table-hover table-striped table-sm text-center">
                     <tr class="table-active">
                         <td>
-                            <a href="{{ route('user-profile') }}" class="text-decoration-none">
+                            <a href="{{ route('user-profile') }}" class="text-decoration-none dropdown-item">
                                 <h6 class="m-0 p-0">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em"
                                         fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
@@ -39,7 +39,7 @@
                     </tr>
                     <tr class="table-active">
                         <td>
-                            <a href="{{ route('change-password') }}" class="text-decoration-none">
+                            <a href="{{ route('change-password') }}" class="text-decoration-none dropdown-item">
                                 <h6 class="m-0 p-0">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em"
                                         fill="currentColor" class="bi bi-key" viewBox="0 0 16 16">

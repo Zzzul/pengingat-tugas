@@ -4,6 +4,7 @@ use App\Http\Livewire\Auth\Login;
 use App\Http\Livewire\Auth\Logout;
 use App\Http\Livewire\Auth\Register;
 use App\Http\Livewire\Matkul;
+use App\Http\Livewire\Profile\Lainnya;
 use App\Http\Livewire\Profile\Password;
 use App\Http\Livewire\Profile\Setting;
 use App\Http\Livewire\Profile\UserInformation;
@@ -32,7 +33,7 @@ Route::group(['middleware' => ['auth', 'role:admin|user|demo']], function () {
     Route::get('tugas', Tugas::class)->name('tugas');
 
     // Profile
-    Route::get('setting', Setting::class)->name('setting');
+    Route::get('lainnya', Lainnya::class)->name('lainnya');
     Route::get('profile', UserInformation::class)->name('user-profile');
     Route::get('change-password', Password::class)->name('change-password');
 });
@@ -41,10 +42,7 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
     Route::get('user-list', UserList::class)->name('user-list');
 });
 
-
-
 Route::group(['middleware' => ['guest']], function () {
     Route::get('register', Register::class)->name('register');
     Route::get('login', Login::class)->name('login');
-    Route::get('logout', Logout::class)->name('logout');
 });
