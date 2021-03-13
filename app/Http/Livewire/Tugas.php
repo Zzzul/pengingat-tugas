@@ -62,8 +62,7 @@ class Tugas extends Component
                 })
                 ->orWhereHas('user', function ($q) {
                     $q->where('name', 'like', '%' . $this->search . '%')
-                        ->orWhere('username', 'like', '%' . $this->search . '%')
-                        ->groupBy('name');
+                        ->orWhere('username', 'like', '%' . $this->search . '%');
                 })
                 ->orderBy('selesai', 'asc')
                 ->paginate($this->paginate_per_page);
