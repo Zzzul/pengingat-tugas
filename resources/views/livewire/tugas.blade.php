@@ -1,12 +1,11 @@
 @php
 $target = '';
-
+// for loading component
 if( $form == 'add'){
 $target = 'store';
 }else{
 $target = 'update';
 }
-
 @endphp
 
 @section('title', 'Tugas')
@@ -37,17 +36,6 @@ $target = 'update';
         <div class="col-md-4">
             <div class="card card-hover mb-3">
                 <div class="card-body p-3">
-                    @role('admin')
-                    <p class="m-0">
-                        User :
-                        <b>{{ $tgs->user_fullname }}</b> {!! $tgs->id_user
-                        == auth()->id() ? '<i class="fas fa-check-circle"></i>' : '' !!}
-                    </p>
-                    <p class="m-0">Semester :
-                        <b>{{ $tgs->semester_ke }}</b>
-                    </p>
-                    @endrole
-
                     <p class="m-0">Mata Kuliah :
                         <b>{{ $tgs->name }}</b>
                     </p>

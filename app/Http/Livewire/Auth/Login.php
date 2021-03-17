@@ -29,13 +29,7 @@ class Login extends Component
 
         $user = User::where(['username' => $this->username])->get();
 
-        if ($user->isEmpty()) {
-            $this->alert('error', 'Username tidak terdafar!', [
-                'position' =>  'top',
-                'timer'    =>  1500,
-                'toast'    =>  true,
-            ]);
-        } elseif (!$user->isEmpty() && Auth::attempt(['username' => $this->username, 'password' => $this->password])) {
+        if (!$user->isEmpty() && Auth::attempt(['username' => $this->username, 'password' => $this->password])) {
 
             $this->flash('success', 'Kamu berhasil login!', [
                 'position' =>  'top',

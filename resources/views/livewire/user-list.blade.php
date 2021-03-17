@@ -18,9 +18,6 @@ $target = 'update';
             </ol>
         </div>
 
-        {{-- {{ Auth::user()->hasRole('admin') }} --}}
-
-        {{-- {{ isset($user_roles) ?  $user_roles[0]['id'] : '' }} --}}
         @if ($form)
         <div class="col-md-12 mt-3 mb-0">
             <form wire:submit.prevent="update('{{ $id_user }}')">
@@ -73,12 +70,12 @@ $target = 'update';
 
                     {{-- Permissions --}}
                     <div class="col-md-10 col-sm-12">
-                        <label class="mb-1 mt-2 @error('permissions')text-danger @enderror">Permissions</label>
+                        <label class="mb-1 mt-2 @error('permissions.id')text-danger @enderror">Permissions</label>
 
                         @foreach ($user_permissions as $permis)
                         <label class="form-check-label" style="cursor : pointer;">
                             <input class="form-check-input ml-2 mr-0" type="checkbox" value="{{ $permis->id }}"
-                                id="permis-{{ $permis->id }}" wire:model="permissions.{{ $permis->id-1 }}">
+                                id="permis-{{ $permis->id }}" wire:model="permissions.id.{{ $loop->index }}" checked>
                             {{ ucfirst($permis->name) }}
                         </label>
                         @endforeach
@@ -86,19 +83,20 @@ $target = 'update';
                         @foreach ($not_user_permissions as $not_permis)
                         <label class="form-check-label" style="cursor : pointer;">
                             <input class="form-check-input ml-2 mr-0" type="checkbox" id="permis-{{ $not_permis->id }}"
-                                value="{{ $not_permis->id }}" wire:model="permissions.{{ $not_permis->id-1 }}">
+                                value="{{ $not_permis->id }}"
+                                wire:model="permissions.id.{{ $loop->index+count($user_permissions) }}">
                             {{ ucfirst($not_permis->name)  }}
                         </label>
                         @endforeach
 
-                        @error('permissions')
+                        @error('permissions.id')
                         <small class="text-danger">
-                            {{ $message }}
+                            {{-- {{ $message }} --}}
+                            Permissions field is required.
                         </small>
                         @enderror
                     </div>
 
-                    {{--<div class="col-md-7"></div> --}}
                     <div class="col-md-2 mt-0">
                         <x-button-submit target="{{ $target }}"></x-button-submit>
                     </div>
@@ -128,6 +126,7 @@ $target = 'update';
                             <th>Name</th>
                             <th>Email</th>
                             <th>Role</th>
+                            <th>Permissions</th>
                             <th>Terdaftar Pada</th>
                             <th>Terakhir Diubah</th>
                             <th>Aksi
@@ -148,6 +147,14 @@ $target = 'update';
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
                             <td>{{ count($user->getRoleNames()) > 0 ? ucfirst(print_r($user->getRoleNames()[0], 1)) : '' }}
+                            </td>
+                            <td>
+                                <ul>
+                                    @foreach ($user->permissions as $user_permis)
+                                    <li>{{  Str::ucfirst($user_permis->name) }} </li>
+                                    @endforeach
+                                </ul>
+
                             </td>
                             <td>{{ $user->created_at->diffForHumans()  }}</td>
                             <td>{{ $user->updated_at->diffForHumans() }}</td>

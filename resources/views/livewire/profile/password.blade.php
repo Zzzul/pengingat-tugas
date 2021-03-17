@@ -19,11 +19,11 @@
         </div>
 
         <div class="col-md-6 my-3">
-            @role('demo')
+            @cannot('ganti password')
             <div class="alert alert-danger mb-3">
-                Akun demo tidak dapat mengganti password!
+                Akun kamu tidak memiliki izin untuk mengganti password!
             </div>
-            @endrole
+            @endcannot
 
             <form wire:submit.prevent="update">
                 <div class="form-group">
@@ -61,8 +61,9 @@
                         placeholder="••••••••••" name="password_confirmation" required autocomplete="new-password">
                 </div>
 
-                @can('change password')
+                @can('ganti password')
                 <div class="form-groupmb-0">
+                    {{-- for deskttop --}}
                     <div class="d-none d-md-block">
                         <button type="submit" class="btn btn-info">
                             {{ __('Ganti Password') }}
@@ -70,6 +71,7 @@
                         </button>
                     </div>
 
+                    {{-- for mobile --}}
                     <div class=" d-md-none d-lg-none d-xl-none">
                         <button type="submit" class="btn btn-info btn-block">
                             {{ __('Ganti Password') }}
@@ -78,6 +80,17 @@
                     </div>
                 </div>
                 @endcan
+
+                @cannot('ganti password')
+                <div class="form-groupmb-0">
+                    <div class="d-none d-md-block">
+                        <button type="buttom" class="btn btn-info" disabled>
+                            {{ __('Ganti Password') }}
+                        </button>
+                    </div>
+                </div>
+                @endcannot
+
 
             </form>
         </div>

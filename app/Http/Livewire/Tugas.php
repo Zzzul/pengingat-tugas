@@ -67,14 +67,6 @@ class Tugas extends Component
                 })
                 ->orderBy('selesai', 'asc')
                 ->paginate($this->paginate_per_page);
-
-            $tugas_yg_ga_selesai = DB::table('tugas')
-                ->join('users', 'users.id', '=', 'tugas.user_id')
-                ->join('matkuls', 'matkuls.id', '=', 'tugas.matkul_id')
-                ->join('semesters', 'semesters.id', '=', 'matkuls.semester_id')
-                ->select('*', 'users.name as user_fullname', 'users.id as id_user')
-                ->where('tugas.selesai', null)
-                ->get();
         } else {
             // jika yg login user biasa
             $all_tugas = ModelsTugas::where('user_id', auth()->user()->id)
@@ -91,18 +83,18 @@ class Tugas extends Component
                 })
                 ->orderBy('selesai', 'asc')
                 ->paginate($this->paginate_per_page);
-
-            $tugas_yg_ga_selesai = DB::table('tugas')
-                ->join('matkuls', 'matkuls.id', '=', 'tugas.matkul_id')
-                ->join('semesters', 'semesters.id', '=', 'matkuls.semester_id')
-                ->select('*')
-                ->where('tugas.selesai', null)
-                ->where('tugas.user_id', auth()->user()->id)
-                ->where('matkuls.user_id', auth()->user()->id)
-                ->where('semesters.user_id', auth()->user()->id)
-                ->where('semesters.aktif_smt', '!=', null)
-                ->get();
         }
+
+        $tugas_yg_ga_selesai = DB::table('tugas')
+            ->join('matkuls', 'matkuls.id', '=', 'tugas.matkul_id')
+            ->join('semesters', 'semesters.id', '=', 'matkuls.semester_id')
+            ->select('*')
+            ->where('tugas.selesai', null)
+            ->where('tugas.user_id', auth()->user()->id)
+            ->where('matkuls.user_id', auth()->user()->id)
+            ->where('semesters.user_id', auth()->user()->id)
+            ->where('semesters.aktif_smt', '!=', null)
+            ->get();
 
         return view('livewire.tugas', compact('all_tugas', 'tugas_yg_ga_selesai'));
     }
@@ -160,8 +152,8 @@ class Tugas extends Component
 
             if ($tugas->user_id != auth()->user()->id) {
                 // jika admin yg edit
-                $this->showAlert('info', 'Kamu sedang mengubah tugas user lain!.');
                 $this->milik_user = User::find($tugas->user_id);
+
                 // matkul sesuai user_id tugas
                 $this->matkuls = Matkul::where('user_id', $tugas->user_id)->get();
             } else {

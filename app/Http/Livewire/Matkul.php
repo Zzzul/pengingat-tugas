@@ -15,7 +15,7 @@ class Matkul extends Component
     use WithPagination;
     use LivewireAlert;
 
-    public $form, $id_matkul, $name, $dosen, $hari, $jam_mulai, $jam_selesai, $sks, $semesters, $semester_id = '', $milik_user;
+    public $form, $id_matkul, $name, $hari, $jam_mulai, $jam_selesai, $sks, $semesters, $semester_id = '', $milik_user;
     public $paginate_per_page = 5;
     protected $paginationTheme = 'bootstrap';
 
@@ -24,7 +24,6 @@ class Matkul extends Component
 
     protected $rules = [
         'name' => 'required',
-        'dosen' => 'required',
         'hari' => 'required',
         'jam_mulai' => 'required',
         'jam_selesai' => 'required',
@@ -55,7 +54,6 @@ class Matkul extends Component
             // admin
             $matkuls = ModelsMatkul::where('name', 'like', '%' . $this->search . '%')
                 ->orWhere('hari', 'like', '%' . $this->search . '%')
-                ->orWhere('dosen', 'like', '%' . $this->search . '%')
                 ->orWhere('jam_mulai', 'like', '%' . $this->search . '%')
                 ->orWhere('jam_selesai', 'like', '%' . $this->search . '%')
                 ->orWhere('sks', 'like', '%' . $this->search . '%')
@@ -69,21 +67,12 @@ class Matkul extends Component
                 })
                 ->orderBy('updated_at', 'desc')
                 ->paginate($this->paginate_per_page);
-
-            $jadwal_hari_ini = ModelsMatkul::with([
-                'semester' => function ($q) {
-                    $q->where('aktif_smt', 1);
-                }
-            ])
-                ->where('hari', $today)
-                ->get();
         } else {
             // end user
             $matkuls = ModelsMatkul::where('user_id', auth()->user()->id)
                 ->where(function ($q) {
                     $q->where('name', 'like', '%' . $this->search . '%')
                         ->orWhere('hari', 'like', '%' . $this->search . '%')
-                        ->orWhere('dosen', 'like', '%' . $this->search . '%')
                         ->orWhere('jam_mulai', 'like', '%' . $this->search . '%')
                         ->orWhere('jam_selesai', 'like', '%' . $this->search . '%')
                         ->orWhere('sks', 'like', '%' . $this->search . '%')
@@ -95,16 +84,15 @@ class Matkul extends Component
                 })
                 ->orderBy('updated_at', 'desc')
                 ->paginate($this->paginate_per_page);
-
-            $jadwal_hari_ini = ModelsMatkul::with([
-                'semester' => function ($q) {
-                    $q->where('user_id', auth()->user()->id)->where('aktif_smt', 1);
-                }
-            ])
-                ->where('user_id', auth()->user()->id)
-                ->where('hari', $today)
-                ->get();
         }
+
+        $jadwal_hari_ini = ModelsMatkul::with([
+            'semester' => function ($q) {
+                $q->where('user_id', auth()->user()->id)->where('aktif_smt', 1);
+            }
+        ])->where('user_id', auth()->user()->id)
+            ->where('hari', $today)
+            ->get();
 
         return view('livewire.matkul', compact('matkuls', 'jadwal_hari_ini'));
     }
@@ -131,7 +119,6 @@ class Matkul extends Component
     {
         $this->validate([
             'name' => '',
-            'dosen' => '',
             'hari' => '',
             'jam_mulai' => '',
             'jam_selesai' => '',
@@ -144,7 +131,6 @@ class Matkul extends Component
     {
         $this->name = '';
         $this->hari = '';
-        $this->dosen = '';
         $this->jam_selesai = '';
         $this->jam_mulai = '';
         $this->sks = '';
@@ -166,7 +152,6 @@ class Matkul extends Component
         } else {
             $matkul = new ModelsMatkul;
             $matkul->name = $this->name;
-            $matkul->dosen = $this->dosen;
             $matkul->hari = $this->hari;
             $matkul->jam_mulai = $this->jam_mulai;
             $matkul->jam_selesai = $this->jam_selesai;
@@ -211,7 +196,6 @@ class Matkul extends Component
         if (auth()->user()->hasRole('admin') || $matkul->user_id == auth()->user()->id) {
 
             if ($matkul->user_id != auth()->user()->id) {
-                $this->showAlert('info', 'Kamu sedang mengubah mata kuliah user lain!.');
                 $this->milik_user = User::find($matkul->user_id);
                 $this->semesters =  Semester::where('user_id', $matkul->user_id)->get();
             } else {
@@ -220,7 +204,6 @@ class Matkul extends Component
             }
 
             $this->name = $matkul->name;
-            $this->dosen = $matkul->dosen;
             $this->hari = $matkul->hari;
             $this->jam_mulai = $matkul->jam_mulai;
             $this->jam_selesai = $matkul->jam_selesai;
@@ -251,7 +234,6 @@ class Matkul extends Component
                 );
             } else {
                 $matkul->name = $this->name;
-                $matkul->dosen = $this->dosen;
                 $matkul->hari = $this->hari;
                 $matkul->jam_mulai = $this->jam_mulai;
                 $matkul->jam_selesai = $this->jam_selesai;

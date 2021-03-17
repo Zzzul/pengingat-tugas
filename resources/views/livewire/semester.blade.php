@@ -7,7 +7,13 @@ $target = 'store';
 $target = 'update';
 }
 @endphp
+
+
 @section('title', 'Semester')
+
+{{-- @can('semester') --}}
+{{-- @if (auth()->user()->can('semester')) --}}
+
 <div class="container py-3">
     <div class="row justify-content-md-center">
 
@@ -176,3 +182,7 @@ $target = 'update';
     {{-- d-sm-block d-md-none --}}
 </div>
 {{-- end of container--}}
+{{-- @else --}}
+{{-- <h1>jaja awok</h1> --}}
+{{-- @endif --}}
+{{-- @endcan --}}

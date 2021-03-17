@@ -14,7 +14,7 @@ class UserList extends Component
     use WithPagination;
     use LivewireAlert;
 
-    public $form, $id_user, $name, $email, $username, $all_roles, $user_roles, $user_permissions, $not_user_permissions, $permissions = [];
+    public $form, $id_user, $name, $email, $username, $all_roles, $user_roles, $user_permissions, $not_user_permissions, $permissions = [], $new_permissions = '';
 
     public $search = '';
     public $page = 1;
@@ -37,11 +37,12 @@ class UserList extends Component
     {
         // $this->user_roles = 1;
         $this->fill(request()->only('search', 'page'));
+        $this->permissions = [];
     }
 
     public function render()
     {
-        $users = User::where('name', 'like', '%' . $this->search . '%')
+        $users = User::with('permissions')->where('name', 'like', '%' . $this->search . '%')
             ->orWhere('username', 'like', '%' . $this->search . '%')
             ->orWhere('email', 'like', '%' . $this->search . '%')
             ->orWhereHas('roles', function ($q) {
@@ -49,14 +50,11 @@ class UserList extends Component
             })
             ->orderBy('created_at', 'asc')->paginate($this->paginate_per_page);
 
-        // $this->all_roles = Role::get();
-
         return view('livewire.user-list', compact('users'));
     }
 
     public function show($id)
     {
-        // hilangkan error karena validasi
         $this->noValidate();
 
         $this->id_user = $id;
@@ -65,12 +63,6 @@ class UserList extends Component
 
         $this->all_roles = Role::get();
 
-        // $this->user_roles = $user->getRoleNames()->isEmpty() ? '' : $user->getRoleNames();
-
-        // $user->getRoleNames()->isEmpty() ? $this->user_roles = '' : $this->user_roles = Role::where('name', $user->getRoleNames()[0])->get();
-
-        // $this->user_roles = Role::where('name', $user->getRoleNames()[0])->get();
-
         if ($user->getRoleNames()->isEmpty()) {
             $this->user_roles = '';
         } else {
@@ -78,23 +70,18 @@ class UserList extends Component
             $this->user_roles = $this->user_roles[0]['id'];
         }
 
-        // dd($this->user_roles);
-
         $this->all_roles = Role::all();
 
         $permissions_id = [];
         foreach ($user->permissions as $key => $value) {
             $permissions_id[] = $value->id;
-            // $this->permissions[] = $value->name;
         }
 
         $this->user_permissions = Permission::whereIn('id', $permissions_id)->get();
         $this->not_user_permissions = Permission::whereNotIn('id', $permissions_id)->get();
 
 
-        $this->permissions = $permissions_id;
-
-        // dd($this->permissions);
+        $this->permissions['id'] = $permissions_id;
 
         $this->name = $user->name;
         $this->email = $user->email;
@@ -108,31 +95,25 @@ class UserList extends Component
             'name'  => 'required|min:4,max:25',
             // 'email' => 'required|email|unique:users,email,' . auth()->user()->id,
             'user_roles' => 'required',
-            'permissions' => 'required',
+            'permissions.id' => 'required',
         ]);
 
         $user = User::findOrFail($id);
         $user_roles = Role::find($this->user_roles);
         $user->getRoleNames()->isEmpty() ? $role_name = '' : $role_name = $user->getRoleNames()[0];
-        // $role_name = $user->getRoleNames()[0]; // result = 'admin' or 'demo'
         $permission_name = $user->permissions;
-
-        // dd($this->permissions);
 
         if (!$user->getRoleNames()->isEmpty()) {
             $user->removeRole($role_name);
             $user->revokePermissionTo($permission_name);
         }
 
-
-        if (isset($this->permissions)) {
-            foreach ($this->permissions as $key => $value) {
-                $user->givePermissionTo($this->permissions[$key]);
-                $user->assignRole($user_roles);
+        $user->assignRole($user_roles);
+        if (isset($this->permissions['id'])) {
+            foreach ($this->permissions['id'] as $value) {
+                $user->givePermissionTo($value);
             }
         }
-
-        // dd($this->permissions);
 
         $user->name = $this->name;
         $user->email = $this->email;
@@ -140,8 +121,6 @@ class UserList extends Component
 
         $this->showAlert('success', 'User berhasil diubah.');
 
-        // $this->user_permissions = '';
-        // $this->not_user_permissions = '';
         $this->hideForm();
     }
 
@@ -154,12 +133,8 @@ class UserList extends Component
     public function hideForm()
     {
         $this->form = '';
-        // $this->name = '';
-        // $this->email = '';
         $this->emptyItems();
         $this->noValidate();
-        // $this->user_permissions = [];
-        // $this->not_user_permissions = [];
     }
 
     public function noValidate()
@@ -182,7 +157,7 @@ class UserList extends Component
             } catch (\Exception $ex) {
                 $this->showAlert('error', 'Tidak dapat dihapus karena terdapat semester pada user : ' . $user->name);
                 $user->assignRole('user');
-                $user->givePermissionTo(['tugas', 'semester', 'matkul', 'edit profile', 'change password']);
+                $user->givePermissionTo(['tugas', 'semester', 'matkul', 'edit profile', 'ganti password']);
             }
         } else {
             $this->showAlert('error', 'User tidak dapat dihapus karena sedang kamu pakai sekarang!.');

@@ -29,24 +29,13 @@ class UserSeeder extends Seeder
         $user->assignRole('admin');
         $user->givePermissionTo(Permission::all());
 
-
         $user = User::create([
             'name' => 'User Biasa',
             'username' => 'userBiasa',
             'email' => 'user@gmail.com',
             'password' => bcrypt('password'),
         ]);
-        $user->assignRole('user');
-        $user->givePermissionTo(['tugas', 'semester', 'matkul', 'edit profile', 'change password']);
-
-
-        $user = User::create([
-            'name' => 'Akun Demo',
-            'username' => 'demo',
-            'email' => 'demo@gmail.com',
-            'password' => bcrypt('password'),
-        ]);
-        $user->assignRole('demo');
-        $user->givePermissionTo(['tugas', 'semester', 'matkul', 'edit profile']);
+        $user->assignRole('mahasiswa');
+        $user->givePermissionTo(['tugas', 'semester', 'mata kuliah', 'edit profile', 'ganti password']);
     }
 }

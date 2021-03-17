@@ -29,18 +29,11 @@ $target = 'update';
         <div class="col-md-4">
             <div class="card card-hover mb-3">
                 <div class="card-body p-3">
-                    @role('admin')
-                    <p class="m-0">
-                        User : {{ $jdwl['user']->name }}
-                        {!! $jdwl['user']->id
-                        == auth()->id() ? '<i class="fas fa-check-circle"></i>' : '' !!}
-                    </p>
-                    @endrole
                     <p class="m-0">Mata Kuliah : {{ $jdwl->name }}</p>
-                    <p class="m-0">Dosen : {{ $jdwl->dosen }}</p>
-                    <p class="m-0">Jam :
-                        {{ date('H:i', strtotime($jdwl->jam_mulai)) .' - '.  date('H:i', strtotime($jdwl->jam_selesai)) }}
+                    <p class="m-0">Waktu :
+                        {{ ucfirst($jdwl->hari) .' '. date('H:i', strtotime($jdwl->jam_mulai)) .' - '.  date('H:i', strtotime($jdwl->jam_selesai)) }}
                     </p>
+                    <p class="m-0">SKS : {{ $jdwl->sks }}</p>
                 </div>
             </div>
         </div>
@@ -69,23 +62,39 @@ $target = 'update';
                         <div class="col-md-10 mb-0">
                             <div class="row form-group">
                                 {{-- matkul --}}
-                                <div class="col-md-4 mb-1">
+                                <div class="col-md-2 mb-1">
                                     <label for="name" class="mb-1">Mata Kuliah</label>
                                     <input type="text" class="form-control @error('name')is-invalid @enderror"
                                         wire:model="name" placeholder="Nama Mata Kuliah" id="name">
                                     @error('name') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
 
-                                {{-- dosen --}}
-                                <div class="col-md-4 mb-1">
-                                    <label for="dosen" class="mb-1">Dosen</label>
-                                    <input type="text" class="form-control @error('dosen')is-invalid @enderror"
-                                        wire:model="dosen" placeholder="Nama Dosen" id="dosen">
-                                    @error('dosen') <span class="text-danger">{{ $message }}</span> @enderror
+                                {{-- semester --}}
+                                <div class="col-md-2 mb-1">
+                                    <label for="semester-id" class="mb-1">Semester</label>
+                                    <select
+                                        class="form-control @error('semester_id')is-invalid @enderror{{ $semesters->isEmpty() ? 'is-invalid' : '' }}"
+                                        wire:model="semester_id" id="semester-id">
+                                        <option value="" disabled>--Pilih Semester--</option>
+                                        @forelse ($semesters as $sms)
+                                        <option value="{{ $sms->id }}">{{ $sms->semester_ke }}</option>
+                                        @empty
+                                        <option value="" disabled>Semester masih kosong!</option>
+                                        @endforelse
+                                    </select>
+                                    @error('semester_id') <span class="text-danger">{{ $message }}</span> @enderror
+                                </div>
+
+                                {{-- sks --}}
+                                <div class="col-md-2 mb-1">
+                                    <label for="sks" class="mb-1">SKS</label>
+                                    <input type="number" class="form-control @error('sks')is-invalid @enderror"
+                                        wire:model="sks" placeholder="SKS" id="sks" min="1" max="6">
+                                    @error('sks') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
 
                                 {{-- hari --}}
-                                <div class="col-md-4 mb-1">
+                                <div class="col-md-2 mb-1">
                                     <label for="hari" class="mb-1">Hari</label>
                                     <select class="form-control @error('hari')is-invalid @enderror" wire:model="hari"
                                         id="hari">
@@ -101,7 +110,7 @@ $target = 'update';
                                 </div>
 
                                 {{-- jam mulai --}}
-                                <div class="col-md-3 mb-1">
+                                <div class="col-md-2 mb-1">
                                     <label for="jam-mulai" class="mb-1">Jam Mulai</label>
                                     <input type="time" class="form-control @error('jam_mulai')is-invalid @enderror"
                                         wire:model="jam_mulai" placeholder="jam_mulai" id="jam-mulai">
@@ -109,36 +118,13 @@ $target = 'update';
                                 </div>
 
                                 {{-- jam selesai --}}
-                                <div class="col-md-3 mb-1">
+                                <div class="col-md-2 mb-1">
                                     <label for="jam-selesai" class="mb-1">Jam selesai</label>
                                     <input type="time" class="form-control @error('jam_selesai')is-invalid @enderror"
                                         wire:model="jam_selesai" placeholder="jam_selesai" id="jam-selesai">
                                     @error('jam_selesai') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
 
-                                {{-- sks --}}
-                                <div class="col-md-3 mb-1">
-                                    <label for="sks" class="mb-1">SKS</label>
-                                    <input type="number" class="form-control @error('sks')is-invalid @enderror"
-                                        wire:model="sks" placeholder="SKS" id="sks" min="1" max="6">
-                                    @error('sks') <span class="text-danger">{{ $message }}</span> @enderror
-                                </div>
-
-                                {{-- semester --}}
-                                <div class="col-md-3 mb-1">
-                                    <label for="semester-id" class="mb-1">Semester</label>
-                                    <select
-                                        class="form-control @error('semester_id')is-invalid @enderror{{ $semesters->isEmpty() ? 'is-invalid' : '' }}"
-                                        wire:model="semester_id" id="semester-id">
-                                        <option value="" disabled>--Pilih Semester--</option>
-                                        @forelse ($semesters as $sms)
-                                        <option value="{{ $sms->id }}">{{ $sms->semester_ke }}</option>
-                                        @empty
-                                        <option value="" disabled>Semester masih kosong!</option>
-                                        @endforelse
-                                    </select>
-                                    @error('semester_id') <span class="text-danger">{{ $message }}</span> @enderror
-                                </div>
                             </div>
                         </div>
                         <div class="col-md-2 mb-3">
@@ -172,10 +158,8 @@ $target = 'update';
                             <th>User</th>
                             @endrole
                             <th>Mata Kuliah</th>
-                            <th>Dosen</th>
                             <th>Hari</th>
-                            <th>Jam Mulai</th>
-                            <th>Jam Selesai</th>
+                            <th>Jam</th>
                             <th>SKS</th>
                             <th>Semester</th>
                             <th>Dibuat Pada</th>
@@ -200,10 +184,9 @@ $target = 'update';
                             </td>
                             @endrole
                             <td>{{ $mk->name }}</td>
-                            <td>{{ $mk->dosen }}</td>
                             <td>{{ Str::ucfirst($mk->hari) }}</td>
-                            <td>{{ $mk->jam_mulai ? date('H:i', strtotime($mk->jam_mulai)) : '-' }}</td>
-                            <td>{{ $mk->jam_selesai ? date('H:i', strtotime($mk->jam_selesai)) : '-'}}</td>
+                            <td>{{ date('H:i', strtotime($mk->jam_mulai)) .' - '.  date('H:i', strtotime($mk->jam_selesai)) }}
+                            </td>
                             <td>{{ $mk->sks }}</td>
                             <td>{{ $mk['semester']->semester_ke }}</td>
                             <td>{{ $mk->created_at->diffForHumans()  }}</td>

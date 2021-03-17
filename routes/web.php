@@ -24,25 +24,38 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
 Route::view('/', 'home')->name('home');
+Route::view('/about', 'about')->name('about');
 
-Route::group(['middleware' => ['auth', 'role:admin|user|demo']], function () {
-    Route::get('semester', Semester::class)->name('semester');
-    Route::get('mata-kuliah', Matkul::class)->name('matkul');
-    Route::get('tugas', Tugas::class)->name('tugas');
+Route::middleware('auth')
+    ->get('lainnya', Lainnya::class)
+    ->name('lainnya');
 
-    // Profile
-    Route::get('lainnya', Lainnya::class)->name('lainnya');
-    Route::get('profile', UserInformation::class)->name('user-profile');
-    Route::get('change-password', Password::class)->name('change-password');
-});
-
-Route::group(['middleware' => ['auth', 'role:admin']], function () {
-    Route::get('user-list', UserList::class)->name('user-list');
-});
-
-Route::group(['middleware' => ['guest']], function () {
+Route::group(['middleware' => 'guest'], function () {
     Route::get('register', Register::class)->name('register');
     Route::get('login', Login::class)->name('login');
 });
+
+Route::middleware(['auth', 'permission:semester'])
+    ->get('semester', Semester::class)
+    ->name('semester');
+
+Route::middleware(['auth', 'permission:tugas'])
+    ->get('tugas', Tugas::class)
+    ->name('tugas');
+
+Route::middleware(['auth', 'permission:ganti password'])
+    ->get('change-password', Password::class)
+    ->name('change-password');
+
+Route::middleware(['auth', 'permission:mata kuliah'])
+    ->get('mata-kuliah', Matkul::class)
+    ->name('matkul');
+
+Route::middleware(['auth', 'permission:edit profile'])
+    ->get('profile', UserInformation::class)
+    ->name('user-profile');
+
+Route::middleware(['auth', 'role:admin'])
+    ->get('user-list', UserList::class)
+    ->name('user-list');

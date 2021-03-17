@@ -32,8 +32,14 @@ class Register extends Component
             'password'  => bcrypt($this->password),
         ]);
 
-        $user->assignRole('user');
-        $user->givePermissionTo(['tugas', 'semester', 'matkul', 'edit profile', 'change password']);
+        $user->assignRole('mahasiswa');
+        $user->givePermissionTo([
+            'tugas',
+            'semester',
+            'mata kuliah',
+            'edit profile',
+            'ganti password'
+        ]);
 
         $this->flash('success', 'Akun berhasil didaftarkan silahkan login!', [
             'position'  =>  'top',

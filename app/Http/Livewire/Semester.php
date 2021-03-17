@@ -116,7 +116,6 @@ class Semester extends Component
         if (auth()->user()->hasRole('admin') || $semester->user_id == auth()->user()->id) {
 
             if ($semester->user_id != auth()->user()->id) {
-                $this->showAlert('info', 'Kamu sedang mengubah semester user lain!.');
                 $this->milik_user = User::find($semester->user_id);
             } else {
                 $this->milik_user = [];

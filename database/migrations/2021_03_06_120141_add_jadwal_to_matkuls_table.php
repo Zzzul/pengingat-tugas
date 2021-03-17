@@ -14,8 +14,7 @@ class AddJadwalToMatkulsTable extends Migration
     public function up()
     {
         Schema::table('matkuls', function (Blueprint $table) {
-            $table->string('dosen', 20)->nullable()->after('name');
-            $table->string('hari', 15)->nullable()->after('dosen');
+            $table->string('hari', 15)->nullable()->after('name');
             $table->time('jam_mulai')->nullable()->after('hari');
             $table->time('jam_selesai')->nullable()->after('jam_mulai');
         });

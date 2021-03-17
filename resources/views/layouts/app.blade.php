@@ -48,9 +48,7 @@
                     <div class="col-md-12">
                         <hr>
                         <p class="text-center">Created with 🖤 by
-                            <a href="https://github.com/zzzul/" target="_blank">Mohammad Zulfahmi</a>
-                            {{-- &bullet; Using <a href="https://laravel.com/" target="_blank">Laravel</a> & <a
-                                href="https://laravel-livewire.com/" target="_blank">Livewire</a> --}}
+                            <a href="{{ route('about') }}">Kelompok 8</a>
                     </div>
                 </div>
             </div>
@@ -65,7 +63,7 @@
                     <div class="col-md-12">
                         <hr>
                         <p class="text-center">Created with 🖤 by
-                            <a href="https://github.com/zzzul/" target="_blank">Mohammad Zulfahmi</a>
+                            <a href="{{ route('about') }}">Kelompok 8</a>
                     </div>
                 </div>
             </div>
