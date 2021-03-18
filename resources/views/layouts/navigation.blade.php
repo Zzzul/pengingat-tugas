@@ -125,10 +125,8 @@
                 <br>
                 <small class="m-0 p-0">
                     @role('admin') Matkul @endrole
-                    @role('user|demo') Mata Kuliah @endrole
-                    @guest
-                    Mata Kuliah
-                    @endguest
+                    @role('mahasiswa') Mata Kuliah @endrole
+                    @guest Mata Kuliah @endguest
                 </small>
             </a>
         </li>
