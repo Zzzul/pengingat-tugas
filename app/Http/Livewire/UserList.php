@@ -47,8 +47,8 @@ class UserList extends Component
             ->orWhere('email', 'like', '%' . $this->search . '%')
             ->orWhereHas('roles', function ($q) {
                 $q->where('name', 'like', '%' . $this->search . '%');
-            })
-            ->orderBy('created_at', 'asc')->paginate($this->paginate_per_page);
+            })->orderBy('created_at', 'asc')
+            ->paginate($this->paginate_per_page);
 
         return view('livewire.user-list', compact('users'));
     }
@@ -80,7 +80,6 @@ class UserList extends Component
         $this->user_permissions = Permission::whereIn('id', $permissions_id)->get();
         $this->not_user_permissions = Permission::whereNotIn('id', $permissions_id)->get();
 
-
         $this->permissions['id'] = $permissions_id;
 
         $this->name = $user->name;
@@ -92,9 +91,8 @@ class UserList extends Component
     public function update($id)
     {
         $this->validate([
-            'name'  => 'required|min:4,max:25',
-            // 'email' => 'required|email|unique:users,email,' . auth()->user()->id,
-            'user_roles' => 'required',
+            'name'           => 'required|min:4,max:25',
+            'user_roles'     => 'required',
             'permissions.id' => 'required',
         ]);
 
@@ -108,11 +106,20 @@ class UserList extends Component
             $user->revokePermissionTo($permission_name);
         }
 
+        // assign new role
         $user->assignRole($user_roles);
         if (isset($this->permissions['id'])) {
             foreach ($this->permissions['id'] as $value) {
                 $user->givePermissionTo($value);
             }
+        }
+
+        // jika role = admin maka ceklis permission user
+        if ($user_roles['name'] == 'admin') {
+            // 6 = permission user
+            $user->givePermissionTo(6);
+        } else {
+            $user->revokePermissionTo(6);
         }
 
         $user->name = $this->name;
@@ -140,8 +147,10 @@ class UserList extends Component
     public function noValidate()
     {
         $this->validate([
-            'name' => '',
-            'email' => ''
+            'name'           => '',
+            'email'          => '',
+            'user_roles'     => '',
+            'permissions.id' => '',
         ]);
     }
 
@@ -183,12 +192,12 @@ class UserList extends Component
     {
         $this->id_user = $id;
         $this->confirm('Yakin ingin menghapus data ini?', [
-            'toast' => false,
-            'position' => 'center',
+            'toast'             => false,
+            'position'          => 'center',
             'confirmButtonText' =>  'ya',
-            'cancelButtonText' =>  'Batal',
-            'onConfirmed' => 'confirmed',
-            'onCancelled' => 'cancelled'
+            'cancelButtonText'  =>  'Batal',
+            'onConfirmed'       => 'confirmed',
+            'onCancelled'       => 'cancelled'
         ]);
     }
 }

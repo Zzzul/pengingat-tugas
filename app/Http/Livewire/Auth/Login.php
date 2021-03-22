@@ -39,7 +39,7 @@ class Login extends Component
 
             $previousUrl = url()->previous();
 
-            if ($previousUrl == 'home' || $previousUrl == 'login' || $previousUrl == 'register') {
+            if ($previousUrl == 'login') {
                 redirect('/home');
             } else {
                 redirect('' . $previousUrl . '');

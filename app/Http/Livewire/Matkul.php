@@ -86,12 +86,11 @@ class Matkul extends Component
                 ->paginate($this->paginate_per_page);
         }
 
-        $jadwal_hari_ini = ModelsMatkul::with([
-            'semester' => function ($q) {
-                $q->where('user_id', auth()->user()->id)->where('aktif_smt', 1);
-            }
-        ])->where('user_id', auth()->user()->id)
+        $jadwal_hari_ini = ModelsMatkul::where('user_id', auth()->user()->id)
             ->where('hari', $today)
+            ->whereHas('semester', function ($q) {
+                $q->where('aktif_smt', 1)->where('user_id', auth()->user()->id);
+            })
             ->get();
 
         return view('livewire.matkul', compact('matkuls', 'jadwal_hari_ini'));

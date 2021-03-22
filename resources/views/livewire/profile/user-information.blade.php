@@ -28,7 +28,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="name">{{ __('Name') }}</label>
+                    <label for="name">{{ __('Nama Lengkap') }}</label>
                     <input wire:model="name" id="name" type="name"
                         class="form-control @error('name') is-invalid @enderror" name="name" required autofocus>
 
@@ -40,7 +40,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="email">{{ __('E-Mail Address') }}</label>
+                    <label for="email">{{ __('E-Mail') }}</label>
 
                     <input wire:model="email" id="email" type="email"
                         class="form-control @error('email') is-invalid @enderror" name="email" required>

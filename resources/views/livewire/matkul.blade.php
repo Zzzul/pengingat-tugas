@@ -31,7 +31,8 @@ $target = 'update';
                 <div class="card-body p-3">
                     <p class="m-0">Mata Kuliah : {{ $jdwl->name }}</p>
                     <p class="m-0">Waktu :
-                        {{ ucfirst($jdwl->hari) .' '. date('H:i', strtotime($jdwl->jam_mulai)) .' - '.  date('H:i', strtotime($jdwl->jam_selesai)) }}
+                        {{ ucfirst($jdwl->hari) .' '. date('H:i', strtotime($jdwl->jam_mulai)) .' - '.
+                        date('H:i', strtotime($jdwl->jam_selesai)) }}
                     </p>
                     <p class="m-0">SKS : {{ $jdwl->sks }}</p>
                 </div>
