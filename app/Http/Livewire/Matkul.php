@@ -23,7 +23,7 @@ class Matkul extends Component
     public $page = 1;
 
     protected $rules = [
-        'name' => 'required',
+        'name' => 'required|unique:matkuls,name',
         'hari' => 'required',
         'jam_mulai' => 'required',
         'jam_selesai' => 'required',
@@ -154,7 +154,6 @@ class Matkul extends Component
             $matkul->hari = $this->hari;
             $matkul->jam_mulai = $this->jam_mulai;
             $matkul->jam_selesai = $this->jam_selesai;
-
             $matkul->user_id = auth()->user()->id;
             $matkul->sks = $this->sks;
             $matkul->semester_id = $this->semester_id;
@@ -216,8 +215,7 @@ class Matkul extends Component
 
     public function update($id)
     {
-        $this->validate();
-
+        $this->validate(['name' => 'required|unique:matkuls,name,' . $id]);
 
         $matkul = ModelsMatkul::findOrFail($id);
 

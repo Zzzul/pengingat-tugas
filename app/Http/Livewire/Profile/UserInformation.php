@@ -34,11 +34,11 @@ class UserInformation extends Component
         $user->email = $this->email;
         $user->save();
 
+        redirect(route('user-profile'));
         $this->flash('success', 'Profile berhasil diubah!', [
             'position' =>  'top',
             'timer'    =>  1000,
             'toast'    =>  true,
         ]);
-        redirect(route('user-profile'));
     }
 }

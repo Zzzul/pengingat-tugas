@@ -27,9 +27,8 @@ $target = 'update';
             <h5 class="text-center mb-3">Tugas yang belum/tidak dikerjakan</h5>
             @endrole
 
-            @role('user|demo')
-            <h5 class="text-center mb-0">Tugas yang belum/tidak kamu dikerjakan</h5>
-            <h6 class="mt-1 mb-3 text-center">(Semester sekarang)</h6>
+            @role('mahasiswa')
+            <h5 class="text-center mb-3">Tugas yang belum/tidak kamu dikerjakan</h5>
             @endrole
         </div>
         @foreach ($tugas_yg_ga_selesai as $tgs)
@@ -43,12 +42,22 @@ $target = 'update';
                         <b>{{ $tgs->pertemuan_ke }}</b>
                     </p>
 
-                    @if (date('YmdHi', strtotime($tgs->batas_waktu)) > date('YmdHi'))
+                    @php
+                    $batasWaktu = new DateTime("$tgs->batas_waktu");
+                    $today = new DateTime(date('Y-m-d'));
+                    @endphp
+
+                    @if ($batasWaktu > $today)
                     <p class="m-0">Batas Waktu :
-                        <b>{{ date('d F Y - H:i', strtotime($tgs->batas_waktu)) }}</b>
+                        {{-- jika sudah pada hari yang sama hanya beda jam --}}
+                        @if ($today->diff($batasWaktu)->days == 0)
+                        <span class="text-danger">Tugas akan segera berakhir!</span>
+                        @else
+                        <span>{{ date('d F Y - H:i', strtotime($tgs->batas_waktu)) }}</span>
+                        @endif
                     </p>
                     @else
-                    <p class="m-0">Batas Waktu : Telah habis
+                    <p class="m-0">Batas Waktu : Telah habis!
                     </p>
                     @endif
 
@@ -70,7 +79,6 @@ $target = 'update';
             </div>
             @endif
             @endrole
-
 
             @if ($form === 'add')
             <form wire:submit.prevent="store">
@@ -238,12 +246,12 @@ $target = 'update';
                                 if($tgs->selesai && $sisa){
                                 // tugas selesai dan waktu masih ada
                                 echo date('d F Y - H:i ',
-                                strtotime($tgs->selesai)).'<i class="fas fa-check text-success ml-2"></i>';
+                                strtotime($tgs->selesai)).'<i class="fas fa-check text-success ml-1"></i>';
 
                                 }elseif($tgs->selesai && !$sisa){
                                 // tugas selesai dan waktu habis
                                 echo date('d F Y - H:i ',
-                                strtotime($tgs->selesai)).'<i class="fas fa-check text-success ml-2"></i>';
+                                strtotime($tgs->selesai)).'<i class="fas fa-check text-success ml-1"></i>';
 
                                 }elseif(!$tgs->selesai && !$sisa){
                                 // tugas gak selesai dan waktu habis
@@ -251,7 +259,7 @@ $target = 'update';
 
                                 }elseif(!$tgs->selesai && $sisa){
                                 // tugas gak selesai dan waktu masih ada
-                                echo '<i class="fas fa-question text-info"></i>';
+                                echo '<i class="fas fa-question text-dark"></i>';
                                 }
                                 @endphp
                             </td>

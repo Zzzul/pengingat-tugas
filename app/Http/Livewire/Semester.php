@@ -23,7 +23,7 @@ class Semester extends Component
     protected $paginationTheme = 'bootstrap';
 
     protected $rules = [
-        'semester_ke' => 'required',
+        'semester_ke' => 'required|unique:semesters,semester_ke',
     ];
 
     protected $queryString = [
@@ -130,7 +130,7 @@ class Semester extends Component
 
     public function update($id)
     {
-        $this->validate();
+        $this->validate(['semester_ke' => 'required|unique:semesters,semester_ke,' . $id]);
 
         $semester = ModelsSemester::findOrFail($id);
 

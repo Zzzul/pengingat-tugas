@@ -95,6 +95,8 @@ class Tugas extends Component
             ->where('semesters.aktif_smt', '!=', null)
             ->get();
 
+        // dd($tugas_yg_ga_selesai);
+
         return view('livewire.tugas', compact('all_tugas', 'tugas_yg_ga_selesai'));
     }
 
@@ -128,17 +130,24 @@ class Tugas extends Component
     {
         $this->validate();
 
-        $matkul = new ModelsTugas;
-        $matkul->matkul_id      = $this->matkul;
-        $matkul->user_id        = auth()->user()->id;
-        $matkul->deskripsi      = $this->deskripsi;
-        $matkul->batas_waktu    = $this->batas_waktu;
-        $matkul->pertemuan_ke   = $this->pertemuan_ke;
-        $matkul->save();
+        $tugas = $this->checkTugas($this->matkul, $this->pertemuan_ke);
 
-        $this->hideForm();
+        if ($tugas) {
+            $this->showAlert('error', 'Tugas ' . $tugas['matkul']->name .  ' pertmuan ' . $tugas->pertemuan_ke  . ' sudah ada.');
+            $this->pertemuan_ke = '';
+        } else {
+            $new_tugas = new ModelsTugas;
+            $new_tugas->matkul_id      = $this->matkul;
+            $new_tugas->user_id        = auth()->user()->id;
+            $new_tugas->deskripsi      = $this->deskripsi;
+            $new_tugas->batas_waktu    = $this->batas_waktu;
+            $new_tugas->pertemuan_ke   = $this->pertemuan_ke;
+            $new_tugas->save();
 
-        $this->showAlert('success', 'Tugas berhasil ditambahkan.');
+            $this->hideForm();
+
+            $this->showAlert('success', 'Tugas berhasil ditambahkan.');
+        }
     }
 
     public function show($id)
@@ -177,40 +186,48 @@ class Tugas extends Component
     {
         $this->validate();
 
+        $check_tugas = $this->checkTugas($this->matkul, $this->pertemuan_ke);
         $tugas = ModelsTugas::find($id);
 
-        $batasWaktuCount = date('YmdHi', strtotime($this->batas_waktu));
-
-        $tglSelesaiCount =  date('YmdHi', strtotime($this->selesai));
-
-        // cek jika tugas milik user yang sedang login
-        if (auth()->user()->hasRole('admin') || $tugas->user_id == auth()->user()->id) {
-
-            // jika batas waktu telah habis
-            if ($tglSelesaiCount > $batasWaktuCount) {
-
-                $this->selesai = null;
-
-                $this->validate(
-                    [
-                        'selesai' => 'required'
-                    ],
-                    ['required' => 'Tanggal selesai tidak boleh lebih besar dari batas waktu!']
-                );
-            } else {
-                $tugas->matkul_id      = $this->matkul;
-                $tugas->deskripsi      = $this->deskripsi;
-                $tugas->batas_waktu    = $this->batas_waktu;
-                $tugas->selesai        = $this->selesai;
-                $tugas->pertemuan_ke   = $this->pertemuan_ke;
-                $tugas->save();
-
-                $this->hideForm();
-
-                $this->showAlert('success', 'Tugas berhasil diubah.');
-            }
+        // jika tugas sudah ada tapi bukan tugas yang sama
+        if ($check_tugas && $tugas->id != $check_tugas->id) {
+            $this->showAlert('error', 'Tugas ' . $check_tugas['matkul']->name .  ' pertmuan ' . $check_tugas->pertemuan_ke  . ' sudah ada.');
         } else {
-            $this->showAlert('error', 'Tugas tidak dapat diubah.');
+            $tugas = ModelsTugas::find($id);
+
+            $batasWaktuCount = date('YmdHi', strtotime($this->batas_waktu));
+
+            $tglSelesaiCount =  date('YmdHi', strtotime($this->selesai));
+
+            // cek jika tugas milik user yang sedang login
+            if (auth()->user()->hasRole('admin') || $tugas->user_id == auth()->user()->id) {
+
+                // jika batas waktu telah habis dan tgl selesai lebih besar dari tgl batas waktu
+                if ($tglSelesaiCount > $batasWaktuCount) {
+
+                    $this->selesai = null;
+
+                    $this->validate(
+                        ['selesai' => 'required'],
+                        ['required' => 'Tanggal selesai tidak boleh lebih besar dari batas waktu!']
+                    );
+                } else {
+                    // jika tgl selesai tidak lebih besar dari batas waktu (deadline belum selesai)
+                    $tugas->matkul_id      = $this->matkul;
+                    $tugas->deskripsi      = $this->deskripsi;
+                    $tugas->batas_waktu    = $this->batas_waktu;
+                    $tugas->selesai        = $this->selesai;
+                    $tugas->pertemuan_ke   = $this->pertemuan_ke;
+                    $tugas->save();
+
+                    $this->hideForm();
+
+                    $this->showAlert('success', 'Tugas berhasil diubah.');
+                }
+            } else {
+                // jika user biasa ingin ubah tugas user lain
+                $this->showAlert('error', 'Tugas tidak dapat diubah.');
+            }
         }
     }
 
@@ -262,5 +279,18 @@ class Tugas extends Component
             'onConfirmed' => 'confirmed',
             'onCancelled' => 'cancelled'
         ]);
+    }
+
+    public function checkTugas($matkul_id, $pertemuan_ke)
+    {
+        // jika matkul dan pertemuan ke sama
+        $tugas = ModelsTugas::with('matkul')->where('matkul_id', $matkul_id)
+            ->where('pertemuan_ke', $pertemuan_ke)->latest()->first();
+
+        if ($tugas) {
+            return $tugas;
+        } else {
+            return false;
+        }
     }
 }
