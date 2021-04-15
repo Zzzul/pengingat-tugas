@@ -11,9 +11,6 @@ $target = 'update';
 
 @section('title', 'Semester')
 
-{{-- @can('semester') --}}
-{{-- @if (auth()->user()->can('semester')) --}}
-
 <div class="container py-3">
     <div class="row justify-content-md-center">
 
@@ -25,7 +22,7 @@ $target = 'update';
         </div>
 
         @if ($form)
-        <div class="col-md-12 mt-3">
+        <div class="col-md-12 mt-2">
             @role('admin')
             @if ($milik_user)
             <div class="alert alert-info" role="alert">
@@ -181,8 +178,3 @@ $target = 'update';
     </div>
     {{-- d-sm-block d-md-none --}}
 </div>
-{{-- end of container--}}
-{{-- @else --}}
-{{-- <h1>jaja awok</h1> --}}
-{{-- @endif --}}
-{{-- @endcan --}}

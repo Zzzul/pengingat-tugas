@@ -42,7 +42,7 @@
                                 <td>2018310041</td>
                             </tr>
                             <tr class="table-active">
-                                <td>Mohammad Zulfahmi</td>
+                                <td>Muhammad Zulfahmi</td>
                                 <td>2018310009</td>
                             </tr>
                         </tbody>

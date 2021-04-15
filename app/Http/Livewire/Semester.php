@@ -23,7 +23,7 @@ class Semester extends Component
     protected $paginationTheme = 'bootstrap';
 
     protected $rules = [
-        'semester_ke' => 'required|unique:semesters,semester_ke',
+        'semester_ke' => 'required|numeric',
     ];
 
     protected $queryString = [

@@ -23,13 +23,7 @@ $target = 'update';
     @if (!$tugas_yg_ga_selesai->isEmpty())
     <div class="row justify-content-md-center mt-2">
         <div class="col-md-12">
-            @role('admin')
-            <h5 class="text-center mb-3">Tugas yang belum/tidak dikerjakan</h5>
-            @endrole
-
-            @role('mahasiswa')
             <h5 class="text-center mb-3">Tugas yang belum/tidak kamu dikerjakan</h5>
-            @endrole
         </div>
         @foreach ($tugas_yg_ga_selesai as $tgs)
         <div class="col-md-4">
@@ -70,7 +64,7 @@ $target = 'update';
 
     <div class="row justify-content-md-center mt-2">
         @if ($form)
-        <div class="col-md-12 mt-3 mb-0">
+        <div class="col-md-12 mb-0">
             @role('admin')
             @if ($milik_user)
             <div class="alert alert-info" role="alert">
