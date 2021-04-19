@@ -47,8 +47,7 @@
                 <div class="row justify-content-md-center">
                     <div class="col-md-12">
                         <hr>
-                        <p class="text-center">Created with 🖤 by
-                            <a href="{{ route('about') }}">Kelompok 8</a>
+                        <p class="text-center">Created with 🖤 by Kelompok 8
                     </div>
                 </div>
             </div>
@@ -62,8 +61,7 @@
                 <div class="row justify-content-md-center">
                     <div class="col-md-12">
                         <hr>
-                        <p class="text-center">Created with 🖤 by
-                            <a href="{{ route('about') }}">Kelompok 8</a>
+                        <p class="text-center">Created with 🖤 by Kelompok 8
                     </div>
                 </div>
             </div>

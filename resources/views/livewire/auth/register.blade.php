@@ -10,7 +10,7 @@
         <div class="col-md-6 my-3">
             <form wire:submit.prevent="register" novalidate>
                 <div class="form-group">
-                    <label for="name">{{ __('Name') }}</label>
+                    <label for="name">{{ __('Nama') }}</label>
                     <input wire:model="name" id="name" type="text"
                         class="form-control @error('name') is-invalid @enderror" name="name"
                         placeholder="Bruno Bucciarati" value="{{ old('name') }}" required autocomplete="name" autofocus>
@@ -37,7 +37,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="email">{{ __('E-Mail Address') }}</label>
+                    <label for="email">{{ __('E-Mail') }}</label>
 
                     <input wire:model="email" id="email" type="email"
                         class="form-control @error('email') is-invalid @enderror" placeholder="bruno@gmail.com"
@@ -65,7 +65,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="password-confirm">{{ __('Confirm Password') }}</label>
+                    <label for="password-confirm">{{ __('Ulangi Password') }}</label>
 
                     <input wire:model="password_confirmation" id="password-confirm" type="password" class="form-control"
                         name="password_confirmation" placeholder="••••••••••" required autocomplete="new-password">

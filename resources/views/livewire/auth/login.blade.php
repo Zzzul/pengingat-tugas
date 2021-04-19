@@ -8,14 +8,13 @@
         </div>
 
         <div class="col-md-6 my-3">
-            <form wire:submit.prevent="login" novalidate>
+            <form wire:submit.prevent="login" autocomplete="off">
                 <div class="form-group">
                     <label for="username">{{ __('Username') }}</label>
 
                     <input wire:model="username" id="username" type="text"
                         class="form-control @error('username') is-invalid @enderror" name="username"
-                        value="{{ old('username') }}" required autocomplete="username" placeholder="BrunoBuccirati"
-                        autofocus>
+                        value="{{ old('username') }}" required placeholder="BrunoBuccirati" autofocus>
 
                     @error('username')
                     <span class="invalid-feedback" role="alert">
@@ -29,7 +28,7 @@
 
                     <input wire:model="password" id="password" type="password"
                         class="form-control @error('password') is-invalid @enderror" name="password" required
-                        autocomplete="current-password" placeholder="••••••••••" />
+                        placeholder="••••••••••" />
 
                     @error('password')
                     <span class="invalid-feedback" role="alert">
