@@ -19,7 +19,7 @@ class Password extends Component
 
     public function update()
     {
-        if (auth()->user()->hasPermissionTo('change password')) {
+        if (auth()->user()->hasPermissionTo('ganti password')) {
             $this->validate([
                 'current_password' => 'required',
                 'password' => 'required|min:8|confirmed',

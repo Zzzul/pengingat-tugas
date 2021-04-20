@@ -20,7 +20,7 @@
         <label class="control-label" for="search">Cari</label>
         <div class="input-group">
             <input type="text" class="form-control" id="search" placeholder="(Tekan &quot;/&quot; untuk fokus)"
-                wire:model="search">
+                wire:model="search" autocomplete="off">
             <div class="input-group-append">
                 <span class="input-group-text">
                     <i class="fas fa-search" wire:loading.remove wire:target="search"></i>

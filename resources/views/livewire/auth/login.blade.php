@@ -8,7 +8,7 @@
         </div>
 
         <div class="col-md-6 my-3">
-            <form wire:submit.prevent="login" autocomplete="off">
+            <form wire:submit.prevent="login" autocomplete="off" novalidate>
                 <div class="form-group">
                     <label for="username">{{ __('Username') }}</label>
 
