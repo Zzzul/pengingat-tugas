@@ -5,7 +5,7 @@
             <div class="d-none d-md-block">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Home</a></li>
-                    <li class="breadcrumb-item active">Ganti Password</li>
+                    <li class="breadcrumb-item">Ganti Password</li>
                 </ol>
             </div>
 
@@ -13,7 +13,7 @@
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Home</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('lainnya') }}">Lainnya</a></li>
-                    <li class="breadcrumb-item active">Ganti Password</li>
+                    <li class="breadcrumb-item">Ganti Password</li>
                 </ol>
             </div>
         </div>
@@ -25,73 +25,76 @@
             </div>
             @endcannot
 
-            <form wire:submit.prevent="update">
-                <div class="form-group">
-                    <label for="current_password">{{ __('Password Sekarang') }}</label>
+            <form wire:submit.prevent="update" novalidate>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="current_password">{{ __('Password Sekarang') }}</label>
 
-                    <input id="current_password" type="password" wire:model="current_password"
-                        class="form-control @error('current_password') is-invalid @enderror" placeholder="••••••••••"
-                        required name="current_password">
+                            <input id="current_password" type="password" wire:model="current_password"
+                                class="form-control @error('current_password') is-invalid @enderror"
+                                placeholder="••••••••••" required name="current_password" autofocus>
 
-                    @error('current_password')
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                    @enderror
-                </div>
+                            @error('current_password')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
 
-                <div class="form-group">
-                    <label for="password">{{ __('Password Baru') }}</label>
+                        <div class="form-group">
+                            <label for="password">{{ __('Password Baru') }}</label>
 
-                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror"
-                        wire:model="password" name="password" placeholder="••••••••••" required
-                        autocomplete="new-password">
+                            <input id="password" type="password"
+                                class="form-control @error('password') is-invalid @enderror" wire:model="password"
+                                name="password" placeholder="••••••••••" required autocomplete="new-password">
 
-                    @error('password')
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                    @enderror
-                </div>
+                            @error('password')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
 
-                <div class="form-group">
-                    <label for="password-confirm">{{ __('Ulangi Password Baru') }}</label>
+                        <div class="form-group">
+                            <label for="password-confirm">{{ __('Ulangi Password Baru') }}</label>
 
-                    <input id="password-confirm" type="password" class="form-control" wire:model="password_confirmation"
-                        placeholder="••••••••••" name="password_confirmation" required autocomplete="new-password">
-                </div>
+                            <input id="password-confirm" type="password" class="form-control"
+                                wire:model="password_confirmation" placeholder="••••••••••" name="password_confirmation"
+                                required autocomplete="new-password">
+                        </div>
 
-                @can('ganti password')
-                <div class="form-groupmb-0">
-                    {{-- for deskttop --}}
-                    <div class="d-none d-md-block">
-                        <button type="submit" class="btn btn-info">
-                            {{ __('Ganti Password') }}
-                            <x-loading target="{{ 'update' }}"></x-loading>
-                        </button>
+                        @can('ganti password')
+                        <div class="form-groupmb-0">
+                            {{-- for deskttop --}}
+                            <div class="d-none d-md-block">
+                                <button type="submit" class="btn btn-primary">
+                                    {{ __('Ganti Password') }}
+                                    <x-loading target="{{ 'update' }}"></x-loading>
+                                </button>
+                            </div>
+
+                            {{-- for mobile --}}
+                            <div class=" d-md-none d-lg-none d-xl-none">
+                                <button type="submit" class="btn btn-primary btn-block">
+                                    {{ __('Ganti Password') }}
+                                    <x-loading target="{{ 'update' }}"></x-loading>
+                                </button>
+                            </div>
+                        </div>
+                        @endcan
+
+                        @cannot('ganti password')
+                        <div class="form-groupmb-0">
+                            <div class="d-none d-md-block">
+                                <button type="buttom" class="btn btn-primary" disabled>
+                                    {{ __('Ganti Password') }}
+                                </button>
+                            </div>
+                        </div>
+                        @endcannot
                     </div>
-
-                    {{-- for mobile --}}
-                    <div class=" d-md-none d-lg-none d-xl-none">
-                        <button type="submit" class="btn btn-info btn-block">
-                            {{ __('Ganti Password') }}
-                            <x-loading target="{{ 'update' }}"></x-loading>
-                        </button>
-                    </div>
                 </div>
-                @endcan
-
-                @cannot('ganti password')
-                <div class="form-groupmb-0">
-                    <div class="d-none d-md-block">
-                        <button type="buttom" class="btn btn-info" disabled>
-                            {{ __('Ganti Password') }}
-                        </button>
-                    </div>
-                </div>
-                @endcannot
-
-
             </form>
         </div>
     </div>

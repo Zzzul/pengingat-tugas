@@ -80,6 +80,7 @@ class Semester extends Component
     {
         $this->form = '';
         $this->semester_ke = '';
+        $this->dispatchBrowserEvent('close-modal');
         $this->noValidate();
     }
 
@@ -99,10 +100,8 @@ class Semester extends Component
             'semester_ke' => $this->semester_ke,
         ]);
 
+        $this->hideForm();
         $this->showAlert('success', 'Semester berhasil ditambahkan.');
-
-        $this->semester_ke = '';
-        $this->form = '';
     }
 
     public function show($id)
@@ -139,6 +138,8 @@ class Semester extends Component
             $semester->user_id = auth()->user()->id;
             $semester->semester_ke = $this->semester_ke;
             $semester->save();
+
+            $this->hideForm();
 
             $this->showAlert('success', 'Semester berhasil diubah.');
         } else {

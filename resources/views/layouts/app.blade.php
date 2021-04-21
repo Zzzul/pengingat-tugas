@@ -18,7 +18,8 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    {{-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> --}}
+    <link href="{{ asset('css/bootstrap-lumen.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
 
     {{-- font awesome --}}
@@ -47,7 +48,8 @@
                 <div class="row justify-content-md-center">
                     <div class="col-md-12">
                         <hr>
-                        <p class="text-center">Created with 🖤 by Kelompok 8
+                        <p class="text-center font-weight-bold">Created with <i class="fas fa-heart text-danger"></i> by
+                            Kelompok 8
                     </div>
                 </div>
             </div>
@@ -61,7 +63,8 @@
                 <div class="row justify-content-md-center">
                     <div class="col-md-12">
                         <hr>
-                        <p class="text-center">Created with 🖤 by Kelompok 8
+                        <p class="text-center font-weight-bold">Created with <i class="fas fa-heart text-danger"></i>
+                            by Kelompok 8
                     </div>
                 </div>
             </div>
@@ -72,10 +75,12 @@
     @livewireScripts
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
     <x-livewire-alert::scripts />
 
     <script src="https://cdn.jsdelivr.net/gh/livewire/turbolinks@v0.1.x/dist/livewire-turbolinks.js"
-        data-turbolinks-eval="false"></script>
+        data-turbolinks-eval="false" data-turbo-eval="false"></script>
+
     <script>
         var map = {};
         onkeydown = onkeyup = function(e){
@@ -88,6 +93,12 @@
                 elm.focus();
             }
         }
+    </script>
+
+    <script>
+        window.addEventListener('close-modal', event => {
+            $('#exampleModal').modal('hide');
+        })
     </script>
 </body>
 

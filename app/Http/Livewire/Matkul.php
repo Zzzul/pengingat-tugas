@@ -110,6 +110,7 @@ class Matkul extends Component
     public function hideForm()
     {
         $this->form = '';
+        $this->dispatchBrowserEvent('close-modal');
         $this->emptyItems();
         $this->noValidate();
     }

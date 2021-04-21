@@ -17,44 +17,9 @@ $target = 'update';
         <div class="col-md-12">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item active">Semester</li>
+                <li class="breadcrumb-item">Semester</li>
             </ol>
         </div>
-
-        @if ($form)
-        <div class="col-md-12 mt-2">
-            @role('admin')
-            @if ($milik_user)
-            <div class="alert alert-info" role="alert">
-                Semester ini milik : <span
-                    class="font-weight bold">{{ '@'. $milik_user->username .' - '. $milik_user->name  }}</span>
-            </div>
-            @endif
-            @endrole
-
-            @if ($form == 'add')
-            <form wire:submit.prevent="store">
-                @else
-                <form wire:submit.prevent="update('{{ $id_semester }}')">
-                    @endif
-
-                    <div class="row form-group">
-                        <div class="col-md-3">
-                            <label for="semester-ke">Semester</label>
-                            <input type="number" id="semester-ke" min="1" max="10"
-                                class="form-control @error('semester_ke')is-invalid @enderror" placeholder="Semester"
-                                wire:model="semester_ke" aria-describedby="semester-ke" {{ $form ? 'autofocus' : '' }}>
-                            @error('semester_ke') <span class="text-danger">{{ $message }}</span> @enderror
-                        </div>
-                        <div class="col-md-7"></div>
-                        <div class="col-md-2">
-                            <x-button-submit target="{{ $target }}"></x-button-submit>
-                        </div>
-                    </div> {{-- end of row form-group--}}
-                </form>
-        </div>
-        {{-- end of --}}
-        @endif
 
         <div class="col-md-12">
 
@@ -75,68 +40,79 @@ $target = 'update';
                 </div>
             </div>
 
-            <x-search-input></x-search-input>
+            <div class="card shadow-sm mb-3">
+                <div class="card-body">
+                    <x-search-input></x-search-input>
 
-            <div class="table-responsive">
-                <table class="table table-hover table-striped table-sm">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            @role('admin')
-                            <th>User</th>
-                            @endrole
-                            <th>Semester</th>
-                            <th>Dibuat Pada</th>
-                            <th>Terakhir Diubah</th>
-                            <th>Aksi
-                                <img wire:loading wire:target="show"
-                                    src="{{ asset('assets/Dual Ring-1s-16px-(2).svg') }}" class="mb-1" alt="Loading..">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    @role('admin')
+                                    <th>User</th>
+                                    @endrole
+                                    <th>Semester</th>
+                                    <th>Dibuat Pada</th>
+                                    <th>Terakhir Diubah</th>
+                                    <th>Aksi
+                                        <img wire:loading wire:target="show"
+                                            src="{{ asset('assets/Dual Ring-1s-16px-(2).svg') }}" class="mb-1"
+                                            alt="Loading..">
 
-                                <img wire:loading wire:target="triggerConfirm"
-                                    src="{{ asset('assets/Dual Ring-1s-16px-(2).svg') }}" class="mb-1" alt="Loading..">
+                                        <img wire:loading wire:target="triggerConfirm"
+                                            src="{{ asset('assets/Dual Ring-1s-16px-(2).svg') }}" class="mb-1"
+                                            alt="Loading..">
 
-                                <img wire:loading wire:target="setAktifSmt"
-                                    src="{{ asset('assets/Dual Ring-1s-16px-(2).svg') }}" class="mb-1" alt="Loading..">
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($semesters as $key => $sms)
-                        <tr class="table-active">
-                            <td>{{ $semesters->firstItem() + $key }}
-                            </td>
-                            @role('admin')
-                            <td>{{ $sms['user']->name }}
-                                {!! $sms['user']->id == auth()->id() ? '<i class="fas fa-check-circle"></i>' : '' !!}
-                            </td>
-                            @endrole
-                            <td>{{ $sms->semester_ke }}</td>
-                            <td>{{ $sms->created_at->diffForHumans()  }}</td>
-                            <td>{{ $sms->updated_at->diffForHumans() }}</td>
-                            <td>
-                                <button class="mb-2 btn btn-outline-info btn-sm mr-1" wire:loading.attr="disabled"
-                                    wire:click="show('{{ $sms->id }}')">
-                                    <i class="fas fa-edit"></i>
-                                </button>
+                                        <img wire:loading wire:target="setAktifSmt"
+                                            src="{{ asset('assets/Dual Ring-1s-16px-(2).svg') }}" class="mb-1"
+                                            alt="Loading..">
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($semesters as $key => $sms)
+                                <tr>
+                                    <td>{{ $semesters->firstItem() + $key }}
+                                    </td>
+                                    @role('admin')
+                                    <td>{{ $sms['user']->name }}
+                                        {!! $sms['user']->id == auth()->id() ? '<i class="fas fa-check-circle"></i>' :
+                                        '' !!}
+                                    </td>
+                                    @endrole
+                                    <td>{{ $sms->semester_ke }}</td>
+                                    <td>{{ $sms->created_at->diffForHumans()  }}</td>
+                                    <td>{{ $sms->updated_at->diffForHumans() }}</td>
+                                    <td>
+                                        <button class="mb-1 btn btn-outline-primary btn-sm mr-1"
+                                            wire:loading.attr="disabled" wire:click="show('{{ $sms->id }}')"
+                                            data-toggle="modal" data-target="#exampleModal">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
 
-                                <button class="mb-2 btn btn-outline-danger btn-sm" wire:loading.attr="disabled"
-                                    wire:click="triggerConfirm('{{ $sms->id }}')">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-                                <button class="mb-2 btn btn-outline-success btn-sm" wire:loading.attr="disabled"
-                                    wire:click="setAktifSmt('{{ $sms->id }}')">
-                                    {!! $sms->aktif_smt ? '<i class="fas fa-star"></i>' : '<i class="far fa-star"></i>'
-                                    !!}
-                                </button>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="5" class="text-center">Data tidak ada/ditemukan.</td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                                        <button class="mb-1 btn btn-outline-danger btn-sm" wire:loading.attr="disabled"
+                                            wire:click="triggerConfirm('{{ $sms->id }}')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+
+                                        <button class="mb-1 btn btn-outline-success btn-sm" wire:loading.attr="disabled"
+                                            wire:click="setAktifSmt('{{ $sms->id }}')">
+                                            {!! $sms->aktif_smt ? '<i class="fas fa-star"></i>' : '<i
+                                                class="far fa-star"></i>'
+                                            !!}
+                                        </button>
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="5" class="text-center">Data tidak ada/ditemukan.</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
         {{-- end of col--}}
@@ -177,4 +153,56 @@ $target = 'update';
         </div>
     </div>
     {{-- d-sm-block d-md-none --}}
+
+    <!-- Modal -->
+    <div wire:ignore.self class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">
+                        {{ $form === 'add' ? 'Tambah Data Semester' : 'Edit Data Semester' }}
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                        wire:loading.attr="disabled" wire:click="hideForm()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @if ($form)
+                    @role('admin')
+                    @if ($milik_user)
+                    <div class="alert alert-primary" role="alert">
+                        Semester ini milik : <span
+                            class="font-weight bold">{{ '@'. $milik_user->username .' - '. $milik_user->name  }}</span>
+                    </div>
+                    @endif
+                    @endrole
+
+                    @if ($form == 'add')
+                    <form wire:submit.prevent="store">
+                        @else
+                        <form wire:submit.prevent="update('{{ $id_semester }}')">
+                            @endif
+
+                            <div class="row form-group">
+                                <div class="col-md-8">
+                                    <label for="semester-ke">Semester</label>
+                                    <input type="number" id="semester-ke" min="1" max="10"
+                                        class="form-control @error('semester_ke')is-invalid @enderror"
+                                        placeholder="Semester ke" wire:model="semester_ke"
+                                        aria-describedby="semester-ke" {{ $form ? 'autofocus' : '' }}>
+                                    @error('semester_ke') <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="col-md-4">
+                                    <x-button-submit target="{{ $target }}"></x-button-submit>
+                                </div>
+                            </div> {{-- end of row form-group--}}
+                        </form>
+                        @endif
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

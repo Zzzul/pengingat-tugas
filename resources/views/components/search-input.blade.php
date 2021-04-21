@@ -1,6 +1,6 @@
 {{-- search --}}
-<div class="form-group row mb-3">
-    <div class="col-md-2 mb-2">
+<div class="form-group row">
+    <div class="col-md-2">
         <label for="paginate">Pagination</label>
         <img wire:loading wire:target="paginate_per_page" src="{{ asset('assets/Dual Ring-1s-16px-(2).svg') }}"
             class="mb-1" alt="Loading..">

@@ -41,6 +41,8 @@ class Password extends Component
 
                 return redirect(route('home'));
             } else {
+                $this->current_password = '';
+
                 $this->showAlert('error', 'Password lama salah!');
             }
         } else {

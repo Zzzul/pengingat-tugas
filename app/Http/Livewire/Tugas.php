@@ -103,6 +103,8 @@ class Tugas extends Component
     public function showForm($type)
     {
         $this->form = $type;
+        $this->noValidate();
+        $this->emptyItems();
 
         if ($type == 'add') {
             $this->matkuls = Matkul::where('user_id', auth()->user()->id)->get();
@@ -113,6 +115,7 @@ class Tugas extends Component
     public function hideForm()
     {
         $this->form = '';
+        $this->dispatchBrowserEvent('close-modal');
         $this->emptyItems();
         $this->noValidate();
     }
@@ -134,6 +137,7 @@ class Tugas extends Component
 
         if ($tugas) {
             $this->showAlert('error', 'Tugas ' . $tugas['matkul']->name .  ' pertmuan ' . $tugas->pertemuan_ke  . ' sudah ada.');
+
             $this->pertemuan_ke = '';
         } else {
             $new_tugas = new ModelsTugas;
