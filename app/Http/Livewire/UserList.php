@@ -92,8 +92,9 @@ class UserList extends Component
     {
         $this->validate([
             'name'           => 'required|min:4,max:25',
+            'email'           => 'required|unique:users,email,' . $this->id_user,
             'user_roles'     => 'required',
-            'permissions.id' => 'required',
+            'permissions' => 'array|required',
         ]);
 
         $user = User::findOrFail($id);
@@ -126,9 +127,8 @@ class UserList extends Component
         $user->email = $this->email;
         $user->save();
 
-        $this->showAlert('success', 'User berhasil diubah.');
-
         $this->hideForm();
+        $this->showAlert('success', 'User berhasil diubah.');
     }
 
     public function emptyItems()
@@ -142,6 +142,7 @@ class UserList extends Component
         $this->form = '';
         $this->emptyItems();
         $this->noValidate();
+        $this->dispatchBrowserEvent('close-modal');
     }
 
     public function noValidate()
@@ -156,7 +157,7 @@ class UserList extends Component
 
     public function confirmed()
     {
-        $user =  User::findOrFail($this->id_user);
+        $user = User::findOrFail($this->id_user);
         if ($user->id != auth()->user()->id) {
 
             // jika tidak terdapat relasi pada user

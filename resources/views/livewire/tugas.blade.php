@@ -178,7 +178,7 @@ $target = 'update';
                                     <td>{{ $tgs->updated_at->diffForHumans() }}</td>
                                     <td>
                                         <button
-                                            class="mr-2 mb-1 btn btn-outline-{{ $selisih == 'Sisa waktu telah habis!' && !$tgs->selesai ? 'warning' : 'primary' }} btn-sm mb-1"
+                                            class="mr-1 mb-1 btn btn-outline-{{ $selisih == 'Sisa waktu telah habis!' && !$tgs->selesai ? 'warning' : 'primary' }} btn-sm mb-1"
                                             wire:loading.attr="disabled" wire:click="show('{{ $tgs->id }}')"
                                             data-toggle="modal" data-target="#exampleModal">
                                             <i class="fas fa-edit"></i>

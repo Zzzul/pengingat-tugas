@@ -91,8 +91,8 @@ $target = 'update';
                                             <i class="fas fa-edit"></i>
                                         </button>
 
-                                        <button class="mb-1 btn btn-outline-danger btn-sm" wire:loading.attr="disabled"
-                                            wire:click="triggerConfirm('{{ $sms->id }}')">
+                                        <button class="mb-1 btn btn-outline-danger btn-sm mr-1"
+                                            wire:loading.attr="disabled" wire:click="triggerConfirm('{{ $sms->id }}')">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
 

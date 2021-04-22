@@ -99,11 +99,12 @@ class Matkul extends Component
     public function showForm($type)
     {
         $this->form = $type;
+        $this->noValidate();
+        $this->emptyItems();
 
         if ($type == 'add') {
             // get all semesters
             $this->semesters = Semester::where('user_id', auth()->user()->id)->get();
-            $this->emptyItems();
         }
     }
 

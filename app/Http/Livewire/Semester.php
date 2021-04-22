@@ -70,10 +70,8 @@ class Semester extends Component
     public function showForm($type)
     {
         $this->form = $type;
-
-        if ($this->semester_ke) {
-            $this->emptyItems();
-        }
+        $this->noValidate();
+        $this->emptyItems();
     }
 
     public function hideForm()
@@ -179,7 +177,7 @@ class Semester extends Component
 
             $this->showAlert('success', 'Semester sekarang berhasil diubah.');
         } else {
-            $this->showAlert('error', 'Semester sekarang tidak dapat diubah.');
+            $this->showAlert('error', 'Semester sekarang tidak dapat diubah karena bukan semester milik kamu.');
         }
     }
 

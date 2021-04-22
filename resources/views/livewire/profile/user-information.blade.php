@@ -22,7 +22,7 @@
         <div class="col-md-6 my-3">
             <div class="card">
                 <div class="card-body">
-                    <form wire:submit.prevent="update">
+                    <form wire:submit.prevent="update" novalidate>
                         <div class="form-group">
                             <label for="username">{{ __('Username') }}</label>
                             <input wire:model="username" id="username" type="text" class="form-control" disabled

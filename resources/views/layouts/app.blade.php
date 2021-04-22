@@ -48,7 +48,7 @@
                 <div class="row justify-content-md-center">
                     <div class="col-md-12">
                         <hr>
-                        <p class="text-center font-weight-bold">Created with <i class="fas fa-heart text-danger"></i> by
+                        <p class="text-center font-weight-bold">Made with <i class="fas fa-heart text-danger"></i> by
                             Kelompok 8
                     </div>
                 </div>
@@ -63,7 +63,7 @@
                 <div class="row justify-content-md-center">
                     <div class="col-md-12">
                         <hr>
-                        <p class="text-center font-weight-bold">Created with <i class="fas fa-heart text-danger"></i>
+                        <p class="text-center font-weight-bold">Made with <i class="fas fa-heart text-danger"></i>
                             by Kelompok 8
                     </div>
                 </div>
