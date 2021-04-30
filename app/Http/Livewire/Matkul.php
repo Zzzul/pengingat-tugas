@@ -23,8 +23,8 @@ class Matkul extends Component
     public $page = 1;
 
     protected $rules = [
-        'name' => 'required|unique:matkuls,name',
-        'hari' => 'required',
+        'name' => 'required',
+        'hari' => 'required|in:senin,selasa,rabu,kamis,jumat,sabtu',
         'jam_mulai' => 'required',
         'jam_selesai' => 'required',
         'sks' => 'required',
@@ -98,18 +98,22 @@ class Matkul extends Component
 
     public function showForm($type)
     {
+        $this->milik_user = '';
         $this->form = $type;
         $this->noValidate();
         $this->emptyItems();
 
+        /**
+         * jika ingin tambah data baru, maka hanya tampilkan semester yang dimilik oleh user yang sedang login
+         */
         if ($type == 'add') {
-            // get all semesters
             $this->semesters = Semester::where('user_id', auth()->user()->id)->get();
         }
     }
 
     public function hideForm()
     {
+        $this->milik_user = '';
         $this->form = '';
         $this->dispatchBrowserEvent('close-modal');
         $this->emptyItems();
@@ -142,48 +146,38 @@ class Matkul extends Component
     {
         $this->validate();
 
+        // jika terdapat mata kuliah yang sama pada satu user
+        $check = $this->checkDuplicateNamaMatkul();
+        if ($check) {
+            $this->name = '';
+            $this->validate(
+                ['name' => 'required'],
+                ['required' => "Mata kuliah $check->name sudah ada!"]
+            );
+        }
+
+        // jika jam mulai lebih besar dari jam selesai
         if ($this->jam_mulai > $this->jam_selesai) {
             $this->jam_selesai = null;
             $this->validate(
-                [
-                    'jam_selesai' => 'required'
-                ],
+                ['jam_selesai' => 'required'],
                 ['required' => 'Jam Selesai selesai tidak boleh lebih kecil dari Jam Mulai!']
             );
-        } else {
-            $matkul = new ModelsMatkul;
-            $matkul->name = $this->name;
-            $matkul->hari = $this->hari;
-            $matkul->jam_mulai = $this->jam_mulai;
-            $matkul->jam_selesai = $this->jam_selesai;
-            $matkul->user_id = auth()->user()->id;
-            $matkul->sks = $this->sks;
-            $matkul->semester_id = $this->semester_id;
-            $matkul->save();
-
-            $this->hideForm();
-
-            $this->showAlert('success', 'Mata Kuliah berhasil ditambahkan.');
-        }
-    }
-
-    public function checkDay($day)
-    {
-        if ($day == 'Monday') {
-            $day = 'senin';
-        } elseif ($day == 'Tuesday') {
-            $day = 'selasa';
-        } elseif ($day == 'Wednesday') {
-            $day = 'rabu';
-        } elseif ($day == 'Thursday') {
-            $day = 'kamis';
-        } elseif ($day == 'Friday') {
-            $day = 'jumat';
-        } elseif ($day == 'Saturday') {
-            $day = 'sabtu';
         }
 
-        return $day;
+        $matkul = new ModelsMatkul;
+        $matkul->name = $this->name;
+        $matkul->hari = $this->hari;
+        $matkul->jam_mulai = $this->jam_mulai;
+        $matkul->jam_selesai = $this->jam_selesai;
+        $matkul->user_id = auth()->user()->id;
+        $matkul->sks = $this->sks;
+        $matkul->semester_id = $this->semester_id;
+        $matkul->save();
+
+        $this->hideForm();
+
+        $this->showAlert('success', 'Mata Kuliah berhasil ditambahkan.');
     }
 
     public function show($id)
@@ -195,6 +189,7 @@ class Matkul extends Component
 
         if (auth()->user()->hasRole('admin') || $matkul->user_id == auth()->user()->id) {
 
+            // jika yang login admin
             if ($matkul->user_id != auth()->user()->id) {
                 $this->milik_user = User::find($matkul->user_id);
                 $this->semesters =  Semester::where('user_id', $matkul->user_id)->get();
@@ -217,36 +212,80 @@ class Matkul extends Component
 
     public function update($id)
     {
-        $this->validate(['name' => 'required|unique:matkuls,name,' . $id]);
+        $this->validate();
 
         $matkul = ModelsMatkul::findOrFail($id);
 
+        // jika terdapat mata kuliah yang sama pada satu user
+        $check = $this->checkDuplicateNamaMatkul();
+        if ($check && $check->id != $id) {
+            $this->name = '';
+            $this->validate(
+                ['name' => 'required'],
+                ['required' => "Mata kuliah $check->name sudah ada!"]
+            );
+        }
+
+        // jika jam mulai lebih besar dari jam selesai
+        if ($this->jam_mulai > $this->jam_selesai) {
+            $this->jam_selesai = null;
+            $this->validate(
+                [
+                    'jam_selesai' => 'required'
+                ],
+                ['required' => 'Jam Selesai selesai tidak boleh lebih kecil dari Jam Mulai!']
+            );
+        }
+
         if (auth()->user()->hasRole('admin') || $matkul->user_id == auth()->user()->id) {
 
-            if ($this->jam_mulai > $this->jam_selesai) {
-                $this->jam_selesai = null;
-                $this->validate(
-                    [
-                        'jam_selesai' => 'required'
-                    ],
-                    ['required' => 'Jam Selesai selesai tidak boleh lebih kecil dari Jam Mulai!']
-                );
-            } else {
-                $matkul->name = $this->name;
-                $matkul->hari = $this->hari;
-                $matkul->jam_mulai = $this->jam_mulai;
-                $matkul->jam_selesai = $this->jam_selesai;
-                $matkul->sks = $this->sks;
-                $matkul->semester_id = $this->semester_id;
-                $matkul->save();
+            $matkul->name = $this->name;
+            $matkul->hari = $this->hari;
+            $matkul->jam_mulai = $this->jam_mulai;
+            $matkul->jam_selesai = $this->jam_selesai;
+            $matkul->sks = $this->sks;
+            $matkul->semester_id = $this->semester_id;
+            $matkul->save();
 
-                $this->showAlert('success', 'Mata Kuliah berhasil diubah.');
-            }
+            $this->showAlert('success', 'Mata Kuliah berhasil diubah.');
         } else {
             $this->showAlert('error', 'Mata Kuliah tidak dapat diubah.');
         }
 
         $this->hideForm();
+    }
+
+    public function checkDay($day)
+    {
+        if ($day == 'Monday') {
+            $day = 'senin';
+        } elseif ($day == 'Tuesday') {
+            $day = 'selasa';
+        } elseif ($day == 'Wednesday') {
+            $day = 'rabu';
+        } elseif ($day == 'Thursday') {
+            $day = 'kamis';
+        } elseif ($day == 'Friday') {
+            $day = 'jumat';
+        } elseif ($day == 'Saturday') {
+            $day = 'sabtu';
+        }
+
+        return $day;
+    }
+
+    public function checkDuplicateNamaMatkul()
+    {
+        $check = ModelsMatkul::where([
+            'user_id' => auth()->id(),
+            'name' => $this->name
+        ])->first();
+
+        if ($check) {
+            return $check;
+        } else {
+            return false;
+        }
     }
 
     public function confirmed()

@@ -69,6 +69,7 @@ class Semester extends Component
 
     public function showForm($type)
     {
+        $this->milik_user = '';
         $this->form = $type;
         $this->noValidate();
         $this->emptyItems();
@@ -78,8 +79,9 @@ class Semester extends Component
     {
         $this->form = '';
         $this->semester_ke = '';
-        $this->dispatchBrowserEvent('close-modal');
         $this->noValidate();
+        $this->dispatchBrowserEvent('close-modal');
+        $this->milik_user = '';
     }
 
     public function noValidate()
@@ -93,19 +95,30 @@ class Semester extends Component
     {
         $this->validate();
 
-        ModelsSemester::create([
-            'user_id' => auth()->user()->id,
-            'semester_ke' => $this->semester_ke,
-        ]);
+        // jika semester yang sama sudah ada
+        $check = $this->checkDuplicateSemesterKe();
+        if ($check) {
+            $this->semester_ke = '';
+            $this->validate(
+                ['semester_ke' => 'required'],
+                ['required' => "Semester ke $check->semester_ke sudah ada!"]
+            );
+        } else {
+            ModelsSemester::create([
+                'user_id' => auth()->user()->id,
+                'semester_ke' => $this->semester_ke,
+            ]);
 
-        $this->hideForm();
-        $this->showAlert('success', 'Semester berhasil ditambahkan.');
+            $this->hideForm();
+            $this->showAlert('success', 'Semester berhasil ditambahkan.');
+        }
     }
 
     public function show($id)
     {
         $this->noValidate();
 
+        $this->milik_user = '';
         $this->id_semester = $id;
 
         $semester = ModelsSemester::findOrFail($id);
@@ -115,7 +128,7 @@ class Semester extends Component
             if ($semester->user_id != auth()->user()->id) {
                 $this->milik_user = User::find($semester->user_id);
             } else {
-                $this->milik_user = [];
+                $this->milik_user = '';
             }
 
             $this->semester_ke = $semester->semester_ke;
@@ -127,13 +140,23 @@ class Semester extends Component
 
     public function update($id)
     {
-        $this->validate(['semester_ke' => 'required|unique:semesters,semester_ke,' . $id]);
+        $this->validate();
+
+        // jika semester yang sama sudah ada tetapi pada id yang beda
+        $check = $this->checkDuplicateSemesterKe();
+        if ($check && $check->id != $this->id_semester) {
+            // error validation
+            $this->semester_ke = '';
+            $this->validate(
+                ['semester_ke' => 'required'],
+                ['required' => "Semester ke $check->semester_ke sudah ada!"]
+            );
+        }
 
         $semester = ModelsSemester::findOrFail($id);
 
         // jika user ingin edit data yang bukan miliknya
         if (auth()->user()->hasRole('admin') || $semester->user_id == auth()->user()->id) {
-            $semester->user_id = auth()->user()->id;
             $semester->semester_ke = $this->semester_ke;
             $semester->save();
 
@@ -145,6 +168,20 @@ class Semester extends Component
         }
 
         $this->hideForm();
+    }
+
+    public function checkDuplicateSemesterKe()
+    {
+        $check = ModelsSemester::where([
+            'user_id' => auth()->id(),
+            'semester_ke' => $this->semester_ke
+        ])->first();
+
+        if ($check) {
+            return $check;
+        } else {
+            return false;
+        }
     }
 
     public function emptyItems()

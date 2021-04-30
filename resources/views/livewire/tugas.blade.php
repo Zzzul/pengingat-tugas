@@ -274,7 +274,7 @@ $target = 'update';
                                 <div class="col-md-12">
                                     <div class="row form-group mb-0">
 
-                                        <div class="col-md-{{ $form != 'add' ? '3' : '5' }} mb-1">
+                                        <div class="col-md-{{ $form != 'add' ? '4' : '5' }} mb-1">
                                             <label for="matkul-id" class="mb-1">
                                                 Mata Kuliah
                                             </label>
@@ -301,7 +301,7 @@ $target = 'update';
                                             @enderror
                                         </div>
 
-                                        <div class="col-md-3 mb-1">
+                                        <div class="col-md-{{ $form != 'add' ? '2' : '3' }} mb-1">
                                             <label for="pertemuan_ke" class="mb-1">Pertemuan Ke</label>
                                             <input type="number"
                                                 class="form-control @error('pertemuan_ke')is-invalid @enderror"

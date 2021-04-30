@@ -1,7 +1,7 @@
 @php
 $target = '';
 
-if( $form == 'add'){
+if($form == 'add'){
 $target = 'store';
 }else{
 $target = 'update';

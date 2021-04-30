@@ -105,10 +105,10 @@ class Tugas extends Component
         $this->form = $type;
         $this->noValidate();
         $this->emptyItems();
+        $this->milik_user = '';
 
         if ($type == 'add') {
             $this->matkuls = Matkul::where('user_id', auth()->user()->id)->get();
-            $this->emptyItems();
         }
     }
 
@@ -118,6 +118,7 @@ class Tugas extends Component
         $this->dispatchBrowserEvent('close-modal');
         $this->emptyItems();
         $this->noValidate();
+        $this->milik_user = '';
     }
 
     public function emptyItems()
@@ -133,20 +134,25 @@ class Tugas extends Component
     {
         $this->validate();
 
-        $tugas = $this->checkTugas($this->matkul, $this->pertemuan_ke);
+        // jika sudah ada tugas dengan matkul dan pertemuan yang sama
+        $check = $this->checkTugas();
 
-        if ($tugas) {
-            $this->showAlert('error', 'Tugas ' . $tugas['matkul']->name .  ' pertmuan ' . $tugas->pertemuan_ke  . ' sudah ada.');
-
+        if ($check) {
             $this->pertemuan_ke = '';
+            $this->matkul = '';
+
+            $this->validate(
+                ['matkul' => 'required'],
+                ['required' => 'Tugas ' . $check['matkul']->name .  ' pertmuan ke ' . $check->pertemuan_ke  . ' sudah ada.']
+            );
         } else {
-            $new_tugas = new ModelsTugas;
-            $new_tugas->matkul_id      = $this->matkul;
-            $new_tugas->user_id        = auth()->user()->id;
-            $new_tugas->deskripsi      = $this->deskripsi;
-            $new_tugas->batas_waktu    = $this->batas_waktu;
-            $new_tugas->pertemuan_ke   = $this->pertemuan_ke;
-            $new_tugas->save();
+            $tugas = new ModelsTugas;
+            $tugas->matkul_id      = $this->matkul;
+            $tugas->user_id        = auth()->user()->id;
+            $tugas->deskripsi      = $this->deskripsi;
+            $tugas->batas_waktu    = $this->batas_waktu;
+            $tugas->pertemuan_ke   = $this->pertemuan_ke;
+            $tugas->save();
 
             $this->hideForm();
 
@@ -190,12 +196,18 @@ class Tugas extends Component
     {
         $this->validate();
 
-        $check_tugas = $this->checkTugas($this->matkul, $this->pertemuan_ke);
+        $check = $this->checkTugas();
         $tugas = ModelsTugas::find($id);
 
         // jika tugas sudah ada tapi bukan tugas yang sama
-        if ($check_tugas && $tugas->id != $check_tugas->id) {
-            $this->showAlert('error', 'Tugas ' . $check_tugas['matkul']->name .  ' pertmuan ' . $check_tugas->pertemuan_ke  . ' sudah ada.');
+        if ($check && $tugas->id != $check->id) {
+            $this->pertemuan_ke = '';
+            $this->matkul = '';
+
+            $this->validate(
+                ['matkul' => 'required'],
+                ['required' => 'Tugas ' . $check['matkul']->name .  ' pertmuan ke ' . $check->pertemuan_ke  . ' sudah ada.']
+            );
         } else {
             $tugas = ModelsTugas::find($id);
 
@@ -285,11 +297,11 @@ class Tugas extends Component
         ]);
     }
 
-    public function checkTugas($matkul_id, $pertemuan_ke)
+    public function checkTugas()
     {
         // jika matkul dan pertemuan ke sama
-        $tugas = ModelsTugas::with('matkul')->where('matkul_id', $matkul_id)
-            ->where('pertemuan_ke', $pertemuan_ke)->latest()->first();
+        $tugas = ModelsTugas::with('matkul')->where('matkul_id', $this->matkul)
+            ->where('pertemuan_ke', $this->pertemuan_ke)->latest()->first();
 
         if ($tugas) {
             return $tugas;

@@ -1,5 +1,5 @@
 body {
-    background-color: #FAFDFB;
+    background-color: #fafdfb;
     /* #FAFDFB #F7F9FB */
 }
 
@@ -17,9 +17,9 @@ body {
 .card-hover:active {
     -webkit-transform: translateY(7px);
     transform: translateY(7px);
-    -webkit-box-shadow: 2px 2px 2px 2px #EAEDEB !important;
-    -moz-box-shadow: 2px 2px 2px 2px #EAEDEB !important;
-    box-shadow: 2px 2px 2px 2px #EAEDEB !important;
+    -webkit-box-shadow: 2px 2px 2px 2px #eaedeb !important;
+    -moz-box-shadow: 2px 2px 2px 2px #eaedeb !important;
+    box-shadow: 2px 2px 2px 2px #eaedeb !important;
 }
 
 .active {
@@ -31,11 +31,9 @@ body {
     border: 1px solid black;
 } */
 
-
 ::-webkit-scrollbar-track {
-    border: 1px solid #158CBA;
-    background-color: #E3E3E3;
-
+    border: 1px solid #158cba;
+    background-color: #e3e3e3;
 }
 
 ::-webkit-scrollbar {
@@ -44,7 +42,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: #127BA3;
+    background-color: #127ba3;
     border-radius: 15px;
 
     /* #158CBA */
