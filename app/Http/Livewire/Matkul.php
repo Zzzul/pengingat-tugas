@@ -220,9 +220,11 @@ class Matkul extends Component
         $check = $this->checkDuplicateNamaMatkul();
         if ($check && $check->id != $id) {
             $this->name = '';
+
             $this->validate(
                 ['name' => 'required'],
-                ['required' => "Mata kuliah $check->name sudah ada!"]
+                // jika $this->milik_user maka admin yang ingin ubah data user lain
+                ['required' => $this->milik_user ?  $this->milik_user->name . ' sudah memiliki mata kuliah ' . $check->name : "Mata kuliah $check->name sudah ada!"]
             );
         }
 
@@ -276,10 +278,17 @@ class Matkul extends Component
 
     public function checkDuplicateNamaMatkul()
     {
-        $check = ModelsMatkul::where([
-            'user_id' => auth()->id(),
-            'name' => $this->name
-        ])->first();
+        if ($this->milik_user) {
+            $check = ModelsMatkul::where([
+                'user_id' => $this->milik_user->id,
+                'name' => $this->name
+            ])->first();
+        } else {
+            $check = ModelsMatkul::where([
+                'user_id' => auth()->id(),
+                'name' => $this->name
+            ])->first();
+        }
 
         if ($check) {
             return $check;

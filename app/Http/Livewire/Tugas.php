@@ -135,7 +135,7 @@ class Tugas extends Component
         $this->validate();
 
         // jika sudah ada tugas dengan matkul dan pertemuan yang sama
-        $check = $this->checkTugas();
+        $check = $this->checkDuplicateTugasDanPertemuan();
 
         if ($check) {
             $this->pertemuan_ke = '';
@@ -145,19 +145,19 @@ class Tugas extends Component
                 ['matkul' => 'required'],
                 ['required' => 'Tugas ' . $check['matkul']->name .  ' pertmuan ke ' . $check->pertemuan_ke  . ' sudah ada.']
             );
-        } else {
-            $tugas = new ModelsTugas;
-            $tugas->matkul_id      = $this->matkul;
-            $tugas->user_id        = auth()->user()->id;
-            $tugas->deskripsi      = $this->deskripsi;
-            $tugas->batas_waktu    = $this->batas_waktu;
-            $tugas->pertemuan_ke   = $this->pertemuan_ke;
-            $tugas->save();
-
-            $this->hideForm();
-
-            $this->showAlert('success', 'Tugas berhasil ditambahkan.');
         }
+
+        $tugas = new ModelsTugas;
+        $tugas->matkul_id      = $this->matkul;
+        $tugas->user_id        = auth()->user()->id;
+        $tugas->deskripsi      = $this->deskripsi;
+        $tugas->batas_waktu    = $this->batas_waktu;
+        $tugas->pertemuan_ke   = $this->pertemuan_ke;
+        $tugas->save();
+
+        $this->hideForm();
+
+        $this->showAlert('success', 'Tugas berhasil ditambahkan.');
     }
 
     public function show($id)
@@ -196,7 +196,7 @@ class Tugas extends Component
     {
         $this->validate();
 
-        $check = $this->checkTugas();
+        $check = $this->checkDuplicateTugasDanPertemuan();
         $tugas = ModelsTugas::find($id);
 
         // jika tugas sudah ada tapi bukan tugas yang sama
@@ -206,44 +206,44 @@ class Tugas extends Component
 
             $this->validate(
                 ['matkul' => 'required'],
-                ['required' => 'Tugas ' . $check['matkul']->name .  ' pertmuan ke ' . $check->pertemuan_ke  . ' sudah ada.']
+                ['required' => $this->milik_user ?
+                    $this->milik_user->name . ' sudah memiliki tugas ' . $check['matkul']->name .  ' pertmuan ke ' . $check->pertemuan_ke :
+
+                    'Tugas ' . $check['matkul']->name .  ' pertmuan ke ' . $check->pertemuan_ke  . ' sudah ada.']
             );
+        }
+
+        $batasWaktuCount = date('YmdHi', strtotime($this->batas_waktu));
+
+        $tglSelesaiCount =  date('YmdHi', strtotime($this->selesai));
+
+        // jika batas waktu telah habis dan tgl selesai lebih besar dari tgl batas waktu
+        if ($tglSelesaiCount > $batasWaktuCount) {
+            $this->selesai = null;
+
+            $this->validate(
+                ['selesai' => 'required'],
+                ['required' => 'Tanggal selesai tidak boleh lebih besar dari batas waktu.']
+            );
+        }
+
+        // cek jika tugas milik user yang sedang login
+        if (auth()->user()->hasRole('admin') || $tugas->user_id == auth()->user()->id) {
+
+            // jika tgl selesai tidak lebih besar dari batas waktu (deadline belum selesai)
+            $tugas->matkul_id      = $this->matkul;
+            $tugas->deskripsi      = $this->deskripsi;
+            $tugas->batas_waktu    = $this->batas_waktu;
+            $tugas->selesai        = $this->selesai;
+            $tugas->pertemuan_ke   = $this->pertemuan_ke;
+            $tugas->save();
+
+            $this->hideForm();
+
+            $this->showAlert('success', 'Tugas berhasil diubah.');
         } else {
-            $tugas = ModelsTugas::find($id);
-
-            $batasWaktuCount = date('YmdHi', strtotime($this->batas_waktu));
-
-            $tglSelesaiCount =  date('YmdHi', strtotime($this->selesai));
-
-            // cek jika tugas milik user yang sedang login
-            if (auth()->user()->hasRole('admin') || $tugas->user_id == auth()->user()->id) {
-
-                // jika batas waktu telah habis dan tgl selesai lebih besar dari tgl batas waktu
-                if ($tglSelesaiCount > $batasWaktuCount) {
-
-                    $this->selesai = null;
-
-                    $this->validate(
-                        ['selesai' => 'required'],
-                        ['required' => 'Tanggal selesai tidak boleh lebih besar dari batas waktu!']
-                    );
-                } else {
-                    // jika tgl selesai tidak lebih besar dari batas waktu (deadline belum selesai)
-                    $tugas->matkul_id      = $this->matkul;
-                    $tugas->deskripsi      = $this->deskripsi;
-                    $tugas->batas_waktu    = $this->batas_waktu;
-                    $tugas->selesai        = $this->selesai;
-                    $tugas->pertemuan_ke   = $this->pertemuan_ke;
-                    $tugas->save();
-
-                    $this->hideForm();
-
-                    $this->showAlert('success', 'Tugas berhasil diubah.');
-                }
-            } else {
-                // jika user biasa ingin ubah tugas user lain
-                $this->showAlert('error', 'Tugas tidak dapat diubah.');
-            }
+            // jika user biasa ingin ubah tugas user lain
+            $this->showAlert('error', 'Tugas tidak dapat diubah.');
         }
     }
 
@@ -297,11 +297,27 @@ class Tugas extends Component
         ]);
     }
 
-    public function checkTugas()
+    // jika matkul dan pertemuan ke sama
+    public function checkDuplicateTugasDanPertemuan()
     {
-        // jika matkul dan pertemuan ke sama
-        $tugas = ModelsTugas::with('matkul')->where('matkul_id', $this->matkul)
-            ->where('pertemuan_ke', $this->pertemuan_ke)->latest()->first();
+        /**
+         * jika admin ingin ubah tugas user lain
+         * cek apakah user tersebut sudah punya tugas dan pertemuan yang sama
+         */
+        if ($this->milik_user) {
+            $tugas = ModelsTugas::with('matkul')->where([
+                'matkul_id' => $this->matkul,
+                'pertemuan_ke' => $this->pertemuan_ke,
+                // user id
+                'user_id' => $this->milik_user->id
+            ])->latest()->first();
+        } else {
+            $tugas = ModelsTugas::with('matkul')->where([
+                'matkul_id' => $this->matkul,
+                'pertemuan_ke' => $this->pertemuan_ke,
+                'user_id' => auth()->id()
+            ])->latest()->first();
+        }
 
         if ($tugas) {
             return $tugas;

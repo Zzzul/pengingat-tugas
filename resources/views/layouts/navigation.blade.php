@@ -41,41 +41,41 @@
 
                 <!-- Authentication Links -->
                 @guest
-                @if (Route::has('login'))
-                <li class="nav-item">
-                    <a class="nav-link{{ request()->is('login') ? ' active' : '' }}"
-                        href="{{ route('login') }}">{{ __('Login') }}</a>
-                </li>
-                @endif
+                    @if (Route::has('login'))
+                        <li class="nav-item">
+                            <a class="nav-link{{ request()->is('login') ? ' active' : '' }}"
+                                href="{{ route('login') }}">{{ __('Login') }}</a>
+                        </li>
+                    @endif
 
-                @if (Route::has('register'))
-                <li class="nav-item">
-                    <a class="nav-link{{ request()->is('register') ? ' active' : '' }}"
-                        href="{{ route('register') }}">{{ __('Register') }}</a>
-                </li>
-                @endif
+                    @if (Route::has('register'))
+                        <li class="nav-item">
+                            <a class="nav-link{{ request()->is('register') ? ' active' : '' }}"
+                                href="{{ route('register') }}">{{ __('Register') }}</a>
+                        </li>
+                    @endif
                 @else
-                <li class="nav-item dropdown">
-                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                        {{ Auth::user()->name }}
-                        @role('admin')
-                        <i class="fas fa-check-circle"></i>
-                        @endrole
-                    </a>
-
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                        <a href="{{ route('user-profile') }}" class="dropdown-item">
-                            Edit Profile
+                    <li class="nav-item dropdown">
+                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            {{ Auth::user()->name }}
+                            @role('admin')
+                            <i class="fas fa-check-circle"></i>
+                            @endrole
                         </a>
 
-                        <a href="{{ route('change-password') }}" class="dropdown-item">
-                            Ganti Password
-                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                            <a href="{{ route('user-profile') }}" class="dropdown-item">
+                                Edit Profile
+                            </a>
 
-                        <livewire:auth.logout />
-                    </div>
-                </li>
+                            <a href="{{ route('change-password') }}" class="dropdown-item">
+                                Ganti Password
+                            </a>
+
+                            <livewire:auth.logout />
+                        </div>
+                    </li>
                 @endguest
             </ul>
         </div>
@@ -83,7 +83,7 @@
 </nav>
 
 <!-- Bottom Navbar -->
-<nav class="navbar navbar-light bg-white navbar-expand fixed-bottom d-md-none d-lg-none d-xl-none">
+<nav class="navbar navbar-dark bg-primary shadow-sm navbar-expand fixed-bottom d-md-none d-lg-none d-xl-none">
     <ul class="navbar-nav nav-justified w-100">
 
         <li class="nav-item">
@@ -101,7 +101,8 @@
         </li>
 
         <li class="nav-item">
-            <a class="mb-0 pb-0 nav-link{{ request()->is('tugas') ? ' active' : '' }}" href="{{ route('tugas') }}">
+            <a class="mb-0 pb-0 nav-link{{ request()->is('tugas') ? ' active' : '' }}"
+                href="{{ route('tugas') }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" fill="currentColor"
                     class="bi bi-list-stars" viewBox="0 0 16 16">
                     <path fill-rule="evenodd"
@@ -162,31 +163,33 @@
         @endrole
 
         @guest
-        <li class="nav-item">
-            <a href="{{ route('login') }}" class="mb-0 pb-0 nav-link{{ request()->is('login') ? ' active' : '' }}">
-                <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor"
-                    class="bi bi-box-arrow-right" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd"
-                        d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z" />
-                    <path fill-rule="evenodd"
-                        d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
-                </svg>
-                <br>
-                <small class="m-0 p-0">Login</small>
-            </a>
-        </li>
+            <li class="nav-item">
+                <a href="{{ route('login') }}"
+                    class="mb-0 pb-0 nav-link{{ request()->is('login') ? ' active' : '' }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor"
+                        class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z" />
+                        <path fill-rule="evenodd"
+                            d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
+                    </svg>
+                    <br>
+                    <small class="m-0 p-0">Login</small>
+                </a>
+            </li>
         @else
-        <li class="nav-item">
-            <a href="{{ route('lainnya') }}" class="mb-0 pb-0 nav-link{{ request()->is('lainnya') ? ' active' : '' }}">
-                <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" fill="currentColor"
-                    class="bi bi-three-dots" viewBox="0 0 16 16">
-                    <path
-                        d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
-                </svg>
-                <br>
-                <small class="m-0 p-0">Lainnya</small>
-            </a>
-        </li>
+            <li class="nav-item">
+                <a href="{{ route('lainnya') }}"
+                    class="mb-0 pb-0 nav-link{{ request()->is('lainnya') ? ' active' : '' }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" fill="currentColor"
+                        class="bi bi-three-dots" viewBox="0 0 16 16">
+                        <path
+                            d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
+                    </svg>
+                    <br>
+                    <small class="m-0 p-0">Lainnya</small>
+                </a>
+            </li>
         @endguest
 
     </ul>

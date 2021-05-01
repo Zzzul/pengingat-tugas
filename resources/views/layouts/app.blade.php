@@ -83,22 +83,24 @@
 
     <script>
         var map = {};
-        onkeydown = onkeyup = function(e){
+        onkeydown = onkeyup = function(e) {
             e = e || event;
             map[e.keyCode] = e.type == 'keydown';
             // 191 = /
-            if(map["191"]==true){
+            if (map["191"] == true) {
                 e.preventDefault();
-                var elm=document.getElementById('search');
+                var elm = document.getElementById('search');
                 elm.focus();
             }
         }
+
     </script>
 
     <script>
         window.addEventListener('close-modal', event => {
             $('#exampleModal').modal('hide');
         })
+
     </script>
 </body>
 

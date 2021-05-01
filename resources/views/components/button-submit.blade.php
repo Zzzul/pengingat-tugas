@@ -11,9 +11,9 @@
         <div wire:loading.remove wire:target="{{ $target }}">
             <i class="fas fa-save mr-1"></i>
             @if ($target === 'store')
-            Submit
+                Submit
             @else
-            Update
+                Update
             @endif
         </div>
 

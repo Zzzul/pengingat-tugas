@@ -23,7 +23,7 @@ class Semester extends Component
     protected $paginationTheme = 'bootstrap';
 
     protected $rules = [
-        'semester_ke' => 'required|numeric',
+        'semester_ke' => 'required|numeric|in:1,2,3,4,5,6,7,8',
     ];
 
     protected $queryString = [
@@ -67,6 +67,7 @@ class Semester extends Component
         return view('livewire.semester', compact('semesters'));
     }
 
+    // show modal
     public function showForm($type)
     {
         $this->milik_user = '';
@@ -75,13 +76,14 @@ class Semester extends Component
         $this->emptyItems();
     }
 
+    // hide modal
     public function hideForm()
     {
         $this->form = '';
-        $this->semester_ke = '';
-        $this->noValidate();
-        $this->dispatchBrowserEvent('close-modal');
         $this->milik_user = '';
+        $this->noValidate();
+        $this->emptyItems();
+        $this->dispatchBrowserEvent('close-modal');
     }
 
     public function noValidate()
@@ -101,7 +103,7 @@ class Semester extends Component
             $this->semester_ke = '';
             $this->validate(
                 ['semester_ke' => 'required'],
-                ['required' => "Semester ke $check->semester_ke sudah ada!"]
+                ['required' => "Semester $check->semester_ke sudah ada!"]
             );
         } else {
             ModelsSemester::create([
@@ -134,12 +136,14 @@ class Semester extends Component
             $this->semester_ke = $semester->semester_ke;
             $this->form = 'edit';
         } else {
+            $this->hideForm();
             $this->showAlert('error', 'Semester tidak dapat diubah.');
         }
     }
 
     public function update($id)
     {
+
         $this->validate();
 
         // jika semester yang sama sudah ada tetapi pada id yang beda
@@ -147,9 +151,11 @@ class Semester extends Component
         if ($check && $check->id != $this->id_semester) {
             // error validation
             $this->semester_ke = '';
+
             $this->validate(
                 ['semester_ke' => 'required'],
-                ['required' => "Semester ke $check->semester_ke sudah ada!"]
+                // jika $this->milik_user maka admin yang ingin ubah data user lain
+                ['required' => $this->milik_user ?  $this->milik_user->name . ' sudah memiliki semester ' . $check->semester_ke : "Semester $check->semester_ke sudah ada!"]
             );
         }
 
@@ -164,18 +170,31 @@ class Semester extends Component
 
             $this->showAlert('success', 'Semester berhasil diubah.');
         } else {
+            $this->hideForm();
+
             $this->showAlert('error', 'Semester tidak dapat diubah.');
         }
-
-        $this->hideForm();
     }
 
     public function checkDuplicateSemesterKe()
     {
-        $check = ModelsSemester::where([
-            'user_id' => auth()->id(),
-            'semester_ke' => $this->semester_ke
-        ])->first();
+        /**
+         * jika admin ingin ubah semeser user lain
+         * cek apakah user tersebut sudah punya semester yang sama
+         */
+        if ($this->milik_user) {
+            $check = ModelsSemester::where([
+                'user_id' => $this->milik_user->id,
+                'semester_ke' => $this->semester_ke
+            ])->first();
+        } else {
+            // jika yang login mahasiswa atau admin ingin tambah semester baru
+            $check = ModelsSemester::where([
+                'user_id' => auth()->id(),
+                'semester_ke' => $this->semester_ke
+            ])->first();
+        }
+
 
         if ($check) {
             return $check;
@@ -218,6 +237,7 @@ class Semester extends Component
         }
     }
 
+    // jika user klik ya pada sweetalert
     public function confirmed()
     {
         $semester =  ModelsSemester::findOrFail($this->id_semester);
