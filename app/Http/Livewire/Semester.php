@@ -46,7 +46,7 @@ class Semester extends Component
         $this->select_semesters = ModelsSemester::get();
 
         $this->aktif_smt = ModelsSemester::select('id', 'semester_ke')
-            ->where('user_id', auth()->user()->id)
+            ->where('user_id', auth()->id())
             ->where(function ($q) {
                 $q->where('aktif_smt', 1);
             })->first();
@@ -58,7 +58,7 @@ class Semester extends Component
                 })
                 ->orderBy('created_at', 'asc')->paginate($this->paginate_per_page);
         } else {
-            $semesters = ModelsSemester::where('user_id', auth()->user()->id)
+            $semesters = ModelsSemester::where('user_id', auth()->id())
                 ->where(function ($q) {
                     $q->where('semester_ke', 'like', '%' . $this->search . '%');
                 })
@@ -107,7 +107,7 @@ class Semester extends Component
             );
         } else {
             ModelsSemester::create([
-                'user_id' => auth()->user()->id,
+                'user_id' => auth()->id(),
                 'semester_ke' => $this->semester_ke,
             ]);
 
@@ -125,9 +125,9 @@ class Semester extends Component
 
         $semester = ModelsSemester::findOrFail($id);
 
-        if (auth()->user()->hasRole('admin') || $semester->user_id == auth()->user()->id) {
+        if (auth()->user()->hasRole('admin') || $semester->user_id == auth()->id()) {
 
-            if ($semester->user_id != auth()->user()->id) {
+            if ($semester->user_id != auth()->id()) {
                 $this->milik_user = User::find($semester->user_id);
             } else {
                 $this->milik_user = '';
@@ -162,7 +162,7 @@ class Semester extends Component
         $semester = ModelsSemester::findOrFail($id);
 
         // jika user ingin edit data yang bukan miliknya
-        if (auth()->user()->hasRole('admin') || $semester->user_id == auth()->user()->id) {
+        if (auth()->user()->hasRole('admin') || $semester->user_id == auth()->id()) {
             $semester->semester_ke = $this->semester_ke;
             $semester->save();
 
@@ -227,7 +227,7 @@ class Semester extends Component
     {
         $semester_aktif = ModelsSemester::findOrfail($id);
 
-        if ($semester_aktif->user_id == auth()->user()->id) {
+        if ($semester_aktif->user_id == auth()->id()) {
             $semester_aktif->aktif_smt = 1;
             $semester_aktif->save();
 
@@ -241,7 +241,7 @@ class Semester extends Component
     public function confirmed()
     {
         $semester =  ModelsSemester::findOrFail($this->id_semester);
-        if (auth()->user()->hasRole('admin') || $semester->user_id == auth()->user()->id) {
+        if (auth()->user()->hasRole('admin') || $semester->user_id == auth()->id()) {
 
             // jika tidak terdapat relasi pada semester
             try {

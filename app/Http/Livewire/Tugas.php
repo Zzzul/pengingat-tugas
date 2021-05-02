@@ -26,10 +26,12 @@ class Tugas extends Component
     protected $paginationTheme = 'bootstrap';
 
     protected $rules = [
-        'matkul'        => 'required',
-        'deskripsi'     => 'required',
-        'batas_waktu'   => 'required',
-        'pertemuan_ke'  => 'required',
+        'matkul'        => 'required|numeric',
+        'deskripsi'     => 'required|string|min:3',
+        'pertemuan_ke'  => 'required|in:1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18',
+        //Y-m-d\TH:i = format datetime-local
+        'batas_waktu'   => 'required|date_format:Y-m-d\TH:i',
+        'selesai'       => 'nullable|date_format:Y-m-d\TH:i|before:batas_waktu',
     ];
 
     protected $queryString = [
@@ -68,7 +70,7 @@ class Tugas extends Component
                 ->paginate($this->paginate_per_page);
         } else {
             // jika yg login user biasa
-            $all_tugas = ModelsTugas::where('user_id', auth()->user()->id)
+            $all_tugas = ModelsTugas::where('user_id', auth()->id())
                 ->where(function ($q) {
                     $q->where('deskripsi', 'like', '%' . $this->search . '%')
                         ->orWhere('batas_waktu', 'like', '%' . $this->search . '%')
@@ -89,9 +91,9 @@ class Tugas extends Component
             ->join('semesters', 'semesters.id', '=', 'matkuls.semester_id')
             ->select('*')
             ->where('tugas.selesai', null)
-            ->where('tugas.user_id', auth()->user()->id)
-            ->where('matkuls.user_id', auth()->user()->id)
-            ->where('semesters.user_id', auth()->user()->id)
+            ->where('tugas.user_id', auth()->id())
+            ->where('matkuls.user_id', auth()->id())
+            ->where('semesters.user_id', auth()->id())
             ->where('semesters.aktif_smt', '!=', null)
             ->get();
 
@@ -108,7 +110,7 @@ class Tugas extends Component
         $this->milik_user = '';
 
         if ($type == 'add') {
-            $this->matkuls = Matkul::where('user_id', auth()->user()->id)->get();
+            $this->matkuls = Matkul::where('user_id', auth()->id())->get();
         }
     }
 
@@ -149,7 +151,7 @@ class Tugas extends Component
 
         $tugas = new ModelsTugas;
         $tugas->matkul_id      = $this->matkul;
-        $tugas->user_id        = auth()->user()->id;
+        $tugas->user_id        = auth()->id();
         $tugas->deskripsi      = $this->deskripsi;
         $tugas->batas_waktu    = $this->batas_waktu;
         $tugas->pertemuan_ke   = $this->pertemuan_ke;
@@ -166,9 +168,9 @@ class Tugas extends Component
         $this->id_tugas = $id;
         $tugas = ModelsTugas::findOrfail($id);
 
-        if (auth()->user()->hasRole('admin') || $tugas->user_id == auth()->user()->id) {
+        if (auth()->user()->hasRole('admin') || $tugas->user_id == auth()->id()) {
 
-            if ($tugas->user_id != auth()->user()->id) {
+            if ($tugas->user_id != auth()->id()) {
                 // jika admin yg edit
                 $this->milik_user = User::find($tugas->user_id);
 
@@ -177,7 +179,7 @@ class Tugas extends Component
             } else {
                 // user biasa yg edit
                 // matkul sesuai user yg login
-                $this->matkuls = Matkul::where('user_id', auth()->user()->id)->get();
+                $this->matkuls = Matkul::where('user_id', auth()->id())->get();
                 $this->milik_user = [];
             }
 
@@ -213,28 +215,14 @@ class Tugas extends Component
             );
         }
 
-        $batasWaktuCount = date('YmdHi', strtotime($this->batas_waktu));
-
-        $tglSelesaiCount =  date('YmdHi', strtotime($this->selesai));
-
-        // jika batas waktu telah habis dan tgl selesai lebih besar dari tgl batas waktu
-        if ($tglSelesaiCount > $batasWaktuCount) {
-            $this->selesai = null;
-
-            $this->validate(
-                ['selesai' => 'required'],
-                ['required' => 'Tanggal selesai tidak boleh lebih besar dari batas waktu.']
-            );
-        }
-
         // cek jika tugas milik user yang sedang login
-        if (auth()->user()->hasRole('admin') || $tugas->user_id == auth()->user()->id) {
+        if (auth()->user()->hasRole('admin') || $tugas->user_id == auth()->id()) {
 
             // jika tgl selesai tidak lebih besar dari batas waktu (deadline belum selesai)
             $tugas->matkul_id      = $this->matkul;
             $tugas->deskripsi      = $this->deskripsi;
             $tugas->batas_waktu    = $this->batas_waktu;
-            $tugas->selesai        = $this->selesai;
+            $tugas->selesai        = $this->selesai ? $this->selesai : null;
             $tugas->pertemuan_ke   = $this->pertemuan_ke;
             $tugas->save();
 
@@ -261,7 +249,7 @@ class Tugas extends Component
     {
         $tugas = ModelsTugas::findOrfail($this->id_tugas);
 
-        if (auth()->user()->hasRole('admin') || $tugas->user_id == auth()->user()->id) {
+        if (auth()->user()->hasRole('admin') || $tugas->user_id == auth()->id()) {
             $tugas->destroy($this->id_tugas);
             $this->showAlert('success', 'Tugas berhasil dihapus.');
         } else {

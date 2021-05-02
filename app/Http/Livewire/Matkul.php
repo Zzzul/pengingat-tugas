@@ -23,12 +23,12 @@ class Matkul extends Component
     public $page = 1;
 
     protected $rules = [
-        'name' => 'required',
-        'hari' => 'required|in:senin,selasa,rabu,kamis,jumat,sabtu',
-        'jam_mulai' => 'required',
-        'jam_selesai' => 'required',
-        'sks' => 'required',
-        'semester_id' => 'required',
+        'name'        => 'required|string|min:3',
+        'semester_id' => 'required|numeric',
+        'hari'        => 'required|in:senin,selasa,rabu,kamis,jumat,sabtu',
+        'jam_mulai'   => 'required',
+        'jam_selesai' => 'required|after:jam_mulai',
+        'sks'         => 'required|in:1,2,3,4,5,6',
     ];
 
     protected $queryString = [
@@ -68,8 +68,8 @@ class Matkul extends Component
                 ->orderBy('updated_at', 'desc')
                 ->paginate($this->paginate_per_page);
         } else {
-            // end user
-            $matkuls = ModelsMatkul::where('user_id', auth()->user()->id)
+            // mahasiswa
+            $matkuls = ModelsMatkul::where('user_id', auth()->id())
                 ->where(function ($q) {
                     $q->where('name', 'like', '%' . $this->search . '%')
                         ->orWhere('hari', 'like', '%' . $this->search . '%')
@@ -86,10 +86,10 @@ class Matkul extends Component
                 ->paginate($this->paginate_per_page);
         }
 
-        $jadwal_hari_ini = ModelsMatkul::where('user_id', auth()->user()->id)
+        $jadwal_hari_ini = ModelsMatkul::where('user_id', auth()->id())
             ->where('hari', $today)
             ->whereHas('semester', function ($q) {
-                $q->where('aktif_smt', 1)->where('user_id', auth()->user()->id);
+                $q->where('aktif_smt', 1)->where('user_id', auth()->id());
             })
             ->get();
 
@@ -107,7 +107,7 @@ class Matkul extends Component
          * jika ingin tambah data baru, maka hanya tampilkan semester yang dimilik oleh user yang sedang login
          */
         if ($type == 'add') {
-            $this->semesters = Semester::where('user_id', auth()->user()->id)->get();
+            $this->semesters = Semester::where('user_id', auth()->id())->get();
         }
     }
 
@@ -156,21 +156,12 @@ class Matkul extends Component
             );
         }
 
-        // jika jam mulai lebih besar dari jam selesai
-        if ($this->jam_mulai > $this->jam_selesai) {
-            $this->jam_selesai = null;
-            $this->validate(
-                ['jam_selesai' => 'required'],
-                ['required' => 'Jam Selesai selesai tidak boleh lebih kecil dari Jam Mulai!']
-            );
-        }
-
         $matkul = new ModelsMatkul;
         $matkul->name = $this->name;
         $matkul->hari = $this->hari;
         $matkul->jam_mulai = $this->jam_mulai;
         $matkul->jam_selesai = $this->jam_selesai;
-        $matkul->user_id = auth()->user()->id;
+        $matkul->user_id = auth()->id();
         $matkul->sks = $this->sks;
         $matkul->semester_id = $this->semester_id;
         $matkul->save();
@@ -187,14 +178,14 @@ class Matkul extends Component
         $this->id_matkul = $id;
         $matkul = ModelsMatkul::findOrfail($id);
 
-        if (auth()->user()->hasRole('admin') || $matkul->user_id == auth()->user()->id) {
+        if (auth()->user()->hasRole('admin') || $matkul->user_id == auth()->id()) {
 
             // jika yang login admin
-            if ($matkul->user_id != auth()->user()->id) {
+            if ($matkul->user_id != auth()->id()) {
                 $this->milik_user = User::find($matkul->user_id);
                 $this->semesters =  Semester::where('user_id', $matkul->user_id)->get();
             } else {
-                $this->semesters = Semester::where('user_id', auth()->user()->id)->get();
+                $this->semesters = Semester::where('user_id', auth()->id())->get();
                 $this->milik_user = [];
             }
 
@@ -228,18 +219,8 @@ class Matkul extends Component
             );
         }
 
-        // jika jam mulai lebih besar dari jam selesai
-        if ($this->jam_mulai > $this->jam_selesai) {
-            $this->jam_selesai = null;
-            $this->validate(
-                [
-                    'jam_selesai' => 'required'
-                ],
-                ['required' => 'Jam Selesai selesai tidak boleh lebih kecil dari Jam Mulai!']
-            );
-        }
 
-        if (auth()->user()->hasRole('admin') || $matkul->user_id == auth()->user()->id) {
+        if (auth()->user()->hasRole('admin') || $matkul->user_id == auth()->id()) {
 
             $matkul->name = $this->name;
             $matkul->hari = $this->hari;
@@ -301,7 +282,7 @@ class Matkul extends Component
     {
         $matkul = ModelsMatkul::findOrFail($this->id_matkul);
 
-        if (auth()->user()->hasRole('admin') || $matkul->user_id == auth()->user()->id) {
+        if (auth()->user()->hasRole('admin') || $matkul->user_id == auth()->id()) {
             try {
                 $matkul->destroy($this->id_matkul);
                 $this->showAlert('success', 'Mata Kuliah berhasil dihapus.');
