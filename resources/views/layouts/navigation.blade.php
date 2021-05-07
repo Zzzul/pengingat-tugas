@@ -65,13 +65,13 @@
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                            <a href="{{ route('user-profile') }}" class="dropdown-item">
+                            {{-- <a href="{{ route('user-profile') }}" class="dropdown-item">
                                 Edit Profile
                             </a>
 
                             <a href="{{ route('change-password') }}" class="dropdown-item">
                                 Ganti Password
-                            </a>
+                            </a> --}}
 
                             <livewire:auth.logout />
                         </div>

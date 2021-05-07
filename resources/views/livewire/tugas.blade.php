@@ -68,10 +68,27 @@ if ($form == 'add') {
             <div class="col-md-12">
                 {{-- button create --}}
                 <div class="row">
-                    <div class="col-md-10 mb-2">
-                        <h5 class="card-title mb-0">Tugas</h5>
-                        <p class="mb-0"> <b>Tanggal Sekarang : {{ date('d F Y') }}</b> </p>
+                    <div class="col-md-8 mb-2">
+                        <h5 class="card-title mb-0 mr-2">Tugas</h5>
+                        {{-- <p class="mb-0">Tanggal sekarang: {{ date('d F Y') }}</p> --}}
                     </div>
+
+                    <div class="col-md-2 pl-5 pr-0">
+                        <div class="btn-group ml-5" role="group">
+                            <button id="btnGroupDrop1" type="button" class="btn btn-success dropdown-toggle"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-print mr-1"></i> Print
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                <a class="dropdown-item" target="blank" href="{{ route('pdf.tugas.all') }}">Semua
+                                    tugas</a>
+
+                                <a class="dropdown-item" target="blank" href="{{ route('pdf.tugas') }}">Tugas yang
+                                    belum/tidak kamu dikerjakan</a>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="col-md-2 justify-content-end mb-2">
                         <x-button-create></x-button-create>
                     </div>
@@ -240,6 +257,9 @@ if ($form == 'add') {
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">
                             {{ $form === 'add' ? 'Tambah Data Tugas' : 'Edit Data Tugas' }}
+                            <div wire:loading="form">
+                                <img src="{{ asset('assets/Dual Ring-1s-16px-(2).svg') }}" alt="Loading..." width="23px">
+                            </div>
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"
                             wire:loading.attr="disabled" wire:click="hideForm()">

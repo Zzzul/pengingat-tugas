@@ -25,17 +25,27 @@ if ($form == 'add') {
 
                 {{-- button create --}}
                 <div class="row my-2">
-                    <div class="col-md-10 mb-2">
-                        <h5 class="card-title mb-0" for="semester-aktif">Semester</h5>
+                    <div class="col-md-8 mb-2">
+                        <h5 class="card-title mb-0 mr-2" for="semester-aktif">Semester</h5>
+
                         @if ($aktif_smt)
-                            <p class="mb-0">Semester Sekarang : <span
-                                    class="font-weight-bold">{{ $aktif_smt['semester_ke'] }}</span></p>
+                            <p class="mb-0 mr-2">Semester Sekarang :
+                                <span class="font-weight-bold">{{ $aktif_smt['semester_ke'] }}</span>
+                            </p>
                         @else
-                            <p class="mb-0">Semester Sekarang : ?</p>
+                            <p class="mb-0 mr-2">Semester Sekarang : ?</p>
                             <p class="mt-0 mb-2">Klik ikon bintang yang sesuai dengan semester kamu.</p>
                         @endif
+
                     </div>
-                    <div class="col-md-2 justify-content-end mb-1">
+
+                    <div class="col-md-2 pr-0">
+                        <a href="{{ route('pdf.semester.all') }}" class="btn btn-success float-right" target="blank">
+                            <i class="fas fa-print mr-1"></i> Print
+                        </a>
+                    </div>
+
+                    <div class="col-md-2 mb-1">
                         <x-button-create></x-button-create>
                     </div>
                 </div>
@@ -161,6 +171,9 @@ if ($form == 'add') {
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">
                             {{ $form === 'add' ? 'Tambah Data Semester' : 'Edit Data Semester' }}
+                            <div wire:loading="form">
+                                <img src="{{ asset('assets/Dual Ring-1s-16px-(2).svg') }}" alt="Loading..." width="23px">
+                            </div>
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"
                             wire:loading.attr="disabled" wire:click="hideForm()">

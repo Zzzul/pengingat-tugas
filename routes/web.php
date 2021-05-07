@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PdfController;
 use App\Http\Livewire\Auth\Login;
 use App\Http\Livewire\Auth\Logout;
 use App\Http\Livewire\Auth\Register;
@@ -11,6 +12,7 @@ use App\Http\Livewire\Profile\UserInformation;
 use App\Http\Livewire\Semester;
 use App\Http\Livewire\Tugas;
 use App\Http\Livewire\UserList;
+use Barryvdh\DomPDF\PDF;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -59,3 +61,14 @@ Route::middleware(['auth', 'permission:edit profile'])
 Route::middleware(['auth', 'role:admin'])
     ->get('user-list', UserList::class)
     ->name('user-list');
+
+Route::middleware('auth')->group(function () {
+    Route::get('mata-kuliah/pdf', [PdfController::class, 'downloadAllMatkul'])->name('pdf.matkul.all');
+
+    Route::get('matkul-kuliah-aktif/pdf', [PdfController::class, 'downloadMatkulActive'])->name('pdf.matkul.aktif');
+
+    Route::get('tugas/pdf', [PdfController::class, 'downloadAllTugas'])->name('pdf.tugas.all');
+    Route::get('tugas-blom-dikerjakan/pdf', [PdfController::class, 'downladTugas'])->name('pdf.tugas');
+
+    Route::get('semester/pdf', [PdfController::class, 'downloadAllSemester'])->name('pdf.semester.all');
+});
