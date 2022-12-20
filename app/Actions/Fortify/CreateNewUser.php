@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
+use App\Models\Semester;
 
 class CreateNewUser implements CreatesNewUsers
 {
@@ -20,7 +21,6 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input)
     {
-
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
             'email' => [
@@ -33,10 +33,25 @@ class CreateNewUser implements CreatesNewUsers
             'password' => $this->passwordRules(),
         ])->validate();
 
-        return User::create([
+        $user = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
         ]);
+
+        $semesters = [];
+
+        for ($i = 1; $i <= 8; ++$i) {
+            $semesters[] = [
+                'semester_ke' => $i,
+                'user_id' => $user->id,
+                'created_at' => now()->toDateTimeString(),
+                'updated_at' => now()->toDateTimeString()
+            ];
+        }
+
+        Semester::insert($semesters);
+
+        return $user;
     }
 }

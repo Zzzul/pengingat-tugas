@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Matkul as ModelsMatkul;
+use App\Models\Matkul as MatkulModel;
 use App\Models\Semester;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -44,12 +44,8 @@ class Matkul extends Component
 
     public function render()
     {
-
-        //  ->orWhereHas('semester', function ($q) {
-        //     $q->where('semester_ke', 'like', '%' . $this->search . '%');
-        // })
-
-        $matkuls = ModelsMatkul::where('name', 'like', '%' . strtolower($this->search) . '%')
+        $matkuls = MatkulModel::where('user_id', auth()->id())
+            ->where('name', 'like', '%' . strtolower($this->search) . '%')
             ->orWhere('sks', 'like', '%' . strtolower($this->search) . '%')
             ->orWhere('created_at', 'like', '%' . strtolower($this->search) . '%')
             ->orWhere('updated_at', 'like', '%' . strtolower($this->search) . '%')
@@ -59,8 +55,7 @@ class Matkul extends Component
             ->orderBy('updated_at', 'desc')
             ->paginate($this->paginate_per_page);
 
-        // get all semesters
-        $this->semesters = Semester::get();
+        $this->semesters = Semester::where('user_id', auth()->id())->get();
 
         return view('livewire.matkul', compact('matkuls'));
     }
@@ -101,11 +96,11 @@ class Matkul extends Component
     {
         $this->validate();
 
-        $matkul = new ModelsMatkul;
-        $matkul->name = strtolower($this->name);
-        $matkul->sks = $this->sks;
-        $matkul->semester_id = $this->semester_id;
-        $matkul->save();
+        MatkulModel::create([
+            'name' => $this->name, 
+            'sks' => $this->sks, 
+            'semester_id' => $this->semester_id
+        ]);
 
         $this->hideForm();
 
@@ -117,12 +112,12 @@ class Matkul extends Component
         $this->noValidate();
 
         $this->id_matkul = $id;
-        $matkul = ModelsMatkul::find($id);
+        $matkul = MatkulModel::find($id);
 
         // get all semesters
-        $this->semesters = Semester::get();
+        $this->semesters = Semester::where('user_id', auth()->id())->get();
 
-        $this->name = ucwords($matkul->name);
+        $this->name = $matkul->name;
         $this->sks = $matkul->sks;
         $this->semester_id = $matkul->semester_id;
         $this->form = 'edit';
@@ -132,59 +127,65 @@ class Matkul extends Component
     {
         $this->validate();
 
-        $matkul = ModelsMatkul::find($id);
-        $matkul->name = strtolower($this->name);
-        $matkul->sks = $this->sks;
-        $matkul->semester_id = $this->semester_id;
-        $matkul->save();
+        MatkulModel::where('user_id', auth()->id())
+            ->where('id', $this->id_matkul)
+            ->update([
+                'name' => $this->name, 
+                'sks' => $this->sks, 
+                'semester_id' => $this->semester_id
+            ]);
 
         $this->hideForm();
 
         $this->showAlert('Mata Kuliah berhasil diubah.');
     }
 
-
     public function showAlert($message)
     {
         $this->alert('success', $message, [
-            'position'          =>  'top',
-            'timer'             =>  1500,
-            'toast'             =>  true,
-            'showCancelButton'  =>  false,
-            'showConfirmButton' =>  false
+            'position' => 'top',
+            'timer' => 1500,
+            'toast' => true,
+            'showCancelButton' => false,
+            'showConfirmButton' => false
         ]);
     }
 
     public function confirmed()
     {
-        ModelsMatkul::destroy($this->id_matkul);
+        MatkulModel::where('user_id', auth()->id())
+            ->where('id', $this->id_matkul)
+            ->delete();
+
+        $this->id_matkul = '';
+
+        $this->hideForm();
 
         $this->showAlert('Mata Kuliah berhasil dihapus.');
-        $this->id_matkul = '';
-        $this->hideForm();
     }
 
     public function cancelled()
     {
         $this->id_matkul = '';
+
         $this->alert('error', 'Dibatalkan', [
-            'position'          =>  'top',
-            'timer'             =>  1500,
-            'toast'             =>  true,
-            'showCancelButton'  =>  false,
-            'showConfirmButton' =>  false
+            'position' => 'top',
+            'timer' => 1500,
+            'toast' => true,
+            'showCancelButton' => false,
+            'showConfirmButton' => false
         ]);
     }
-
 
     public function triggerConfirm($id)
     {
         $this->id_matkul = $id;
+
         $this->confirm('Yakin ingin menghapus data ini?', [
             'toast' => false,
             'position' => 'center',
-            'confirmButtonText' =>  'Ya',
-            'cancelButtonText' =>  'Batal',
+            'confirmButtonText' => 'Ya',
+            'cancelButtonText' => 'Batal',
             'onConfirmed' => 'confirmed',
             'onCancelled' => 'cancelled'
         ]);

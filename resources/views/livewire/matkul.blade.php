@@ -10,7 +10,6 @@ $target = 'update';
 @section('title', 'Mata Kuliah')
 <div class="container py-3">
     <div class="row justify-content-md-center">
-
         <div class="col-md-12">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
@@ -19,7 +18,7 @@ $target = 'update';
         </div>
 
         @if ($form)
-        <div class="col-md-12 my-2">
+        <div class="col-md-12 my-3">
             @if ($form == 'add')
             <form wire:submit.prevent="store">
                 @else
@@ -67,7 +66,7 @@ $target = 'update';
 
         <div class="col-md-12">
             {{-- button create --}}
-            <div class="row my-2">
+            <div class="row">
                 <div class="col-md-10 mb-2">
                     <h5 class="card-title mb-0 pt-2">Mata Kuliah</h5>
                 </div>

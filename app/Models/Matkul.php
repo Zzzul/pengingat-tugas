@@ -9,13 +9,12 @@ class Matkul extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'sks', 'semester_id'];
+    protected $fillable = ['user_id ', 'name', 'sks', 'semester_id'];
 
     public function semester()
     {
         return $this->belongsTo(Semester::class);
     }
-
 
     public function tugas()
     {

@@ -11,6 +11,13 @@ class Tugas extends Model
 
     protected $fillable = ['matkul_id', 'deskripsi', 'batas_wakut', 'selesai', 'pertemuan_ke'];
 
+    public static function boot(): void
+    {
+        static::creating(fn (Model $model) =>
+            $model->user_id = auth()->id(),
+        );
+    }
+
     public function matkul()
     {
         return $this->belongsTo(Matkul::class);

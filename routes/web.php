@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Livewire\Matkul;
-use App\Http\Livewire\Semester;
+use App\Http\Livewire\SemesterComponent;
 use App\Http\Livewire\Tugas;
 use Illuminate\Support\Facades\Route;
 
@@ -24,7 +24,7 @@ Route::view('/', 'home')->name('home');
 // Route::view('home', 'home')->name('home');
 
 Route::group(['middleware' => ['auth']], function () {
-    Route::get('semester', Semester::class)->name('semester');
+    Route::get('semester', SemesterComponent::class)->name('semester');
     Route::get('mata-kuliah', Matkul::class)->name('matkul');
     Route::get('tugas', Tugas::class)->name('tugas');
 
