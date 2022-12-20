@@ -223,7 +223,7 @@ if ($form == 'add') {
                                         <div class="col-md-6 mb-2">
                                             <label for="name" class="mb-1">Mata Kuliah</label>
                                             <input type="text" class="form-control @error('name')is-invalid @enderror"
-                                                wire:model="name" placeholder="Nama Mata Kuliah" id="name">
+                                                wire:model.defer="name" placeholder="Nama Mata Kuliah" id="name">
                                             @error('name') <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
@@ -233,7 +233,7 @@ if ($form == 'add') {
                                             <label for="semester-id" class="mb-1">Semester</label>
                                             <select
                                                 class="form-control @error('semester_id')is-invalid @enderror{{ $semesters->isEmpty() ? 'is-invalid' : '' }}"
-                                                    wire:model="semester_id" id="semester-id">
+                                                    wire:model.defer="semester_id" id="semester-id">
                                                     <option value="" disabled>--Pilih Semester--</option>
                                                     @forelse ($semesters as $sms)
                                                         <option value="{{ $sms->id }}">{{ $sms->semester_ke }}
@@ -250,7 +250,7 @@ if ($form == 'add') {
                                             <div class="col-md-3 mb-2">
                                                 <label for="sks" class="mb-1">SKS</label>
                                                 <input type="number" class="form-control @error('sks')is-invalid @enderror"
-                                                    wire:model="sks" placeholder="SKS" id="sks" min="1" max="6">
+                                                    wire:model.defer="sks" placeholder="SKS" id="sks" min="1" max="6">
                                                 @error('sks') <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                             </div>
@@ -259,7 +259,7 @@ if ($form == 'add') {
                                             <div class="col-md-4">
                                                 <label for="hari" class="mb-1">Hari</label>
                                                 <select class="form-control @error('hari')is-invalid @enderror"
-                                                    wire:model="hari" id="hari">
+                                                    wire:model.defer="hari" id="hari">
                                                     <option value="" disabled>--Pilih Hari--</option>
                                                     <option value="senin">Senin</option>
                                                     <option value="selasa">Selasa</option>
@@ -276,7 +276,7 @@ if ($form == 'add') {
                                             <div class="col-md-4">
                                                 <label for="jam-mulai" class="mb-1">Jam Mulai</label>
                                                 <input type="time" class="form-control @error('jam_mulai')is-invalid @enderror"
-                                                    wire:model="jam_mulai" placeholder="jam_mulai" id="jam-mulai">
+                                                    wire:model.defer="jam_mulai" placeholder="jam_mulai" id="jam-mulai">
                                                 @error('jam_mulai') <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                             </div>
@@ -286,7 +286,7 @@ if ($form == 'add') {
                                                 <label for="jam-selesai" class="mb-1">Jam selesai</label>
                                                 <input type="time"
                                                     class="form-control @error('jam_selesai')is-invalid @enderror"
-                                                    wire:model="jam_selesai" placeholder="jam_selesai" id="jam-selesai">
+                                                    wire:model.defer="jam_selesai" placeholder="jam_selesai" id="jam-selesai">
                                                 @error('jam_selesai') <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                             </div>

@@ -5,17 +5,18 @@ namespace App\Http\Livewire\Profile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
+use App\Traits\LivewireAlert;
 
 class Password extends Component
 {
-
+    use LivewireAlert;
+    
     public $current_password, $password, $password_confirmation;
 
     public function render()
     {
         return view('livewire.profile.password');
     }
-
 
     public function update()
     {
@@ -31,11 +32,7 @@ class Password extends Component
                     'password' => bcrypt($this->password)
                 ]);
 
-                $this->flash('success', 'Password berhasil diubah, silahkan login ulang!', [
-                    'position'  =>  'top',
-                    'timer'     =>  1500,
-                    'toast'     =>  true,
-                ]);
+                $this->showAlert('success', 'Password berhasil diubah, silahkan login ulang!');
 
                 Auth::logout();
 
@@ -48,17 +45,5 @@ class Password extends Component
         } else {
             $this->showAlert('error', 'Kamu tidak bisa mengganti password!');
         }
-    }
-
-
-    public function showAlert($type, $message)
-    {
-        $this->alert($type, $message, [
-            'position'          =>  'top',
-            'timer'             =>  1500,
-            'toast'             =>  true,
-            'showCancelButton'  =>  false,
-            'showConfirmButton' =>  false
-        ]);
     }
 }

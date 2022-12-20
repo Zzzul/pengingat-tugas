@@ -8,7 +8,6 @@ if ($form == 'add') {
 }
 @endphp
 
-
 @section('title', 'Semester')
 
     <div class="container py-3">
@@ -202,7 +201,7 @@ if ($form == 'add') {
                                     <label for="semester-ke">Semester</label>
                                     <input type="number" id="semester-ke" min="1" max="8"
                                         class="form-control @error('semester_ke')is-invalid @enderror"
-                                        placeholder="Semester ke" wire:model="semester_ke" aria-describedby="semester-ke"
+                                        placeholder="Semester ke" wire:model.defer="semester_ke" aria-describedby="semester-ke"
                                         {{ $form ? 'autofocus' : '' }}>
                                     @error('semester_ke') <span class="text-danger">{{ $message }}</span>
                                     @enderror

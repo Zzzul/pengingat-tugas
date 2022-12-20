@@ -22,7 +22,6 @@ class UserList extends Component
 
     protected $paginationTheme = 'bootstrap';
 
-
     protected $queryString = [
         'search' => ['except' => ''],
         'page' => ['except' => 1],
@@ -91,9 +90,9 @@ class UserList extends Component
     public function update($id)
     {
         $this->validate([
-            'name'           => 'required|min:4,max:25',
-            'email'           => 'required|unique:users,email,' . $this->id_user,
-            'user_roles'     => 'required',
+            'name' => 'required|min:4,max:25',
+            'email' => 'required|unique:users,email,' . $this->id_user,
+            'user_roles' => 'required',
             'permissions' => 'array|required',
         ]);
 

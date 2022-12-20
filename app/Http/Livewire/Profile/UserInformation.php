@@ -4,11 +4,13 @@ namespace App\Http\Livewire\Profile;
 
 use App\Models\User;
 use Livewire\Component;
+use App\Traits\LivewireAlert;
 
 class UserInformation extends Component
 {
-    public $username, $name, $email;
+    use LivewireAlert;
 
+    public $username, $name, $email;
 
     public function mount()
     {
@@ -35,10 +37,6 @@ class UserInformation extends Component
         $user->save();
 
         redirect(route('user-profile'));
-        $this->flash('success', 'Profile berhasil diubah!', [
-            'position' =>  'top',
-            'timer'    =>  1000,
-            'toast'    =>  true,
-        ]);
+        $this->showAlert('success', 'Profile berhasil diubah!');
     }
 }

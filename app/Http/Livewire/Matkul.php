@@ -219,7 +219,6 @@ class Matkul extends Component
             );
         }
 
-
         if (auth()->user()->hasRole('admin') || $matkul->user_id == auth()->id()) {
 
             $matkul->name = $this->name;

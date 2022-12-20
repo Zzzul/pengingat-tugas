@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Auth;
 use App\Models\User;
 use Livewire\Component;
 use App\Traits\LivewireAlert;
+use App\Models\Semester;
 
 class Register extends Component
 {
@@ -43,6 +44,19 @@ class Register extends Component
             'edit profile',
             'ganti password'
         ]);
+
+        $semesters = [];
+
+        for ($i = 1; $i <= 8; ++$i) {
+            $semesters[] = [
+                'semester_ke' => $i,
+                'user_id' => $user->id,
+                'created_at' => now()->toDateTimeString(),
+                'updated_at' => now()->toDateTimeString()
+            ];
+        }
+        
+        Semester::insert($semesters);
 
         $this->showAlert('success', 'Akun berhasil didaftarkan silahkan login!');
 

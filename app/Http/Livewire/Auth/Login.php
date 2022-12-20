@@ -33,7 +33,7 @@ class Login extends Component
 
         if (!$user->isEmpty() && Auth::attempt(['username' => $this->username, 'password' => $this->password])) {
 
-            $this->showAlert('success', 'Kamu berhasil login!');
+            // $this->showAlert('success', 'Kamu berhasil login!');
 
             $previousUrl = url()->previous();
 

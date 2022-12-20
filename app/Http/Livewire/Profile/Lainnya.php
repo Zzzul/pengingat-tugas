@@ -4,9 +4,12 @@ namespace App\Http\Livewire\Profile;
 
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use App\Traits\LivewireAlert;
 
 class Lainnya extends Component
 {
+    use LivewireAlert;
+
     public function render()
     {
         return view('livewire.profile.lainnya');
@@ -14,12 +17,10 @@ class Lainnya extends Component
 
     public function logout()
     {
-        $this->flash('success', 'Kamu berhasil logout!', [
-            'position'          =>  'top',
-            'timer'             =>  1500,
-            'toast'             =>  true,
-        ]);
+        $this->showAlert('success', 'Kamu berhasil logout!');
+
         Auth::logout();
+        
         return redirect(route('home'));
     }
 }

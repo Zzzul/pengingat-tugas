@@ -293,7 +293,7 @@ if ($form == 'add') {
                                             </label>
                                             <select
                                                 class="form-control @error('matkul')is-invalid @enderror{{ $matkuls->isEmpty() ? 'is-invalid' : '' }}"
-                                                    wire:model="matkul" id="matkul-id">
+                                                    wire:model.defer="matkul" id="matkul-id">
                                                     <option value="" disabled>--Pilih Mata Kuliah--</option>
                                                     @forelse ($matkuls as $mk)
                                                         <option value="{{ $mk->id }}">{{ $mk->name }}</option>
@@ -309,7 +309,7 @@ if ($form == 'add') {
                                                 <label for="batas_waktu" class="mb-1">Batas Waktu</label>
                                                 <input type="datetime-local" id="batas_waktu"
                                                     class="form-control @error('batas_waktu')is-invalid @enderror"
-                                                    wire:model="batas_waktu" id="batas_waktu">
+                                                    wire:model.defer="batas_waktu" id="batas_waktu">
                                                 @error('batas_waktu') <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                             </div>
@@ -318,7 +318,7 @@ if ($form == 'add') {
                                                 <label for="pertemuan_ke" class="mb-1">Pertemuan Ke</label>
                                                 <input type="number"
                                                     class="form-control @error('pertemuan_ke')is-invalid @enderror"
-                                                    wire:model="pertemuan_ke" placeholder="Pertemuan Ke" id="pertemuan_ke"
+                                                    wire:model.defer="pertemuan_ke" placeholder="Pertemuan Ke" id="pertemuan_ke"
                                                     min="1" max="18">
                                                 @error('pertemuan_ke') <span class="text-danger">{{ $message }}</span>
                                                 @enderror
@@ -329,7 +329,7 @@ if ($form == 'add') {
                                                     <label for="selesai" class="mb-1">Selesai Pada</label>
                                                     <input type="datetime-local" id="selesai"
                                                         class="form-control @error('selesai')is-invalid @enderror"
-                                                        wire:model="selesai" placeholder="{{ $selesai }}">
+                                                        wire:model.defer="selesai" placeholder="{{ $selesai }}">
                                                     @error('selesai') <span
                                                             class="text-danger mt-0 mb-5">{{ $message }}</span>
                                                     @enderror
@@ -343,7 +343,7 @@ if ($form == 'add') {
                                                 <div class="form-group">
                                                     <label for="deskripsi" class="mb-1">Deskripsi</label>
                                                     <textarea class="form-control @error('deskripsi')is-invalid @enderror"
-                                                        wire:model="deskripsi" placeholder="Deskripsi" id="deskripsi" rows="3"
+                                                        wire:model.defer="deskripsi" placeholder="Deskripsi" id="deskripsi" rows="3"
                                                         aria-setsize="false"></textarea>
                                                     @error('deskripsi') <span class="text-danger">{{ $message }}</span>
                                                     @enderror
