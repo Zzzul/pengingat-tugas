@@ -7,9 +7,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Livewire\Component;
+use App\Traits\LivewireAlert;
 
 class Login extends Component
 {
+    use LivewireAlert;
 
     public $username, $password;
 
@@ -31,11 +33,7 @@ class Login extends Component
 
         if (!$user->isEmpty() && Auth::attempt(['username' => $this->username, 'password' => $this->password])) {
 
-            $this->flash('success', 'Kamu berhasil login!', [
-                'position' =>  'top',
-                'timer'    =>  1500,
-                'toast'    =>  true,
-            ]);
+            $this->showAlert('success', 'Kamu berhasil login!');
 
             $previousUrl = url()->previous();
 
@@ -45,11 +43,7 @@ class Login extends Component
                 redirect('' . $previousUrl . '');
             }
         } else {
-            $this->alert('error', 'Username atau password salah!', [
-                'position' =>  'top',
-                'timer'    =>  1500,
-                'toast'    =>  true,
-            ]);
+            $this->showAlert('error', 'Username atau password salah!');
         }
     }
 }

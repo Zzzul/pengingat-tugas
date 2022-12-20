@@ -4,9 +4,12 @@ namespace App\Http\Livewire\Auth;
 
 use App\Models\User;
 use Livewire\Component;
+use App\Traits\LivewireAlert;
 
 class Register extends Component
 {
+    use LivewireAlert;
+
     public $name, $username, $email, $password, $password_confirmation;
 
     protected $rules = [
@@ -41,11 +44,7 @@ class Register extends Component
             'ganti password'
         ]);
 
-        $this->flash('success', 'Akun berhasil didaftarkan silahkan login!', [
-            'position'  =>  'top',
-            'timer'     =>  1000,
-            'toast'     =>  true,
-        ]);
+        $this->showAlert('success', 'Akun berhasil didaftarkan silahkan login!');
 
         return redirect(route('login'));
     }

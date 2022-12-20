@@ -143,7 +143,6 @@ class Semester extends Component
 
     public function update($id)
     {
-
         $this->validate();
 
         // jika semester yang sama sudah ada tetapi pada id yang beda
@@ -194,7 +193,6 @@ class Semester extends Component
                 'semester_ke' => $this->semester_ke
             ])->first();
         }
-
 
         if ($check) {
             return $check;

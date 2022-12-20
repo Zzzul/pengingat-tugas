@@ -16,12 +16,14 @@ class Logout extends Component
 
     public function logout()
     {
-        $this->flash('success', 'Kamu berhasil logout!', [
-            'position'          =>  'top',
-            'timer'             =>  1500,
-            'toast'             =>  true,
-        ]);
+        // $this->flash('success', 'Kamu berhasil logout!', [
+        //     'position'          =>  'top',
+        //     'timer'             =>  1500,
+        //     'toast'             =>  true,
+        // ]);
+        
         Auth::logout();
+        
         return redirect(route('home'));
     }
 }
