@@ -1,6 +1,6 @@
 {{-- search --}}
-<div class="form-group row mb-3">
-    <div class="col-md-2 mb-2">
+<div class="form-group row">
+    <div class="col-md-2">
         <label for="paginate">Pagination</label>
         <img wire:loading wire:target="paginate_per_page" src="{{ asset('assets/Dual Ring-1s-16px-(2).svg') }}"
             class="mb-1" alt="Loading..">
@@ -20,7 +20,7 @@
         <label class="control-label" for="search">Cari</label>
         <div class="input-group">
             <input type="text" class="form-control" id="search" placeholder="(Tekan &quot;/&quot; untuk fokus)"
-                wire:model="search">
+                wire:model="search" autocomplete="off">
             <div class="input-group-append">
                 <span class="input-group-text">
                     <i class="fas fa-search" wire:loading.remove wire:target="search"></i>
