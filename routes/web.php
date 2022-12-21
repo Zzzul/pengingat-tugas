@@ -1,30 +1,10 @@
 <?php
 
 use App\Http\Controllers\PdfController;
-use App\Http\Livewire\Auth\Login;
-use App\Http\Livewire\Auth\Logout;
-use App\Http\Livewire\Auth\Register;
-use App\Http\Livewire\Matkul;
-use App\Http\Livewire\Profile\Lainnya;
-use App\Http\Livewire\Profile\Password;
-use App\Http\Livewire\Profile\Setting;
-use App\Http\Livewire\Profile\UserInformation;
-use App\Http\Livewire\Semester;
-use App\Http\Livewire\Tugas;
-use App\Http\Livewire\UserList;
-use Barryvdh\DomPDF\PDF;
+use App\Http\Livewire\Auth\{Login, Register, Logout};
+use App\Http\Livewire\Profile\{Lainnya, Password, Setting, UserInformation};
+use App\Http\Livewire\{Semester, Matkul, UserList, Tugas};
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 
 Route::view('/', 'home')->name('home');
 Route::view('/about', 'about')->name('about');
